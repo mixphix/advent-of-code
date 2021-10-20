@@ -3,6 +3,9 @@ cradle:
     - path: "./lib"
       component: "lib:advent-of-code"
 
+    - path: "./app/Advent15"
+      component: "advent-of-code:exe:advent15"
+
     - path: "./app"
       component: "advent-of-code:exe:advent-of-code"
 
