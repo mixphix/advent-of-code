@@ -1,0 +1,10 @@
+cradle:
+  cabal:
+    - path: "./lib"
+      component: "lib:advent-of-code"
+
+    - path: "./app"
+      component: "advent-of-code:exe:advent-of-code"
+
+    - path: "../toolbox/src"
+      component: "lib:toolbox"
