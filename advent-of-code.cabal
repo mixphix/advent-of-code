@@ -107,6 +107,18 @@ library
     hs-source-dirs:
       lib
 
+executable advent-of-code
+    import: advent
+    main-is:
+      Main.hs
+
+    other-modules:
+      
+    build-depends:
+      advent-of-code
+    hs-source-dirs:
+      app
+
 executable advent15
     import: advent
     main-is:
@@ -143,15 +155,3 @@ executable advent15
       advent-of-code
     hs-source-dirs:
       app/Advent15
-
-executable advent-of-code
-    import: advent
-    main-is:
-      Main.hs
-
-    other-modules:
-      
-    build-depends:
-      advent-of-code
-    hs-source-dirs:
-      app
