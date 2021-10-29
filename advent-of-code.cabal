@@ -21,15 +21,30 @@ maintainer: brown.m@pm.me
 -- category:
 extra-source-files: CHANGELOG.md
 
-library
+common advent
     build-depends:
       base ^>=4.15.0.0
+      , adjunctions
+      , aeson
+      , arithmoi
+      , comonad
       , containers
+      , cryptonite
+      , directory
+      , distributive
+      , filepath
+      , group-theory
       , lens
+      , lens-aeson
       , linear
       , nonempty-containers
       , parsec
+      , poly
       , relude
+      , semirings
+      , unordered-containers
+      , template-haskell
+      , text
       , time
       , time-compat
       , toolbox
@@ -52,9 +67,11 @@ library
       LambdaCase
       MultiParamTypeClasses
       MultiWayIf
+      NamedFieldPuns
       OverloadedStrings
       PatternSynonyms
       PolyKinds
+      QuasiQuotes
       RecordWildCards
       ScopedTypeVariables
       StandaloneDeriving
@@ -65,117 +82,76 @@ library
       TypeOperators
       ViewPatterns
     ghc-options: -O2 -Wall
+    default-language:
+      Haskell2010
+    mixins:
+      base hiding (Prelude)
+      , relude (Relude as Prelude)
+      , relude
+
+library
+    import: advent
+    exposed-modules:
+      Advent
+      Advent.Output
+    other-modules:
+      Advent.Coordinates
+      Advent.D4
+      Advent.Functions
+      Advent.Infinite
+      Advent.Input
+      Advent.Numbers
+      Advent.Orphans
+      Advent.Parsers
+      Advent.Polynomials
     hs-source-dirs:
       lib
-    default-language:
-      Haskell2010
-    mixins:
-      base hiding (Prelude)
-      , relude (Relude as Prelude)
-      , relude
 
 executable advent15
+    import: advent
     main-is:
       Main.hs
 
-    -- Modules included in this executable, other than Main.
     other-modules:
-      
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
+      Day01
+      Day02
+      Day03
+      Day04
+      Day05
+      Day06
+      Day07
+      Day08
+      Day09
+      Day10
+      Day11
+      Day12
+      Day13
+      Day14
+      Day15
+      Day16
+      Day17
+      Day18
+      Day19
+      Day20
+      Day21
+      Day22
+      Day23
+      Day24
+      Day25
+
     build-depends:
-      base ^>=4.15.0.0
-      , advent-of-code
-      , relude
-    default-extensions:
-      BangPatterns
-      ConstraintKinds
-      DataKinds
-      DeriveDataTypeable
-      DeriveFoldable
-      DeriveFunctor
-      DeriveGeneric
-      DeriveLift
-      DeriveTraversable
-      DerivingStrategies
-      DerivingVia
-      EmptyCase
-      GeneralizedNewtypeDeriving
-      ImportQualifiedPost
-      LambdaCase
-      MultiParamTypeClasses
-      MultiWayIf
-      OverloadedStrings
-      PatternSynonyms
-      PolyKinds
-      RecordWildCards
-      ScopedTypeVariables
-      StandaloneDeriving
-      StandaloneKindSignatures
-      TupleSections
-      TypeApplications
-      TypeFamilies
-      TypeOperators
-      ViewPatterns
-    ghc-options: -O2 -Wall
+      advent-of-code
     hs-source-dirs:
       app/Advent15
-    default-language:
-      Haskell2010
-    mixins:
-      base hiding (Prelude)
-      , relude (Relude as Prelude)
-      , relude
 
 executable advent-of-code
+    import: advent
     main-is:
       Main.hs
 
-    -- Modules included in this executable, other than Main.
     other-modules:
       
-    -- LANGUAGE extensions used by modules in this package.
-    -- other-extensions:
     build-depends:
-      base ^>=4.15.0.0
-      , advent-of-code
-      , relude
-    default-extensions:
-      BangPatterns
-      ConstraintKinds
-      DataKinds
-      DeriveDataTypeable
-      DeriveFoldable
-      DeriveFunctor
-      DeriveGeneric
-      DeriveLift
-      DeriveTraversable
-      DerivingStrategies
-      DerivingVia
-      EmptyCase
-      GeneralizedNewtypeDeriving
-      ImportQualifiedPost
-      LambdaCase
-      MultiParamTypeClasses
-      MultiWayIf
-      OverloadedStrings
-      PatternSynonyms
-      PolyKinds
-      RecordWildCards
-      ScopedTypeVariables
-      StandaloneDeriving
-      StandaloneKindSignatures
-      TupleSections
-      TypeApplications
-      TypeFamilies
-      TypeOperators
-      ViewPatterns
-    ghc-options: -O2 -Wall
+      advent-of-code
     hs-source-dirs:
       app
-    default-language:
-      Haskell2010
-    mixins:
-      base hiding (Prelude)
-      , relude (Relude as Prelude)
-      , relude
