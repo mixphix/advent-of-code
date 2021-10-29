@@ -1,11 +1,12 @@
 module Advent.Functions where
 
-import Control.Lens (Iso', iso, (^.))
+import Control.Lens (Iso', iso, (^.), pattern Empty)
 import Data.Containers.NonEmpty (withNonEmpty, pattern IsEmpty, pattern IsNonEmpty)
 import Data.List.NonEmpty ((<|))
 import Data.Map.Strict qualified as Map
-import Data.Sequence (Seq (..))
+import Data.Sequence (Seq ((:<|), (:|>)))
 import Data.Sequence.NonEmpty (NESeq (..))
+import Data.Set qualified as Set
 import Data.Time.Clock (diffUTCTime)
 import Data.Time.Clock.System (getSystemTime, systemToUTCTime)
 import GHC.Exts (IsList (..))
@@ -94,6 +95,15 @@ mapToGrid m =
 -- | (0, 0) is the top-left corner
 grid :: Iso' [[a]] (Map (V2 Natural) a)
 grid = iso gridToMap mapToGrid
+
+firstDuplicate :: forall a. (Ord a) => [a] -> Maybe a
+firstDuplicate = go Empty
+  where
+    go :: Set a -> [a] -> Maybe a
+    go _ [] = Nothing
+    go seen (a : as)
+      | a `member` seen = Just a
+      | otherwise = go (Set.insert a seen) as
 
 takeL :: Natural -> Seq a -> Seq a
 takeL 0 _ = IsEmpty

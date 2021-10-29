@@ -88,9 +88,7 @@ a `hit` b = points < _health b ? (health -~ points) b
       GT -> a - _def b
       _ -> 1
 
-data Difficulty = Normal | Hard deriving (Show)
-
-fight :: Difficulty -> Turn -> Map Effect Natural -> Player -> Player -> Spell -> Alt [] [Spell]
+fight :: Part -> Turn -> Map Effect Natural -> Player -> Player -> Spell -> Alt [] [Spell]
 fight diff Yours effects0 you0 me0 spell =
   let active = keys effects0
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
@@ -101,7 +99,7 @@ fight diff Yours effects0 you0 me0 spell =
         Just you -> case hit (you ^. dmg) me1 of
           Nothing -> empty
           Just me -> fight diff Mine effects you me spell
-fight Normal Mine effects0 you0 me0 spell =
+fight Part1 Mine effects0 you0 me0 spell =
   let active = keys effects0
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
       effects = effectuate effects0
@@ -121,13 +119,13 @@ fight Normal Mine effects0 you0 me0 spell =
                         & mana -~ mp
                         & health +~ hp
                  in case meff of
-                      Nothing -> universe -| fight Normal Yours effects you me
+                      Nothing -> universe -| fight Part1 Yours effects you me
                       Just (e, d)
                         | Just _ <- effects !? e -> empty
                         | otherwise ->
-                          universe -| fight Normal Yours (insert e d effects) you me
+                          universe -| fight Part1 Yours (insert e d effects) you me
           | otherwise -> empty
-fight Hard Mine effects0 you0 me0 spell =
+fight Part2 Mine effects0 you0 me0 spell =
   let active = keys effects0
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
       effects = effectuate effects0
@@ -149,19 +147,19 @@ fight Hard Mine effects0 you0 me0 spell =
                           & mana -~ mp
                           & health +~ hp
                    in case meff of
-                        Nothing -> universe -| fight Hard Yours effects you me
+                        Nothing -> universe -| fight Part2 Yours effects you me
                         Just (e, d)
                           | Just _ <- effects !? e -> empty
                           | otherwise ->
-                            universe -| fight Hard Yours (insert e d effects) you me
+                            universe -| fight Part2 Yours (insert e d effects) you me
             | otherwise -> empty
 
 part1 :: Natural
 part1 =
   withNonEmpty 0 (minimumOf1 (sumOn cost)) . getAlt $
-    universe -| fight Normal Mine Map.empty boss (Player 50 0 0 500)
+    universe -| fight Part1 Mine Map.empty boss (Player 50 0 0 500)
 
 part2 :: Natural
 part2 =
   withNonEmpty 0 (minimumOf1 (sumOn cost)) . getAlt $
-    universe -| fight Hard Mine Map.empty boss (Player 50 0 0 500)
+    universe -| fight Part2 Mine Map.empty boss (Player 50 0 0 500)

@@ -23,3 +23,5 @@ import Linear as Advent hiding (E)
 import Relude.Extra.Map as Advent
 import Text.Parsec as Advent hiding (choice, count, many, optional, uncons, (<|>), pattern Empty)
 import Text.Parsec.Text as Advent (Parser)
+
+data Part = Part1 | Part2 deriving (Eq, Ord, Show)
