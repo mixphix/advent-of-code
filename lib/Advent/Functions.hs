@@ -1,8 +1,10 @@
 module Advent.Functions where
 
 import Control.Lens (Iso', iso, (^.), pattern Empty)
+import Data.Char (toLower)
 import Data.Containers.NonEmpty (withNonEmpty, pattern IsEmpty, pattern IsNonEmpty)
 import Data.List.NonEmpty ((<|))
+import Data.List.Toolbox (elemIndex)
 import Data.Map.Strict qualified as Map
 import Data.Sequence (Seq ((:<|), (:|>)))
 import Data.Sequence.NonEmpty (NESeq (..))
@@ -164,3 +166,6 @@ timed x = do
   putStr $ show x
   te <- systemToUTCTime <$> getSystemTime
   putStrLn $ " (" <> padWith 10 ' ' (diffUTCTime te ts) <> ")"
+
+alphabetPos :: Char -> Natural
+alphabetPos c = maybe (error "not a letter") fromIntegral $ toLower c `elemIndex` ['a' .. 'z']

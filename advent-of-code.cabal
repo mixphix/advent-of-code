@@ -23,7 +23,7 @@ extra-source-files: CHANGELOG.md
 
 common advent
     build-depends:
-      base ^>=4.15.0.0
+      base >= 4.15 && < 5
       , adjunctions
       , aeson
       , arithmoi
@@ -155,3 +155,40 @@ executable advent15
       advent-of-code
     hs-source-dirs:
       app/Advent15
+
+executable advent16
+    import: advent
+    main-is:
+      Main.hs
+
+    other-modules:
+      Day01
+      Day02
+      Day03
+      Day04
+      Day05
+      Day06
+      Day07
+      Day08
+      Day09
+      Day10
+      -- Day11
+      -- Day12
+      -- Day13
+      -- Day14
+      -- Day15
+      -- Day16
+      -- Day17
+      -- Day18
+      -- Day19
+      -- Day20
+      -- Day21
+      -- Day22
+      -- Day23
+      -- Day24
+      -- Day25
+
+    build-depends:
+      advent-of-code
+    hs-source-dirs:
+      app/Advent16
