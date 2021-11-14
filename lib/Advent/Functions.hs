@@ -37,10 +37,10 @@ infixl 4 <<&>>
 (<<&>>) :: (Functor f, Functor g) => g (f a) -> (a -> b) -> g (f b)
 (<<&>>) = flip (<<$>>)
 
-infixr 1 -|
+infixr 1 >-<
 
-(-|) :: (Foldable t, Monoid m) => t a -> (a -> m) -> m
-(-|) = flip foldMap
+(>-<) :: (Foldable t, Monoid m) => t a -> (a -> m) -> m
+(>-<) = flip foldMap
 
 padWith :: (Show a) => Int -> Char -> a -> String
 padWith n c x = paddedWith n c (show x)

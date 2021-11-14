@@ -119,11 +119,11 @@ fight Part1 Mine effects0 you0 me0 spell =
                         & mana -~ mp
                         & health +~ hp
                  in case meff of
-                      Nothing -> universe -| fight Part1 Yours effects you me
+                      Nothing -> universe >-< fight Part1 Yours effects you me
                       Just (e, d)
                         | Just _ <- effects !? e -> empty
                         | otherwise ->
-                          universe -| fight Part1 Yours (insert e d effects) you me
+                          universe >-< fight Part1 Yours (insert e d effects) you me
           | otherwise -> empty
 fight Part2 Mine effects0 you0 me0 spell =
   let active = keys effects0
@@ -147,19 +147,19 @@ fight Part2 Mine effects0 you0 me0 spell =
                           & mana -~ mp
                           & health +~ hp
                    in case meff of
-                        Nothing -> universe -| fight Part2 Yours effects you me
+                        Nothing -> universe >-< fight Part2 Yours effects you me
                         Just (e, d)
                           | Just _ <- effects !? e -> empty
                           | otherwise ->
-                            universe -| fight Part2 Yours (insert e d effects) you me
+                            universe >-< fight Part2 Yours (insert e d effects) you me
             | otherwise -> empty
 
 part1 :: Natural
 part1 =
   withNonEmpty 0 (minimumOf1 (sumOn cost)) . getAlt $
-    universe -| fight Part1 Mine Map.empty boss (Player 50 0 0 500)
+    universe >-< fight Part1 Mine Map.empty boss (Player 50 0 0 500)
 
 part2 :: Natural
 part2 =
   withNonEmpty 0 (minimumOf1 (sumOn cost)) . getAlt $
-    universe -| fight Part2 Mine Map.empty boss (Player 50 0 0 500)
+    universe >-< fight Part2 Mine Map.empty boss (Player 50 0 0 500)
