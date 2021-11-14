@@ -3205,14 +3205,6 @@
     note: "Use `universe` from `Relude.Extra.Enum`"
     rhs: universe
 - hint:
-    lhs: succ
-    note: "`succ` from `Prelude` is a pure function but it may throw exception. Consider using `next` from `Relude.Extra.Enum` instead."
-    rhs: next
-- hint:
-    lhs: pred
-    note: "`pred` from `Prelude` is a pure function but it may throw exception. Consider using `prev` from `Relude.Extra.Enum` instead."
-    rhs: prev
-- hint:
     lhs: toEnum
     note: "`toEnum` from `Prelude` is a pure function but it may throw exception. Consider using `safeToEnum` from `Relude.Extra.Enum` instead."
     rhs: safeToEnum

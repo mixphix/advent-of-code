@@ -20,7 +20,11 @@ import Data.List.NonEmpty.Toolbox as Advent ((<|), (<||), (|>), (||>))
 import Data.Traversable as Advent
 import GHC.Exts as Advent (IsList (..))
 import Linear as Advent hiding (E)
+import Relude.Extra.Enum as Advent
+import Relude.Extra.Group as Advent
 import Relude.Extra.Map as Advent
+import Relude.Extra.Newtype as Advent
+import Relude.Extra.Tuple as Advent
 import Text.Parsec as Advent hiding (choice, count, many, optional, uncons, (<|>), pattern Empty)
 import Text.Parsec.Text as Advent (Parser)
 
