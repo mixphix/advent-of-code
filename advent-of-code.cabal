@@ -36,6 +36,7 @@ common advent
       , directory
       , distributive
       , filepath
+      , fixed-vector ^>= 1.2.1
       , free
       , group-theory
       , lens ^>= 5.1
@@ -221,9 +222,9 @@ executable advent17
       Day12
       Day13
       Day14
-      -- Day15
-      -- Day16
-      -- Day17
+      Day15
+      Day16
+      Day17
       -- Day18
       -- Day19
       -- Day20
