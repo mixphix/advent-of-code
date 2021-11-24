@@ -9,86 +9,11 @@ cradle:
     - path: "./app/Advent15"
       component: "advent-of-code:exe:advent15"
 
-    - path: "./app/Advent15/Day01.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day02.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day03.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day04.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day05.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day06.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day07.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day08.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day09.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day10.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day11.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day12.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day13.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day14.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day15.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day16.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day17.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day18.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day19.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day20.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day21.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day22.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day23.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day24.hs"
-      component: "advent-of-code:exe:advent15"
-
-    - path: "./app/Advent15/Day25.hs"
-      component: "advent-of-code:exe:advent15"
-
     - path: "./app/Advent16"
       component: "advent-of-code:exe:advent16"
 
-    - path: "./app/Advent16/Day01.hs"
-      component: "advent-of-code:exe:advent16"
+    - path: "./app/Advent17"
+      component: "advent-of-code:exe:advent17"
 
     - path: "../toolbox/src"
       component: "lib:toolbox"

@@ -3,8 +3,7 @@
 module Day23 where
 
 import Advent
-import Control.Lens (makeLenses, (%~))
-import Data.Vector (Vector)
+import Control.Lens (makeLenses)
 import Data.Vector qualified as V
 
 type Register = Char

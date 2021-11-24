@@ -10,7 +10,10 @@ import Data.IntMap.NonEmpty qualified as NEIntMap
 import Data.Map.Monoidal.Deep (DeepMap)
 import Data.Map.Monoidal.Deep qualified as DM
 import Data.Map.Monoidal.Strict qualified as Mop
+import Data.Map.NonEmpty (NEMap)
+import Data.Map.NonEmpty qualified as NEMap
 import Data.Monoid.Toolbox
+import Data.Semigroup.Foldable qualified
 import Data.Sequence.NonEmpty (NESeq)
 import Data.Sequence.NonEmpty qualified as NESeq
 import Data.Set.NonEmpty (NESet)
@@ -22,28 +25,49 @@ instance One (NESeq a) where
   type OneItem _ = a
   one = fromList . one
 
-instance (Ord a) => One (NESet a) where
-  type OneItem _ = a
-  one = fromList . one
-
-instance One (NEIntMap a) where
-  type OneItem _ = (Int, a)
-  one = fromList . one
-
 instance IsList (NESeq a) where
   type Item _ = a
   fromList xs = viaNonEmpty NESeq.fromList xs ?: error "NESeq: fromList []"
   toList = toList
+
+instance Foldable1 NESeq where
+  foldMap1 = Data.Semigroup.Foldable.foldMap1
+
+instance (Ord a) => One (NESet a) where
+  type OneItem _ = a
+  one = fromList . one
 
 instance (Ord a) => IsList (NESet a) where
   type Item _ = a
   fromList xs = viaNonEmpty NESet.fromList xs ?: error "NESet: fromList []"
   toList = toList
 
+instance Foldable1 NESet where
+  foldMap1 = Data.Semigroup.Foldable.foldMap1
+
+instance One (NEIntMap a) where
+  type OneItem _ = (Int, a)
+  one = fromList . one
+
 instance IsList (NEIntMap a) where
   type Item _ = (Int, a)
   fromList xs = viaNonEmpty NEIntMap.fromList xs ?: error "NEIntMap: fromList []"
   toList = toList . NEIntMap.assocs
+
+instance Foldable1 NEIntMap where
+  foldMap1 = Data.Semigroup.Foldable.foldMap1
+
+instance (Ord k) => One (NEMap k a) where
+  type OneItem _ = (k, a)
+  one = fromList . one
+
+instance (Ord k) => IsList (NEMap k a) where
+  type Item _ = (k, a)
+  fromList xs = viaNonEmpty NEMap.fromList xs ?: error "NEMap: fromList []"
+  toList = toList . NEMap.assocs
+
+instance Foldable1 (NEMap k) where
+  foldMap1 = Data.Semigroup.Foldable.foldMap1
 
 instance StaticMap (NEIntMap v) where
   type Key _ = Int

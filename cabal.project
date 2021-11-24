@@ -1,2 +1,5 @@
 packages: ., ../toolbox
 optimization: 2
+allow-newer:
+  servant-client-core:aeson
+  , servant:aeson

@@ -3,7 +3,7 @@
 module Day22 where
 
 import Advent
-import Control.Lens (makeLenses, (+~), (-~), (.~))
+import Control.Lens (makeLenses, (+~), (-~))
 import Data.List.NonEmpty.Toolbox (minimumOf1)
 import Data.Map.Strict qualified as Map
 import Data.Text qualified as T

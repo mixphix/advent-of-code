@@ -1,7 +1,7 @@
 module Day08 where
 
 import Advent
-import Control.Lens (from, pattern Empty)
+import Control.Lens (from)
 import Data.Map.Strict qualified as Map
 
 type Screen = Map (V2 Natural) Bool

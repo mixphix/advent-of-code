@@ -9,7 +9,6 @@ import Data.Functor.Rep (Representable (..), distributeRep)
 import Data.List.Toolbox (iterate')
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
-import Data.Vector (Vector)
 import Data.Vector qualified as V
 
 light :: Parser Bool

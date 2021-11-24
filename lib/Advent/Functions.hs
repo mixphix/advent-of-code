@@ -4,6 +4,7 @@ import Control.Lens (Iso', iso, (^.), pattern Empty)
 import Data.Char (toLower)
 import Data.Containers.NonEmpty (withNonEmpty, pattern IsEmpty, pattern IsNonEmpty)
 import Data.List.NonEmpty ((<|))
+import Data.List.NonEmpty qualified as NE
 import Data.List.Toolbox (elemIndex)
 import Data.Map.Strict qualified as Map
 import Data.Sequence (Seq ((:<|), (:|>)))
@@ -67,11 +68,8 @@ hasMoreThan k p = (>= k) . count p
 pairwise :: (a -> a -> b) -> [a] -> [b]
 pairwise f = zipWith f <*> drop 1
 
-unorderedPairs :: [a] -> [[a]]
-unorderedPairs ls = take (length ls) $ pairwise list2 (cycle ls)
-
-orderedPairs :: [a] -> [[a]]
-orderedPairs = ((<>) <*> map reverse) . unorderedPairs
+pairsTied :: [a] -> [NonEmpty a]
+pairsTied ls = take (length ls) $ pairwise (\a b -> a :| one b) (cycle ls)
 
 palindrome :: (Eq a) => [a] -> Bool
 palindrome = (==) <*> reverse
@@ -159,6 +157,13 @@ permutationsNE lx = lx :| perms [] lx
         interleaveWith f rest (x :| xs) =
           let (us, vs) = withNonEmpty (as, rest) (interleaveWith (f . (x <|)) rest) xs
            in (x : us, f (a :| x : us) : vs)
+
+oddOneOut :: (Ord a) => [a] -> Maybe a
+oddOneOut xs | length xs < 3 = Nothing
+oddOneOut xs = case NE.group (sort xs) of
+  [a :| [], _] -> Just a
+  [_, b :| []] -> Just b
+  _ -> Nothing
 
 timed :: (Show a) => a -> IO ()
 timed x = do

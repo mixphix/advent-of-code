@@ -3,12 +3,12 @@ module Day01 where
 import Advent
 
 directions :: Parser [(Natural, Ant -> Ant)]
-directions = choice [left, right] `sepEndBy1` string ", "
+directions = choice [l, r] `sepEndBy1` string ", "
   where
-    left = do
+    l = do
       n <- char 'L' *> number
       pure (n, turnL)
-    right = do
+    r = do
       n <- char 'R' *> number
       pure (n, turnR)
 

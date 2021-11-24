@@ -1,7 +1,6 @@
 module Day11 where
 
 import Advent
-import Data.Containers.ListUtils (nubOrd)
 import Data.List.Toolbox (allSame, intersect)
 import Data.Text (strip)
 

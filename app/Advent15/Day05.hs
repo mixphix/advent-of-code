@@ -26,7 +26,7 @@ nice2 (toString -> tstr) =
     hasMatchingPair =
       anySame
         . foldMap (\xs -> if length xs > 2 then take 2 xs else take 1 xs)
-        $ group (unorderedPairs tstr)
+        $ group (pairsTied tstr)
 
 part2 :: Natural
 part2 = count nice2 in05
