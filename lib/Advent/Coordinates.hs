@@ -1,9 +1,10 @@
 module Advent.Coordinates where
 
 import Advent.D4 (D4 (..))
-import Control.Lens (Iso', from, iso, (^.))
+import Control.Lens (Iso', from, iso, view, (^.))
 import Data.Complex (Complex (..))
 import Data.Semiring (Ring (..), Semiring (..), fromIntegral, minus)
+import GHC.Show qualified (show)
 import Linear (V2 (..))
 import Prelude hiding (negate, one)
 
@@ -83,7 +84,19 @@ moore = (cardinal 1 <$> universe ??)
 vonNeumann :: (Ring a) => V2 a -> [V2 a]
 vonNeumann = (cardinal 1 <$> [North, East, South, West] ??)
 
-newtype Ant = Ant (Cardinal, Complex Integer)
+newtype Ant = Ant (Cardinal, Complex Integer) deriving (Eq)
+
+instance Show Ant where
+  show (Ant (c, view (from complex) -> v)) =
+    "Ant (" <> show v <> ") " <> case c of
+      East -> "\x27a1"
+      Northeast -> "\x2197"
+      North -> "\x2b06"
+      Northwest -> "\x2196"
+      West -> "\x2b05"
+      Southwest -> "\x2199"
+      South -> "\x2b07"
+      Southeast -> "\x2198"
 
 turnL :: Ant -> Ant
 turnL (Ant (c, p)) = Ant (c', p)
