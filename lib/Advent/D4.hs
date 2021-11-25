@@ -11,7 +11,7 @@ data D4
   | TR
   | TR2
   | TR3
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Enum, Bounded, Show)
 
 instance Semigroup D4 where
   x <> E = x
