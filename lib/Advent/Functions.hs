@@ -14,7 +14,7 @@ import Data.Time.Clock (diffUTCTime)
 import Data.Time.Clock.System (getSystemTime, systemToUTCTime)
 import GHC.Exts (IsList (..))
 import Linear (V2 (..))
-import Relude.Extra.Map
+import Relude.Extra.Map (DynamicMap (insert), StaticMap (member), (!?))
 
 enum :: (Enum a, Enum b) => Iso' a b
 enum = iso (toEnum . fromEnum) (toEnum . fromEnum)
@@ -22,7 +22,7 @@ enum = iso (toEnum . fromEnum) (toEnum . fromEnum)
 listed :: (IsList f, IsList g, Item f ~ Item g) => Iso' f g
 listed = iso (fromList . GHC.Exts.toList) (fromList . GHC.Exts.toList)
 
-relist :: (IsList f, IsList g, Item f ~ Item g) => f -> g
+relist :: forall s t a b f g. (s a ~ f, t b ~ g, IsList f, IsList g, Item f ~ Item g) => f -> g
 relist = (^. listed)
 
 list2 :: a -> a -> [a]
