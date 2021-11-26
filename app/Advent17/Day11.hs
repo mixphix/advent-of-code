@@ -24,8 +24,8 @@ hexCardinal = \case
   Dn -> (V3 0 1 (-1) +)
   DnLeft -> (V3 (-1) 1 0 +)
 
-cardinalP :: Parser HexCardinal
-cardinalP =
+hexcardinalP :: Parser HexCardinal
+hexcardinalP =
   choice
     [ UpLeft <$ string "nw",
       UpRight <$ string "ne",
@@ -36,7 +36,7 @@ cardinalP =
     ]
 
 in11 :: [HexCardinal]
-in11 = mapMaybe (parsedWith cardinalP) . T.splitOn "," . withNonEmpty "" head $ lines (input 2017 11)
+in11 = mapMaybe (parsedWith hexcardinalP) . T.splitOn "," . withNonEmpty "" head $ lines (input 2017 11)
 
 part1 :: Integer
 part1 = hexManhattan (V3 0 0 0) $ foldl' (flip hexCardinal) (V3 0 0 0) in11

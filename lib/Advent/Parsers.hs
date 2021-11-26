@@ -32,8 +32,8 @@ numberGrid = numberGridSep (oneOf " ,")
 numberGridSep :: (Integral n, Monad m) => ParsecT Text u m a -> ParsecT Text u m [[n]]
 numberGridSep p = number `sepEndBy1` many p `sepEndBy1` char '\n'
 
-direction :: Parsec Text u Cardinal
-direction =
+cardinalP :: Parsec Text u Cardinal
+cardinalP =
   choice
     [ North <$ char '^',
       East <$ char '<',

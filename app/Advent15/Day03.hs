@@ -4,12 +4,12 @@ import Advent
 import Data.Map.Monoidal.Strict qualified as Mop
 
 in03 :: [Cardinal]
-in03 = parsedWith (many direction) (input 2015 3) ?: []
+in03 = parsedWith (many cardinalP) (input 2015 3) ?: []
 
 type Visits = Mop.Map (V2 Integer) (Sum Int)
 
 move :: (Ant, Visits) -> Cardinal -> (Ant, Visits)
-move (a, m) c = (a', insert (antPosV a') (Sum 1) m)
+move (a, m) c = (a', insert (antPosition a') (Sum 1) m)
   where
     a' = shimmy 1 c a
 

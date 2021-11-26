@@ -41,13 +41,13 @@ gridValue Part2 = \case
   _ -> error "not in grid!"
 
 walkGrid :: Part -> Cardinal -> Ant -> Ant
-walkGrid part c a@(antPosV -> v)
+walkGrid part c a@(antPosition -> v)
   | cardinal 1 c v `elem` gridFor part = shimmy 1 c a
   | otherwise = a
 
 code :: Part -> V2 Integer -> [Cardinal] -> Char
 code part pos =
-  gridValue part . antPosV . foldl' (flip (walkGrid part)) (Ant (North, pos ^. complex))
+  gridValue part . antPosition . foldl' (flip (walkGrid part)) (Ant North pos)
 
 part1 :: String
 part1 = map (code Part1 (V2 0 0)) in02

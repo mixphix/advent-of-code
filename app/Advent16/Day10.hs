@@ -1,7 +1,6 @@
 module Day10 where
 
 import Advent
-import Control.Lens (pattern Empty)
 
 data Bot
   = Bot Natural

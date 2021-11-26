@@ -31,7 +31,7 @@ toGrid :: Set (Word8, Word8) -> Grid Bool
 toGrid s = store (`member` s) (0, 0)
 
 fromGrid :: Grid Bool -> Set (Word8, Word8)
-fromGrid (StoreT (Identity (Compose (V v))) _) = relist @[(Word8, Word8)] $ do
+fromGrid (StoreT (Identity (Compose (V v))) _) = relist @[] $ do
   (a, V v') <- zip [0 ..] (relist v)
   (b, el) <- zip [0 ..] (relist v')
   el ? (a, b)

@@ -22,15 +22,14 @@ import Day14 qualified
 import Day15 qualified
 import Day16 qualified
 import Day17 qualified
-
--- import Day18 qualified
--- import Day19 qualified
--- import Day20 qualified
--- import Day21 qualified
--- import Day22 qualified
--- import Day23 qualified
--- import Day24 qualified
--- import Day25 qualified
+import Day18 qualified
+import Day19 qualified
+import Day20 qualified
+import Day21 qualified
+import Day22 qualified
+import Day23 qualified
+import Day24 qualified
+import Day25 qualified
 
 main :: IO ()
 main = $(mainFor 2017)

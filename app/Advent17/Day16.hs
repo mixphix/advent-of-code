@@ -1,7 +1,6 @@
 module Day16 where
 
 import Advent
-import Control.Lens (ix)
 import Data.List (elemIndex)
 import Data.Text qualified as T
 import Data.Vector (backpermute)

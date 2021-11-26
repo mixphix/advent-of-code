@@ -1,7 +1,6 @@
 module Day19 where
 
 import Advent
-import Control.Lens (pattern Empty)
 import Data.Map.Monoidal.Strict qualified as Mop
 import Data.Sequence (Seq ((:<|)))
 import Data.Sequence qualified as Seq

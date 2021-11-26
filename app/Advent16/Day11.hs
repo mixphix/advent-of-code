@@ -1,7 +1,7 @@
 module Day11 where
 
 import Advent
-import Control.Lens (Ixed (ix), Lens', lens, (.~), (<>~))
+import Control.Lens (Lens', lens)
 import Control.Monad.ST
 import Data.List.Toolbox ((\\))
 import Data.Monoid.Toolbox
@@ -113,16 +113,16 @@ end Area {..} = me == Four && sort (unFloors floors !? Four ?: []) == sort (fold
 
 moves :: Area -> [(Floor, [[Gizmo]])]
 moves Area {..} =
-  let at 1 = maybe [] (map one . sort) (unFloors floors !? me)
-      at 2 = case unFloors floors !? me ?: [] of
+  let att 1 = maybe [] (map one . sort) (unFloors floors !? me)
+      att 2 = case unFloors floors !? me ?: [] of
         [] -> []
         [_] -> []
         _ -> nubOrd . map toList $ pairsTied (sort $ unFloors floors !? me ?: [])
-      at (_ :: Word8) = []
+      att (_ :: Word8) = []
    in case me of
-        One -> [(Two, at 2 <> at 1)]
-        Four -> [(Three, at 1 <> at 2)]
-        n -> [(succ n, at 2 <> at 1)] <> [(pred n, at 1 <> at 2)]
+        One -> [(Two, att 2 <> att 1)]
+        Four -> [(Three, att 1 <> att 2)]
+        n -> [(succ n, att 2 <> att 1)] <> [(pred n, att 1 <> att 2)]
 
 move :: forall s. STRef s [Area] -> Natural -> Area -> [(Floor, [[Gizmo]])] -> ST s (Maybe (Min Natural))
 move _ _ _ [] = pure empty

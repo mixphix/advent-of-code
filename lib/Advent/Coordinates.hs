@@ -1,7 +1,11 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE TemplateHaskell #-}
+
 module Advent.Coordinates where
 
 import Advent.D4 (D4 (..))
-import Control.Lens (Iso', from, iso, view, (^.))
+import Control.Lens (Iso', Lens', abbreviatedFields, from, iso, makeLensesWith)
 import Data.Complex (Complex (..))
 import Data.Semiring (Ring (..), Semiring (..), fromIntegral, minus)
 import GHC.Show qualified (show)
@@ -16,6 +20,9 @@ complex = iso (\(V2 x y) -> x :+ y) (\(x :+ y) -> V2 x y)
 
 pair :: Iso' (V2 a) (a, a)
 pair = iso (\(V2 x y) -> (x, y)) (uncurry V2)
+
+cpair :: Iso' (Complex a) (a, a)
+cpair = from complex . pair
 
 dihedralTransform :: (Ring a) => D4 -> V2 a -> V2 a
 dihedralTransform = \case
@@ -39,11 +46,16 @@ dihedralTransformC = \case
   TR2 -> \(x :+ y) -> x :+ negate y
   TR3 -> \(x :+ y) -> y :+ x
 
-(×) :: D4 -> V2 Integer -> V2 Integer
-(×) = dihedralTransform
-
-(•) :: D4 -> Complex Integer -> Complex Integer
-(•) = dihedralTransformC
+dihedralGrid :: D4 -> [[a]] -> [[a]]
+dihedralGrid = \case
+  E -> id
+  R -> reverse . transpose
+  R2 -> reverse . map reverse
+  R3 -> transpose . reverse
+  T -> map reverse
+  TR -> transpose
+  TR2 -> reverse
+  TR3 -> reverse . transpose . reverse
 
 data Cardinal
   = East
@@ -84,10 +96,16 @@ moore = (cardinal 1 <$> universe ??)
 vonNeumann :: (Ring a) => V2 a -> [V2 a]
 vonNeumann = (cardinal 1 <$> [North, East, South, West] ??)
 
-newtype Ant = Ant (Cardinal, Complex Integer) deriving (Eq)
+data Ant = Ant
+  { antDirection :: Cardinal,
+    antPosition :: V2 Integer
+  }
+  deriving (Eq)
+
+makeLensesWith abbreviatedFields ''Ant
 
 instance Show Ant where
-  show (Ant (c, view (from complex) -> v)) =
+  show (Ant c v) =
     "Ant (" <> show v <> ") " <> case c of
       East -> "\x27a1"
       Northeast -> "\x2197"
@@ -99,7 +117,7 @@ instance Show Ant where
       Southeast -> "\x2198"
 
 turnL :: Ant -> Ant
-turnL (Ant (c, p)) = Ant (c', p)
+turnL (Ant c p) = Ant c' p
   where
     c' = case c of
       East -> North
@@ -112,7 +130,7 @@ turnL (Ant (c, p)) = Ant (c', p)
       Southeast -> Northeast
 
 turnR :: Ant -> Ant
-turnR (Ant (c, p)) = Ant (c', p)
+turnR (Ant c p) = Ant c' p
   where
     c' = case c of
       East -> South
@@ -124,18 +142,18 @@ turnR (Ant (c, p)) = Ant (c', p)
       South -> West
       Southeast -> Southwest
 
-scurry :: Natural -> Ant -> Ant
+turnU :: Ant -> Ant
+turnU = turnR . turnR
+
+scurry :: Integer -> Ant -> Ant
 scurry 0 a = a
-scurry n (Ant (c, p)) = Ant (c, cardinalC (Prelude.fromIntegral n) c p)
+scurry n (Ant c p) = Ant c (cardinal n c p)
 
-shimmy :: Natural -> Cardinal -> Ant -> Ant
-shimmy n c (Ant (ac, p)) = Ant (ac, cardinalC (Prelude.fromIntegral n) c p)
+shimmy :: Integer -> Cardinal -> Ant -> Ant
+shimmy n c (Ant ac p) = Ant ac (cardinal n c p)
 
-antPos :: Ant -> Complex Integer
-antPos (Ant (_, p)) = p
-
-antPosV :: Ant -> V2 Integer
-antPosV a = antPos a ^. from complex
+positionC :: Lens' Ant (Complex Integer)
+positionC = position . complex
 
 antCentre :: Cardinal -> Ant
-antCentre c = Ant (c, 0 :+ 0)
+antCentre c = Ant c (V2 0 0)
