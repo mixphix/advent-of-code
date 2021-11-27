@@ -4,7 +4,7 @@ import Advent
 import Data.Map.Strict qualified as Map
 import Data.Maybe (fromJust)
 
-virus :: Part -> (Ant, Map (V2 Integer) Char) -> (Ant, Map (V2 Integer) Char)
+virus :: Part -> (Ant, Map (Point 2 Integer) Char) -> (Ant, Map (Point 2 Integer) Char)
 virus Part1 (a@(view position -> p), m) =
   case m !? p of
     Just '#' -> (scurry 1 $ turnR a, m & at p ?~ '.')
@@ -16,7 +16,7 @@ virus Part2 (a@(view position -> p), m) =
     Just 'W' -> (scurry 1 a, m & at p ?~ '#')
     _ -> (scurry 1 $ turnL a, m & at p ?~ 'W')
 
-in22 :: Map (V2 Integer) Char
+in22 :: Map (Point 2 Integer) Char
 in22 = Map.mapKeys (dihedralTransform TR2 . fmap fromIntegral) . view grid . map toString $ lines (input 2017 22)
 
 start :: Ant

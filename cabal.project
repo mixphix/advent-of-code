@@ -1,5 +1,9 @@
-packages: ., ../toolbox
+packages:
+  .
+  , ../toolbox
+  , ../vector-circular
 optimization: 2
 allow-newer:
   servant-client-core:aeson
   , servant:aeson
+  , hedgehog:mmorph

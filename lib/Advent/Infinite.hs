@@ -50,9 +50,9 @@ infChunksOf :: Natural -> Infinite a -> Infinite [a]
 infChunksOf 0 _ = error "chunksOf 0"
 infChunksOf n as = let (p, bs) = infSplitAt n as in p ::: infChunksOf n bs
 
-(@) :: Infinite a -> Natural -> a
-(a ::: _) @ 0 = a
-(_ ::: as) @ n = as @ pred n
+(@@) :: Infinite a -> Natural -> a
+(a ::: _) @@ 0 = a
+(_ ::: as) @@ n = as @@ pred n
 
 choices :: [a] -> [Infinite a]
 choices as = (:::) <$> as <*> choices as

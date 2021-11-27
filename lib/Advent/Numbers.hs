@@ -2,7 +2,9 @@ module Advent.Numbers where
 
 import Advent.Functions (pairwise, palindrome, takeLNE, takeRNE)
 import Advent.Orphans ()
-import Control.Lens (Iso', iso, pattern Empty)
+import Control.Lens (Iso', iso, (^.), pattern Empty)
+import Data.Geometry.Point
+import Data.Geometry.Vector (Additive (..))
 import Data.List.NonEmpty.Toolbox qualified as NE
 import Data.List.Toolbox (allSame)
 import Data.Ratio ((%))
@@ -11,7 +13,6 @@ import Data.Sequence.NonEmpty qualified as NESeq
 import Data.Set qualified as Set
 import Data.Set.NonEmpty (NESet)
 import Data.Set.NonEmpty qualified as NESet
-import Linear (V2 (..), V3 (..))
 import Math.NumberTheory.ArithmeticFunctions qualified as NT
 import Math.NumberTheory.Primes qualified as NT
 import Math.NumberTheory.Primes.Counting qualified as NT
@@ -212,25 +213,25 @@ hailstone !n = succ $! hailstone (if even n then n `div` 2 else 3 * n + 1)
 narcissistic :: Natural -> Natural -> Bool
 narcissistic k n = n == sum (digits n <&> (^ k))
 
-ulampos :: Natural -> V2 Integer
-ulampos 0 = V2 0 0
+ulampos :: Natural -> Point 2 Integer
+ulampos 0 = Point2 0 0
 ulampos n =
   let k = fromIntegral (floorsqrt n) :: Integer
       m = fromIntegral n - (k * k)
       d = m - fromIntegral (k + 1)
       half = flip quot 2 . fromIntegral
-      f = if even k then negate else id
-      k2pos = if even k then V2 (1 - half k) (half k) else V2 (half $ fromIntegral k - 1) (half $ 1 - fromIntegral k)
-      k2k1pos = if even k then V2 (-half k) (-half k) else V2 (half $ k + 1) (half $ k + 1)
+      f = fmap $ if even k then negate else id
+      k2pos = if even k then Point2 (1 - half k) (half k) else Point2 (half $ fromIntegral k - 1) (half $ 1 - fromIntegral k)
+      k2k1pos = if even k then Point2 (- half k) (- half k) else Point2 (half $ k + 1) (half $ k + 1)
    in if fromIntegral n == k * k
         then k2pos
         else
           if m <= succ k -- side length
-            then k2pos + f (V2 1 (m - 1))
-            else k2k1pos - f (V2 d 0)
+            then Point . on (^+^) (^. vector) k2pos $ f (Point2 1 (m - 1))
+            else Point . on (^-^) (^. vector) k2k1pos $ f (Point2 d 0)
 
-unulampos :: V2 Integer -> Natural
-unulampos (V2 x y) =
+unulampos :: Point 2 Integer -> Natural
+unulampos (Point2 x y) =
   let q = abs x > abs y
       x' = fromIntegral $ on max abs x y
       y' = if q then x + y else x - y
@@ -240,7 +241,7 @@ unulampos (V2 x y) =
         then (if x > 0 then y'' - 2 * x'' else y'')
         else (if y > 0 then y'' - x'' else y'' + x'')
 
-ulam :: Iso' Natural (V2 Integer)
+ulam :: Iso' Natural (Point 2 Integer)
 ulam = iso ulampos unulampos
 
 reciprocal :: Natural -> [Natural]
@@ -297,9 +298,9 @@ palindromic = palindrome . toList . digits
 palindromicIn :: forall n. (KnownNat n) => Const Natural n -> Bool
 palindromicIn (Const n) = palindrome . toList . getConst $ base @n n
 
-pythags :: [V3 Natural]
+pythags :: [Point 3 Natural]
 pythags =
-  [ V3 a b c
+  [ Point3 a b c
     | c <- [5 ..],
       b <- [1 .. c],
       a <- [1 .. b],

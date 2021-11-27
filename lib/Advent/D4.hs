@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+
 module Advent.D4 where
 
 import Data.Group (Group (..))

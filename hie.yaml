@@ -15,5 +15,8 @@ cradle:
     - path: "./app/Advent17"
       component: "advent-of-code:exe:advent17"
 
+    - path: "./app/Advent18"
+      component: "advent-of-code:exe:advent18"
+
     - path: "../toolbox/src"
       component: "lib:toolbox"

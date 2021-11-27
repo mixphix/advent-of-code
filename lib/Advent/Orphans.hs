@@ -14,13 +14,11 @@ import Data.Map.NonEmpty (NEMap)
 import Data.Map.NonEmpty qualified as NEMap
 import Data.Monoid.Toolbox (Max (..), Min (..))
 import Data.Semigroup.Foldable qualified
-import Data.Semiring (Semiring)
 import Data.Sequence.NonEmpty (NESeq)
 import Data.Sequence.NonEmpty qualified as NESeq
 import Data.Set.NonEmpty (NESet)
 import Data.Set.NonEmpty qualified as NESet
 import GHC.Exts qualified
-import Linear (V1 (..))
 import Relude.Extra
 
 instance One (NESeq a) where
@@ -190,6 +188,3 @@ deriving newtype instance (RealFrac a) => RealFrac (Min a)
 deriving newtype instance (RealFloat a) => RealFloat (Min a)
 
 deriving newtype instance (Integral a) => Integral (Min a)
-
--- Linear instances
-deriving newtype instance (Semiring a) => Semiring (V1 a)

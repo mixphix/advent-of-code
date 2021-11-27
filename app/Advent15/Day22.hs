@@ -50,24 +50,24 @@ heal = \case
   Poison -> 0
   Charge -> 0
 
-data Effect = S | P | C deriving (Eq, Ord, Enum, Bounded, Show, Read)
+data Effect = Shd | Psn | Chg deriving (Eq, Ord, Enum, Bounded, Show, Read)
 
 spellEffect :: Spell -> Maybe (Effect, Natural)
 spellEffect = \case
-  Shield -> Just (S, 6)
-  Poison -> Just (P, 6)
-  Charge -> Just (C, 5)
+  Shield -> Just (Shd, 6)
+  Poison -> Just (Psn, 6)
+  Charge -> Just (Chg, 5)
   _ -> Nothing
 
 effectDamage :: Effect -> Natural
 effectDamage = \case
-  P -> 3
+  Psn -> 3
   _ -> 0
 
 effectStatus :: Effect -> Player -> Player
 effectStatus = \case
-  S -> (def .~ 7)
-  C -> (mana +~ 101)
+  Shd -> (def .~ 7)
+  Chg -> (mana +~ 101)
   _ -> id
 
 effectuate :: Map Effect Natural -> Map Effect Natural
@@ -93,7 +93,7 @@ fight diff Yours effects0 you0 me0 spell =
   let active = keys effects0
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
       effects = effectuate effects0
-      me1 = foldl' (&) me0 $ bool ((def .~ 0) :) id (S `elem` active) buffs
+      me1 = foldl' (&) me0 $ bool ((def .~ 0) :) id (Shd `elem` active) buffs
    in case hit (sum debuffs) you0 of
         Nothing -> pure []
         Just you -> case hit (you ^. dmg) me1 of
@@ -104,7 +104,7 @@ fight Part1 Mine effects0 you0 me0 spell =
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
       effects = effectuate effects0
       hp = heal spell
-      me1 = foldl' (&) me0 $ bool ((def .~ 0) :) id (S `elem` active) buffs
+      me1 = foldl' (&) me0 $ bool ((def .~ 0) :) id (Shd `elem` active) buffs
       mp = cost spell
    in case hit (sum debuffs) you0 of
         Nothing -> pure []
@@ -130,7 +130,7 @@ fight Part2 Mine effects0 you0 me0 spell =
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
       effects = effectuate effects0
       hp = heal spell
-      me1 = foldl' (&) me0 $ bool ((def .~ 0) :) id (S `elem` active) buffs
+      me1 = foldl' (&) me0 $ bool ((def .~ 0) :) id (Shd `elem` active) buffs
       mp = cost spell
    in case hit 1 me1 of
         Nothing -> empty

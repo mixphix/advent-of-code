@@ -23,11 +23,15 @@ import Data.Either.Toolbox as Advent hiding ((+++), (|||))
 import Data.Foldable.Toolbox as Advent hiding (elem, genericLength, notElem, product, sum, toList)
 import Data.Function.Toolbox as Advent hiding (applyN, (.:))
 import Data.Function.Toolbox qualified (applyN)
+import Data.Geometry.Point as Advent
+import Data.Geometry.Vector (Vector)
+import Data.Geometry.Vector as Advent hiding (Vector, head, last, replicate)
 import Data.List.NonEmpty.Toolbox as Advent ((<|), (<||), (|>), (||>))
+import Data.Map.Monoidal.Strict as Advent ((!))
+import Data.Map.Monoidal.Strict qualified as Mop (Map)
 import Data.Traversable as Advent
 import Data.Vector as Advent (Vector)
 import GHC.Exts as Advent (IsList (fromList))
-import Linear as Advent hiding (E, transpose)
 import Relude.Extra.Enum as Advent
 import Relude.Extra.Group as Advent
 import Relude.Extra.Map as Advent
@@ -38,3 +42,7 @@ import Text.Parsec.Text as Advent (Parser)
 
 applyN :: Int -> (a -> a) -> a -> a
 applyN = Data.Function.Toolbox.applyN @Int
+
+type Mop k a = Mop.Map k a
+
+type V a = Data.Geometry.Vector.Vector a

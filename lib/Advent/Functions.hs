@@ -13,7 +13,7 @@ import Data.Set qualified as Set
 import Data.Time.Clock (diffUTCTime)
 import Data.Time.Clock.System (getSystemTime, systemToUTCTime)
 import GHC.Exts (IsList (..))
-import Linear (V2 (..))
+import Data.Geometry.Point
 import Relude.Extra.Map (DynamicMap (insert), StaticMap (member), (!?))
 
 enum :: (Enum a, Enum b) => Iso' a b
@@ -80,20 +80,20 @@ uninterleave (x : y : zs) =
    in (x : xs, y : ys)
 uninterleave xs = (xs, [])
 
-gridToMap :: [[a]] -> Map (V2 Natural) a
+gridToMap :: [[a]] -> Map (Point 2 Natural) a
 gridToMap = go 0 0 Map.empty
   where
     go _ _ !m [] = m
     go r _ !m ([] : xss) = go (succ r) 0 m xss
-    go r c !m ((x : xs) : xss) = go r (succ c) (insert (V2 c r) x m) (xs : xss)
+    go r c !m ((x : xs) : xss) = go r (succ c) (insert (Point2 c r) x m) (xs : xss)
 
-mapToGrid :: Map (V2 Natural) a -> [[a]]
+mapToGrid :: Map (Point 2 Natural) a -> [[a]]
 mapToGrid m =
-  let (V2 c r, _) = Map.findMax m
-   in [catMaybes [m !? V2 col row | col <- [0 .. c]] | row <- [0 .. r]]
+  let (Point2 c r, _) = Map.findMax m
+   in [catMaybes [m !? Point2 col row | col <- [0 .. c]] | row <- [0 .. r]]
 
 -- | (0, 0) is the top-left corner
-grid :: Iso' [[a]] (Map (V2 Natural) a)
+grid :: Iso' [[a]] (Map (Point 2 Natural) a)
 grid = iso gridToMap mapToGrid
 
 firstDuplicate :: forall a. (Ord a) => [a] -> Maybe a

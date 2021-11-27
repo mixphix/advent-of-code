@@ -2,7 +2,7 @@ module Day15 where
 
 import Advent
 
-type Ingredient = (Integer, V4 Integer)
+type Ingredient = (Integer, V 4 Integer)
 
 ingredient :: Parser (String, Ingredient)
 ingredient = do
@@ -12,7 +12,7 @@ ingredient = do
   flavor <- string ", flavor " *> number
   texture <- string ", texture " *> number
   calories <- string ", calories " *> number
-  pure (name, (calories, V4 capacity durability flavor texture))
+  pure (name, (calories, Vector4 capacity durability flavor texture))
 
 teaspoons :: [[Integer]]
 teaspoons = do
@@ -28,7 +28,7 @@ in15 = mapMaybe (snd <<$>> parsedWith ingredient) $ lines (input 2015 15)
 cookie :: [Integer] -> (Integer, Integer)
 cookie tsps =
   let (cals, ingrs) = unzip $ zipWith (\t (c, i) -> (t * c, t *^ i)) tsps $ take (length tsps) in15
-   in (sum cals, productOn (max 0) $ sum ingrs)
+   in (sum cals, productOn (max 0) $ sumV ingrs)
 
 part1 :: Integer
 part1 = maximumOf (snd . cookie) teaspoons ?: 0

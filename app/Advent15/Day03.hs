@@ -1,12 +1,11 @@
 module Day03 where
 
 import Advent
-import Data.Map.Monoidal.Strict qualified as Mop
 
 in03 :: [Cardinal]
 in03 = parsedWith (many cardinalP) (input 2015 3) ?: []
 
-type Visits = Mop.Map (V2 Integer) (Sum Int)
+type Visits = Mop (Point 2 Integer) (Sum Int)
 
 move :: (Ant, Visits) -> Cardinal -> (Ant, Visits)
 move (a, m) c = (a', insert (antPosition a') (Sum 1) m)
@@ -14,7 +13,7 @@ move (a, m) c = (a', insert (antPosition a') (Sum 1) m)
     a' = shimmy 1 c a
 
 start :: Visits
-start = one (V2 0 0, Sum 1)
+start = one (Point2 0 0, Sum 1)
 
 deliver :: [Cardinal] -> Visits -> Visits
 deliver cs m = snd $ foldl' move (antCentre North, m) cs

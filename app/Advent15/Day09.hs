@@ -2,11 +2,10 @@ module Day09 where
 
 import Advent
 import Data.List.NonEmpty.Toolbox (groupWith, maximumOn1)
-import Data.Map.Monoidal.Strict ((!))
 import Data.Map.Monoidal.Strict qualified as Mop
 import Data.Set qualified as Set
 
-type Routes = Mop.Map String (Mop.Map String (Sum Natural))
+type Routes = Mop String (Mop String (Sum Natural))
 
 route :: Parser [(String, (String, Sum Natural))]
 route = do

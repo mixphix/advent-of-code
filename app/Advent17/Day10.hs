@@ -4,14 +4,14 @@ import Advent hiding (Vector)
 import Data.List (elemIndex)
 import Data.List.Toolbox (chunksOf)
 import Data.Text qualified as T
-import Data.Vector.Unboxed (Vector, (!))
+import Data.Vector.Unboxed (Vector)
 import Data.Vector.Unboxed qualified as V
 
 twist :: Int -> Int -> Vector Word8 -> Vector Word8
 twist pos len v = V.fromList $ fromIntegral <$> twisted
   where
     list = reverse $ [pos .. pos + len - 1] <&> (`mod` V.length v)
-    twisted = [0 .. V.length v - 1] <&> \n -> (v !) $ elemIndex n list >>= (list !!?) . (pred (length list) -) ?: n
+    twisted = [0 .. V.length v - 1] <&> \n -> (v V.!) $ elemIndex n list >>= (list !!?) . (pred (length list) -) ?: n
 
 prepASCII :: Text -> [Word8]
 prepASCII = (<> [17, 31, 73, 47, 23]) . map (fromIntegral . ord) . toString . T.strip
@@ -28,7 +28,7 @@ runTwists pos skip (len : lens) v = runTwists ((pos + fromIntegral len + skip) `
 part1 :: Int
 part1 =
   let v = runTwists 0 0 (in10 Part1) (V.fromList [0 .. 255])
-   in fromIntegral (v ! 0) * fromIntegral (v ! 1)
+   in fromIntegral (v V.! 0) * fromIntegral (v V.! 1)
 
 sparseHash :: [Word8] -> Vector Word8
 sparseHash l = runTwists 0 0 (fold $ replicate 64 l) $ relist [0 .. 255]

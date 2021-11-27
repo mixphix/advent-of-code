@@ -5,35 +5,38 @@
 module Advent.Coordinates where
 
 import Advent.D4 (D4 (..))
+import Advent.Suspension (Suspension (..))
 import Control.Lens (Iso', Lens', abbreviatedFields, from, iso, makeLensesWith)
 import Data.Complex (Complex (..))
-import Data.Semiring (Ring (..), Semiring (..), fromIntegral, minus)
+import Data.Geometry.Point (Point (Point2))
+import Data.Ratio ((%))
+import Data.Semiring (Ring (..), Semiring (..), minus)
+import Data.Semiring qualified as R
 import GHC.Show qualified (show)
-import Linear (V2 (..))
 import Prelude hiding (negate, one)
 
 int :: (Integral n, Ring r) => n -> r
-int = Data.Semiring.fromIntegral
+int = R.fromIntegral
 
-complex :: Iso' (V2 a) (Complex a)
-complex = iso (\(V2 x y) -> x :+ y) (\(x :+ y) -> V2 x y)
+complex :: Iso' (Point 2 a) (Complex a)
+complex = iso (\(Point2 x y) -> x :+ y) (\(x :+ y) -> Point2 x y)
 
-pair :: Iso' (V2 a) (a, a)
-pair = iso (\(V2 x y) -> (x, y)) (uncurry V2)
+pair :: Iso' (Point 2 a) (a, a)
+pair = iso (\(Point2 x y) -> (x, y)) (uncurry Point2)
 
 cpair :: Iso' (Complex a) (a, a)
 cpair = from complex . pair
 
-dihedralTransform :: (Ring a) => D4 -> V2 a -> V2 a
+dihedralTransform :: (Ring a) => D4 -> Point 2 a -> Point 2 a
 dihedralTransform = \case
   E -> id
-  R -> \(V2 x y) -> V2 (negate y) x
+  R -> \(Point2 x y) -> Point2 (negate y) x
   R2 -> fmap negate
-  R3 -> \(V2 x y) -> V2 y (negate x)
-  T -> \(V2 x y) -> V2 (negate x) y
-  TR -> \(V2 x y) -> V2 (negate y) (negate x)
-  TR2 -> \(V2 x y) -> V2 x (negate y)
-  TR3 -> \(V2 x y) -> V2 y x
+  R3 -> \(Point2 x y) -> Point2 y (negate x)
+  T -> \(Point2 x y) -> Point2 (negate x) y
+  TR -> \(Point2 x y) -> Point2 (negate y) (negate x)
+  TR2 -> \(Point2 x y) -> Point2 x (negate y)
+  TR3 -> \(Point2 x y) -> Point2 y x
 
 dihedralTransformC :: (Ring a) => D4 -> Complex a -> Complex a
 dihedralTransformC = \case
@@ -68,16 +71,16 @@ data Cardinal
   | Southeast
   deriving (Eq, Ord, Enum, Bounded, Show)
 
-cardinal :: (Ring a) => Integer -> Cardinal -> V2 a -> V2 a
-cardinal n c (V2 x y) = case c of
-  East -> V2 (x `plus` int n) y
-  Northeast -> V2 (x `plus` int n) (y `plus` int n)
-  North -> V2 x (y `plus` int n)
-  Northwest -> V2 (x `minus` int n) (y `plus` int n)
-  West -> V2 (x `minus` int n) y
-  Southwest -> V2 (x `minus` int n) (y `minus` int n)
-  South -> V2 x (y `minus` int n)
-  Southeast -> V2 (x `plus` int n) (y `minus` int n)
+cardinal :: (Ring a) => Integer -> Cardinal -> Point 2 a -> Point 2 a
+cardinal n c (Point2 x y) = case c of
+  East -> Point2 (x `plus` int n) y
+  Northeast -> Point2 (x `plus` int n) (y `plus` int n)
+  North -> Point2 x (y `plus` int n)
+  Northwest -> Point2 (x `minus` int n) (y `plus` int n)
+  West -> Point2 (x `minus` int n) y
+  Southwest -> Point2 (x `minus` int n) (y `minus` int n)
+  South -> Point2 x (y `minus` int n)
+  Southeast -> Point2 (x `plus` int n) (y `minus` int n)
 
 cardinalC :: (Ring a) => Integer -> Cardinal -> Complex a -> Complex a
 cardinalC n c (x :+ y) = case c of
@@ -90,15 +93,15 @@ cardinalC n c (x :+ y) = case c of
   South -> x :+ (y `minus` int n)
   Southeast -> (x `plus` int n) :+ (y `minus` int n)
 
-moore :: (Ring a) => V2 a -> [V2 a]
+moore :: (Ring a) => Point 2 a -> [Point 2 a]
 moore = (cardinal 1 <$> universe ??)
 
-vonNeumann :: (Ring a) => V2 a -> [V2 a]
+vonNeumann :: (Ring a) => Point 2 a -> [Point 2 a]
 vonNeumann = (cardinal 1 <$> [North, East, South, West] ??)
 
 data Ant = Ant
   { antDirection :: Cardinal,
-    antPosition :: V2 Integer
+    antPosition :: Point 2 Integer
   }
   deriving (Eq)
 
@@ -156,4 +159,10 @@ positionC :: Lens' Ant (Complex Integer)
 positionC = position . complex
 
 antCentre :: Cardinal -> Ant
-antCentre c = Ant c (V2 0 0)
+antCentre c = Ant c (Point2 0 0)
+
+slope :: Point 2 Integer -> Point 2 Integer -> Suspension Rational
+slope (Point2 x0 y0) (Point2 x1 y1)
+  | x0 == x1 && y1 > y0 = NorthPole
+  | x0 == x1 = SouthPole
+  | otherwise = Meridian $ (y1 - y0) % (x1 - x0)

@@ -2,10 +2,8 @@ module Day13 where
 
 import Advent
 import Data.List.NonEmpty.Toolbox (groupWith, maximumOf1)
-import Data.Map.Monoidal.Strict ((!))
-import Data.Map.Monoidal.Strict qualified as Mop
 
-type Table = Mop.Map String (Mop.Map String (Sum Integer))
+type Table = Mop String (Mop String (Sum Integer))
 
 table :: Parser (String, (String, Sum Integer))
 table = do

@@ -18,8 +18,8 @@ molecules (m1 : m2 : ms)
 molecules [x] = one (one x)
 molecules "" = Empty
 
-in19 :: (Mop.Map Text [Text], Seq Text)
-rules :: Mop.Map Text [Text]
+in19 :: (Mop Text [Text], Seq Text)
+rules :: Mop Text [Text]
 medicine :: Seq Text
 in19@(rules, medicine) =
   let text = lines $ input 2015 19
@@ -27,7 +27,7 @@ in19@(rules, medicine) =
       med = withNonEmpty "" (toString . last) text
    in (rrs, molecules med)
 
-inverseRules :: Mop.Map Text Text
+inverseRules :: Mop Text Text
 inverseRules = Mop.foldMapWithKey (\k vs -> fromList $ (,k) <$> vs) rules
 
 part1 :: Natural

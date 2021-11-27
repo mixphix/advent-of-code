@@ -4,10 +4,10 @@ import Advent
 import Control.Lens (from)
 import Data.Map.Strict qualified as Map
 
-type Screen = Map (V2 Natural) Bool
+type Screen = Map (Point 2 Natural) Bool
 
 blank :: Screen
-blank = foldr (`insert` False) Empty $ V2 <$> [0 .. 49] <*> [0 .. 5]
+blank = foldr (`insert` False) Empty $ Point2 <$> [0 .. 49] <*> [0 .. 5]
 
 data Command
   = Rect Natural Natural
@@ -35,16 +35,16 @@ command = choice [rect, row, col]
 
 runCommand :: Command -> Screen -> Screen
 runCommand = \case
-  Rect w h -> \m -> foldr (`insert` True) m (V2 <$> [0 .. pred w] <*> [0 .. pred h])
+  Rect w h -> \m -> foldr (`insert` True) m (Point2 <$> [0 .. pred w] <*> [0 .. pred h])
   RotateRow r k -> \m ->
-    let row = relist $ (`V2` r) <$> [0 .. 49]
+    let row = relist $ (`Point2` r) <$> [0 .. 49]
         curs = Map.restrictKeys m row
-        shift (V2 x y) = V2 ((50 + x - k) `mod` 50) y
+        shift (Point2 x y) = Point2 ((50 + x - k) `mod` 50) y
      in foldr (\v -> alter (const $ curs !? shift v) v) m row
   RotateCol c k -> \m ->
-    let col = relist $ V2 c <$> [0 .. 5]
+    let col = relist $ Point2 c <$> [0 .. 5]
         curs = Map.restrictKeys m col
-        shift (V2 x y) = V2 x ((6 + y - k) `mod` 6)
+        shift (Point2 x y) = Point2 x ((6 + y - k) `mod` 6)
      in foldr (\v -> alter (const $ curs !? shift v) v) m col
 
 in08 :: [Command]

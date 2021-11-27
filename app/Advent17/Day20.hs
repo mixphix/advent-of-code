@@ -3,7 +3,7 @@ module Day20 where
 import Advent
 import Data.List.Toolbox (groupSort)
 
-particle :: Parser (V3 (V3 Integer))
+particle :: Parser (V 3 (V 3 Integer))
 particle = do
   px <- string "p=<" *> (many space *> number) <* string ","
   py <- number <* string ","
@@ -14,22 +14,22 @@ particle = do
   ax <- string "a=<" *> (many space *> number) <* string ","
   ay <- (many space *> number) <* string ","
   az <- (many space *> number) <* string ">"
-  pure $ V3 (V3 px vx ax) (V3 py vy ay) (V3 pz vz az)
+  pure $ Vector3 (Vector3 px vx ax) (Vector3 py vy ay) (Vector3 pz vz az)
 
-in20 :: [V3 (V3 Integer)]
+in20 :: [V 3 (V 3 Integer)]
 in20 = mapMaybe (parsedWith particle) $ lines (input 2017 20)
 
-reposition :: Integer -> V3 (V3 Integer) -> V3 (V3 Integer)
-reposition n (V3 (V3 px vx ax) (V3 py vy ay) (V3 pz vz az)) =
-  V3
-    (V3 (px + (n * vx) + (n * n * ax)) (vx + (n * ax)) ax)
-    (V3 (py + (n * vy) + (n * n * ay)) (vy + (n * ay)) ay)
-    (V3 (pz + (n * vz) + (n * n * az)) (vz + (n * az)) az)
+reposition :: Integer -> V 3 (V 3 Integer) -> V 3 (V 3 Integer)
+reposition n (Vector3 (Vector3 px vx ax) (Vector3 py vy ay) (Vector3 pz vz az)) =
+  Vector3
+    (Vector3 (px + (n * vx) + (n * n * ax)) (vx + (n * ax)) ax)
+    (Vector3 (py + (n * vy) + (n * n * ay)) (vy + (n * ay)) ay)
+    (Vector3 (pz + (n * vz) + (n * n * az)) (vz + (n * az)) az)
 
 part1 :: Natural
 part1 = maybe 0 fst . minimumOn (sumOn abs . fmap (^. _x) . reposition 1000000 . snd) $ zip [0 ..] in20
 
-simulate :: Integer -> [V3 (V3 Integer)] -> [V3 (V3 Integer)]
+simulate :: Integer -> [V 3 (V 3 Integer)] -> [V 3 (V 3 Integer)]
 simulate 0 vs = vs
 simulate n (map (reposition 1) . simulate (n - 1) -> vs) =
   let ps = foldMap (relist @_ @Set) . filter ((> 1) . length) . groupSort $ map (fmap (view _x)) vs

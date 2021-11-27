@@ -9,36 +9,36 @@ import Data.Functor.Rep (Representable (..), distributeRep)
 import Data.List.Toolbox (iterate')
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
-import Data.Vector qualified as V
+import Data.Vector qualified as Vec
 
 light :: Parser Bool
 light = (True <$ char '#') <|> (False <$ char '.')
 
-newtype V a = V {unV :: Vector a}
+newtype Vec a = Vec {unV :: Vector a}
   deriving (Eq, Show, Functor, Foldable)
 
-instance Distributive V where
+instance Distributive Vec where
   distribute = distributeRep
 
-instance Representable V where
-  type Rep V = Word8
-  index (V v) i = v V.! fromIntegral i
-  tabulate d = V $ V.generate 100 (d . fromIntegral)
+instance Representable Vec where
+  type Rep Vec = Word8
+  index (Vec v) i = v Vec.! fromIntegral i
+  tabulate d = Vec $ Vec.generate 100 (d . fromIntegral)
 
-type Grid a = Store (Compose V V) a
+type Grid a = Store (Compose Vec Vec) a
 
 toGrid :: Set (Word8, Word8) -> Grid Bool
 toGrid s = store (`member` s) (0, 0)
 
 fromGrid :: Grid Bool -> Set (Word8, Word8)
-fromGrid (StoreT (Identity (Compose (V v))) _) = relist @[] $ do
-  (a, V v') <- zip [0 ..] (relist v)
+fromGrid (StoreT (Identity (Compose (Vec v))) _) = relist @[] $ do
+  (a, Vec v') <- zip [0 ..] (relist v)
   (b, el) <- zip [0 ..] (relist v')
   el ? (a, b)
 
 in18 :: Set (Word8, Word8)
 in18 =
-  Set.map (\(V2 x y) -> (fromIntegral x, fromIntegral y))
+  Set.map (\(Point2 x y) -> (fromIntegral x, fromIntegral y))
     . Map.keysSet
     . Map.filter id
     . view grid
