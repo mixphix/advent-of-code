@@ -6,7 +6,7 @@ in03 :: Natural
 in03 = parsedWith number (input 2017 3) ?: 0
 
 part1 :: Integer
-part1 = sumOn abs $ in03 ^. ulam
+part1 = manhattan origin $ in03 ^. ulam
 
 part2 :: Natural
 part2 = f 2 $ one (view ulam 1, 1)

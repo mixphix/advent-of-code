@@ -9,7 +9,7 @@ in02 :: [[Cardinal]]
 in02 = mapMaybe (parsedWith $ many1 directions) $ lines (input 2016 2)
 
 gridFor :: Part -> [Point 2 Integer]
-gridFor Part1 = Point2 0 0 : moore (Point2 0 0)
+gridFor Part1 = surrounding (Point2 0 0)
 gridFor Part2 = Point2 0 0 : Point2 2 0 : Point2 (-2) 0 : Point2 0 2 : Point2 0 (-2) : moore (Point2 0 0)
 
 gridValue :: Part -> Point 2 Integer -> Char

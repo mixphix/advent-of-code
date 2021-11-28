@@ -5,7 +5,7 @@ import Advent
 type Lights = Map (Point 2 Natural) Integer
 
 lights :: Lights
-lights = fromList $ (,0) <$> join (liftM2 Point2) [0 .. 999]
+lights = relist $ (,0) <$> join (liftM2 Point2) [0 .. 999]
 
 zone :: (Maybe Integer -> Integer) -> Point 2 Natural -> Point 2 Natural -> Lights -> Lights
 zone f (Point2 l b) (Point2 r t) m = foldr (alter $ Just . f) m $ liftM2 Point2 [l .. r] [b .. t]
