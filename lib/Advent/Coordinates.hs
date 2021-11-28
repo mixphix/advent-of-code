@@ -8,7 +8,8 @@ import Advent.D4 (D4 (..))
 import Advent.Suspension (Suspension (..))
 import Control.Lens (Iso', Lens', abbreviatedFields, from, iso, makeLensesWith)
 import Data.Complex (Complex (..))
-import Data.Geometry.Point (Point (Point2))
+import Data.Foldable.Toolbox (sumOn)
+import Data.Geometry (Additive ((^-^)), Arity, Point (..))
 import Data.Ratio ((%))
 import Data.Semiring (Ring (..), Semiring (..), minus)
 import Data.Semiring qualified as R
@@ -26,6 +27,9 @@ pair = iso (\(Point2 x y) -> (x, y)) (uncurry Point2)
 
 cpair :: Iso' (Complex a) (a, a)
 cpair = from complex . pair
+
+manhattan :: (Arity d, Num a) => Point d a -> Point d a -> a
+manhattan (Point v) (Point w) = sumOn abs (v ^-^ w)
 
 dihedralTransform :: (Ring a) => D4 -> Point 2 a -> Point 2 a
 dihedralTransform = \case
@@ -93,11 +97,14 @@ cardinalC n c (x :+ y) = case c of
   South -> x :+ (y `minus` int n)
   Southeast -> (x `plus` int n) :+ (y `minus` int n)
 
+vonNeumann :: (Ring a) => Point 2 a -> [Point 2 a]
+vonNeumann = (cardinal 1 <$> [North, East, South, West] ??)
+
 moore :: (Ring a) => Point 2 a -> [Point 2 a]
 moore = (cardinal 1 <$> universe ??)
 
-vonNeumann :: (Ring a) => Point 2 a -> [Point 2 a]
-vonNeumann = (cardinal 1 <$> [North, East, South, West] ??)
+surrounding :: (Ring a) => Point 2 a -> [Point 2 a]
+surrounding = (:) <*> moore
 
 data Ant = Ant
   { antDirection :: Cardinal,
