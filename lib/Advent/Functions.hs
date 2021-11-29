@@ -1,8 +1,9 @@
 module Advent.Functions where
 
-import Control.Lens (Iso', iso, (^.), pattern Empty)
+import Control.Lens (AsEmpty, Iso', iso, (^.), pattern Empty)
 import Data.Char (toLower)
 import Data.Containers.NonEmpty (withNonEmpty, pattern IsEmpty, pattern IsNonEmpty)
+import Data.Geometry.Point
 import Data.List.NonEmpty ((<|))
 import Data.List.NonEmpty qualified as NE
 import Data.List.Toolbox (elemIndex)
@@ -13,8 +14,7 @@ import Data.Set qualified as Set
 import Data.Time.Clock (diffUTCTime)
 import Data.Time.Clock.System (getSystemTime, systemToUTCTime)
 import GHC.Exts (IsList (..))
-import Data.Geometry.Point
-import Relude.Extra.Map (DynamicMap (insert), StaticMap (member), (!?))
+import Relude.Extra.Map
 
 enum :: (Enum a, Enum b) => Iso' a b
 enum = iso (toEnum . fromEnum) (toEnum . fromEnum)
@@ -174,3 +174,10 @@ timed x = do
 
 alphabetPos :: Char -> Natural
 alphabetPos c = maybe (error "not a letter") fromIntegral $ toLower c `elemIndex` ['a' .. 'z']
+
+popKeys ::
+  (One m, OneItem m ~ (Key m, Val m), AsEmpty m, Monoid m, DynamicMap m, Foldable t) =>
+  t (Key m) ->
+  m ->
+  (m, m)
+popKeys ks m0 = foldl' (\(acc, m) x -> (acc <> maybe mempty (one . (x,)) (m !? x), delete x m)) (Empty, m0) ks

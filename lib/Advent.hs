@@ -6,18 +6,18 @@ import Advent.Functions as Advent
 import Advent.Infinite as Advent
 import Advent.Input as Advent
 import Advent.Numbers as Advent
-import Advent.Orphans as Advent ()
+import Advent.Orphans as Advent
 import Advent.Parsers as Advent
 import Advent.Polynomials as Advent
 import AdventAPI as Advent (Part (..))
 import Control.Applicative as Advent
 import Control.Arrow as Advent hiding (ArrowLoop (..), first, second)
-import Control.Lens as Advent (at, ix, none, view, (%~), (.~), (<>~), (?~), (^.), _1, _2, _3, _4, pattern Empty)
+import Control.Lens as Advent (at, ix, none, view, (%~), (.~), (<>~), (?~), (^.), _1, _2, _3, _4)
 import Control.Monad as Advent
 import Data.Char as Advent
 import Data.Complex as Advent hiding (conjugate)
 import Data.Containers.ListUtils as Advent
-import Data.Containers.NonEmpty as Advent hiding (empty, nonEmpty)
+import Data.Containers.NonEmpty as Advent hiding (empty, nonEmpty, pattern IsEmpty, pattern IsNonEmpty)
 import Data.Data as Advent
 import Data.Either.Toolbox as Advent hiding ((+++), (|||))
 import Data.Foldable.Toolbox as Advent hiding (elem, genericLength, notElem, product, sum, toList)
@@ -43,6 +43,6 @@ import Text.Parsec.Text as Advent (Parser)
 applyN :: Int -> (a -> a) -> a -> a
 applyN = Data.Function.Toolbox.applyN @Int
 
-type Mop k a = Mop.Map k a
+type Mop = Mop.Map
 
-type V a = Data.Geometry.Vector.Vector a
+type V = Data.Geometry.Vector.Vector
