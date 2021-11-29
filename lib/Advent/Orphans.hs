@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Advent.Orphans
@@ -11,7 +12,7 @@ module Advent.Orphans
 where
 
 import Advent.Functions (relist)
-import Control.Lens.Empty (AsEmpty)
+import Control.Lens hiding (pattern Empty)
 import Data.Containers.NonEmpty (HasNonEmpty (..), pattern IsEmpty, pattern IsNonEmpty)
 import Data.IntMap.Monoidal.Strict qualified as IntMop
 import Data.IntMap.NonEmpty (NEIntMap)
@@ -43,6 +44,7 @@ type NEVector = NonEmptyVector
 
 type CVector = CircularVector
 
+-- Folds and listlikes
 instance One (NEVector a) where
   type OneItem _ = a
   one = pure
@@ -115,6 +117,19 @@ instance (Ord k) => IsList (NEMap k a) where
 instance Foldable1 (NEMap k) where
   foldMap1 = Data.Semigroup.Foldable.foldMap1
 
+instance (Ord k) => StaticMap (NEMap k v) where
+  type Key _ = k
+  type Val _ = v
+  size = NEMap.size
+  lookup = NEMap.lookup
+  member = NEMap.member
+
+instance (Ord k) => DynamicMap (NEMap k v) where
+  insert = NEMap.insert
+  insertWith = NEMap.insertWith
+  delete k = NEMap.unsafeFromMap . NEMap.delete k
+  alter f k = NEMap.unsafeFromMap . NEMap.alter f k
+
 instance One (NEIntMap a) where
   type OneItem _ = (Int, a)
   one = fromList . one
@@ -134,7 +149,7 @@ instance StaticMap (NEIntMap v) where
   lookup = NEIntMap.lookup
   member = NEIntMap.member
 
-instance (Semigroup v) => DynamicMap (NEIntMap v) where
+instance DynamicMap (NEIntMap v) where
   insert = NEIntMap.insert
   insertWith = NEIntMap.insertWith
   delete k = NEIntMap.unsafeFromMap . NEIntMap.delete k
@@ -284,3 +299,177 @@ deriving newtype instance (RealFrac a) => RealFrac (Min a)
 deriving newtype instance (RealFloat a) => RealFloat (Min a)
 
 deriving newtype instance (Integral a) => Integral (Min a)
+
+-- Lenses
+type instance Index (NEVector a) = Int
+
+type instance IxValue (NEVector a) = a
+
+instance Ixed (NEVector a) where
+  ix i f v
+    | 0 <= i && i < length v = f (v NEVector.! i) <&> \a -> v NEVector.// [(i, a)]
+    | otherwise = pure v
+  {-# INLINE ix #-}
+
+instance Each (NEVector a) (NEVector b) a b
+
+instance FunctorWithIndex Int NEVector
+
+instance FoldableWithIndex Int NEVector
+
+instance TraversableWithIndex Int NEVector
+
+type instance Index (CVector a) = Int
+
+type instance IxValue (CVector a) = a
+
+instance Ixed (CVector a) where
+  ix i f cv@(CircularVector v k)
+    | 0 <= i && i < length v = f (v NEVector.! i) <&> \a -> CircularVector (v NEVector.// [(i, a)]) k
+    | otherwise = pure cv
+  {-# INLINE ix #-}
+
+instance FunctorWithIndex Int CVector
+
+instance FoldableWithIndex Int CVector
+
+instance TraversableWithIndex Int CVector
+
+type instance Index (NESeq a) = Int
+
+type instance IxValue (NESeq a) = a
+
+instance Ixed (NESeq a) where
+  ix i f s
+    | 0 <= i && i < length s = f (NESeq.index s i) <&> \a -> NESeq.adjust' (const a) i s
+    | otherwise = pure s
+  {-# INLINE ix #-}
+
+instance Each (NESeq a) (NESeq b) a b
+
+instance FunctorWithIndex Int NESeq
+
+instance FoldableWithIndex Int NESeq
+
+instance TraversableWithIndex Int NESeq
+
+type instance Index (NESet a) = a
+
+type instance IxValue (NESet a) = ()
+
+instance (Ord a) => Ixed (NESet a) where
+  ix k f m =
+    if NESet.member k m
+      then f () $> m
+      else pure m
+  {-# INLINE ix #-}
+
+type instance Index NEIntSet = Int
+
+type instance IxValue NEIntSet = ()
+
+instance Ixed NEIntSet where
+  ix k f m =
+    if NEIntSet.member k m
+      then f () $> m
+      else pure m
+  {-# INLINE ix #-}
+
+type instance Index (NEMap k v) = k
+
+type instance IxValue (NEMap k v) = v
+
+instance (Ord k) => Ixed (NEMap k v) where
+  ix k f m = case lookup k m of
+    Just v -> f v <&> \v' -> insert k v' m
+    Nothing -> pure m
+  {-# INLINE ix #-}
+
+instance FunctorWithIndex k (NEMap k)
+
+instance FoldableWithIndex k (NEMap k)
+
+instance TraversableWithIndex k (NEMap k) where
+  itraverse = NEMap.traverseWithKey
+
+type instance Index (NEIntMap v) = Int
+
+type instance IxValue (NEIntMap v) = v
+
+instance Ixed (NEIntMap v) where
+  ix k f m = case lookup k m of
+    Just v -> f v <&> \v' -> insert k v' m
+    Nothing -> pure m
+  {-# INLINE ix #-}
+
+instance Each (NEIntMap a) (NEIntMap b) a b
+
+instance FunctorWithIndex Int NEIntMap
+
+instance FoldableWithIndex Int NEIntMap
+
+instance TraversableWithIndex Int NEIntMap
+
+type instance Index (Mop.Map k v) = k
+
+type instance IxValue (Mop.Map k v) = v
+
+instance (Ord k, Semigroup v) => Ixed (Mop.Map k v) where
+  ix k f m = case lookup k m of
+    Just v -> f v <&> \v' -> insert k v' m
+    Nothing -> pure m
+  {-# INLINE ix #-}
+
+instance (Ord k, Semigroup v) => At (Mop.Map k v) where
+  at k f = Mop.alterF f k
+  {-# INLINE at #-}
+
+instance FunctorWithIndex k (Mop.Map k)
+
+instance FoldableWithIndex k (Mop.Map k)
+
+instance TraversableWithIndex k (Mop.Map k) where
+  itraverse = Mop.traverseWithKey
+
+type instance Index (IntMop.IntMap v) = Int
+
+type instance IxValue (IntMop.IntMap v) = v
+
+instance (Semigroup v) => Ixed (IntMop.IntMap v) where
+  ix k f m = case lookup k m of
+    Just v -> f v <&> \v' -> insert k v' m
+    Nothing -> pure m
+  {-# INLINE ix #-}
+
+instance (Semigroup v) => At (IntMop.IntMap v) where
+  at k f = IntMop.alterF f k
+  {-# INLINE at #-}
+
+instance Each (IntMop.IntMap a) (IntMop.IntMap b) a b
+
+instance FunctorWithIndex Int IntMop.IntMap
+
+instance FoldableWithIndex Int IntMop.IntMap
+
+instance TraversableWithIndex Int IntMop.IntMap
+
+type instance Index (DeepMap (k ': ks) v) = k
+
+type instance IxValue (DeepMap (k ': ks) v) = DeepMap ks v
+
+instance (Ord k, Semigroup (DeepMap ks v)) => Ixed (DeepMap (k ': ks) v) where
+  ix k f m = case lookup k m of
+    Just v -> f v <&> \v' -> insert k v' m
+    Nothing -> pure m
+  {-# INLINE ix #-}
+
+instance (Ord k, Semigroup (DeepMap ks v)) => At (DeepMap (k ': ks) v) where
+  at k f = DM.alterF f k
+  {-# INLINE at #-}
+
+instance TraversableWithIndex j (DeepMap ks) => FunctorWithIndex (k, j) (DeepMap (k ': ks))
+
+instance TraversableWithIndex j (DeepMap ks) => FoldableWithIndex (k, j) (DeepMap (k ': ks))
+
+instance TraversableWithIndex j (DeepMap ks) => TraversableWithIndex (k, j) (DeepMap (k ': ks)) where
+  itraverse f = DM.traverseDeepWithKey (itraverse . curry f)
