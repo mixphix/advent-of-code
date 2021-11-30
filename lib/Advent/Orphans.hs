@@ -49,6 +49,10 @@ import GHC.Exts qualified
 import GHC.TypeNats (type (<=))
 import Relude.Extra (DynamicMap (..), Foldable1 (..), StaticMap (..))
 
+instance Rewrapped (Mop k a) (Mop k a)
+
+instance Rewrapped (IntMop a) (IntMop a)
+
 type NEVector = NonEmptyVector
 
 type CVector = CircularVector
@@ -103,17 +107,17 @@ instance Rewrapped (NEIntMop a) (NEIntMop a)
 
 instance Rewrapped (NEIntMop a) (NEIntMap a)
 
--- instance HasNonEmpty (Mop k a) where
---   type NE _ = NEMop k a
---   withNonEmpty x y (Mop.MonoidalMap m) = withNonEmpty x (y . NEMop) m
---   empty = Empty
---   fromNonEmpty = Mop.MonoidalMap . fromNonEmpty . getNEMap
+instance HasNonEmpty (Mop k a) where
+  type NE _ = NEMop k a
+  withNonEmpty x y (Mop.MonoidalMap m) = withNonEmpty x (y . NEMop) m
+  empty = Empty
+  fromNonEmpty = Wrapped . fromNonEmpty . Unwrapped
 
--- instance HasNonEmpty (IntMop a) where
---   type NE _ = NEIntMop a
---   withNonEmpty x y (IntMop.MonoidalIntMap m) = withNonEmpty x (y . NEIntMop) m
---   empty = Empty
---   fromNonEmpty = IntMop.MonoidalIntMap . fromNonEmpty . getNEIntMap
+instance HasNonEmpty (IntMop a) where
+  type NE _ = NEIntMop a
+  withNonEmpty x y (IntMop.MonoidalIntMap m) = withNonEmpty x (y . NEIntMop) m
+  empty = Empty
+  fromNonEmpty = Wrapped . fromNonEmpty . Unwrapped
 
 instance Traversable NEIntMop where
   traverse f (NEIntMop m) = NEIntMop <$> traverse f m
