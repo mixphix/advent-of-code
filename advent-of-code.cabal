@@ -147,6 +147,7 @@ common years
     mixins:
       base hiding (Prelude)
       , advent-of-code (Advent as Prelude)
+      , advent-of-code
       , toolbox
 
 executable advent15
