@@ -1,6 +1,5 @@
 module Day12 where
 
-import Advent
 import Control.Lens (transform)
 import Data.Aeson (Value)
 import Data.Aeson qualified as Aeson

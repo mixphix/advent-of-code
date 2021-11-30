@@ -1,21 +1,18 @@
 module Day06 where
 
-import Advent hiding (Vector)
-import Data.List.Toolbox (iterateWhileUnique)
-import Data.Vector.Unboxed (Vector)
 import Data.Vector.Unboxed qualified as V
 import Data.Vector.Unboxed.Mutable qualified as VM
 
-in06 :: Vector Int
+in06 :: V.Vector Int
 in06 = relist . mapMaybe (parsedWith number) $ words (input 2017 6)
 
-stepFrom :: Int -> Int -> Vector Int -> Vector Int
+stepFrom :: Int -> Int -> V.Vector Int -> V.Vector Int
 stepFrom _ 0 v = v
 stepFrom i q v
   | i == V.length v = stepFrom 0 q v
   | otherwise = stepFrom (succ i) (pred q) $ V.modify (\w -> VM.modify w succ i) v
 
-step :: Vector Int -> Vector Int
+step :: V.Vector Int -> V.Vector Int
 step v =
   let m = V.maximum v
       Just i = V.elemIndex m v

@@ -1,6 +1,5 @@
 module Day05 where
 
-import Advent
 import Control.Monad.Toolbox (loop)
 import Crypto.Hash (Digest, MD5, hash)
 import Data.Map.Monoidal.Strict qualified as Mop

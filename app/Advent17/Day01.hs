@@ -1,8 +1,5 @@
 module Day01 where
 
-import Advent
-import Data.List.Toolbox (allSame)
-
 in01 :: [Natural]
 in01 = mapMaybe (parsedWith number . one) . toString $ input 2017 1
 

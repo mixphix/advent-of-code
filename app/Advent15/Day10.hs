@@ -1,8 +1,5 @@
 module Day10 where
 
-import Advent
-import Data.List.NonEmpty (group1)
-
 in10 :: [Natural]
 in10 = relist . digits $ parsedWith number (input 2015 10) ?: 0
 

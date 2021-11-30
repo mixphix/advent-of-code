@@ -1,7 +1,5 @@
 module Day09 where
 
-import Advent
-import Data.List.NonEmpty.Toolbox (groupWith, maximumOn1)
 import Data.Map.Monoidal.Strict qualified as Mop
 import Data.Set qualified as Set
 
@@ -33,7 +31,7 @@ shortestRoute k0 = getSum $ go (Set.delete k0 places) (Sum 0) k0
       | null remaining = n
       | otherwise =
         let visited = Mop.restrictKeys (in09 ! k) remaining
-            Just (p, pn) = minimumOn snd $ Mop.assocs visited
+            Just (p, pn) = viaNonEmpty (minimumOn1 snd) $ Mop.assocs visited
          in go (Set.delete p remaining) (n <> pn) p
 
 longestRoute :: String -> Natural
@@ -43,11 +41,11 @@ longestRoute k0 = getSum $ go (Set.delete k0 places) (Sum 0) k0
       | null remaining = n
       | otherwise =
         let visited = Mop.restrictKeys (in09 ! k) remaining
-            (p, pn) = maximumOn1 snd . relist $ Mop.assocs visited
+            Just (p, pn) = viaNonEmpty (maximumOn1 snd) $ Mop.assocs visited
          in go (Set.delete p remaining) (n <> pn) p
 
 part1 :: Natural
-part1 = minimumOf shortestRoute places ?: 0
+part1 = withNonEmpty 0 (minimumOf1 shortestRoute) places
 
 part2 :: Natural
-part2 = maximumOf longestRoute places ?: 0
+part2 = withNonEmpty 0 (maximumOf1 longestRoute) places

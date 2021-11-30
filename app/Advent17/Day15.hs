@@ -1,8 +1,5 @@
 module Day15 where
 
-import Advent
-import Data.Bits ((.&.))
-import Data.List (iterate')
 import Data.Text qualified as T
 
 in15 :: (Word, Word)

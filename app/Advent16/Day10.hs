@@ -1,7 +1,5 @@
 module Day10 where
 
-import Advent
-
 data Bot
   = Bot Natural
   | Output Natural

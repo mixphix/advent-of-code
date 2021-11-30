@@ -1,8 +1,6 @@
 module Day04 where
 
-import Advent
 import Data.List.NonEmpty qualified as NE
-import Data.List.Toolbox (groupSort)
 import Data.Map.Monoidal.Strict qualified as Mop
 import Data.Maybe (fromJust)
 import Data.Time.Toolbox

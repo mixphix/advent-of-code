@@ -1,7 +1,5 @@
 module Day25 where
 
-import Advent
-
 uncantor :: Point 2 Natural -> Int
 uncantor (Point2 r c) =
   let n = sq (r + c - 2) + r + (3 * c) - 4

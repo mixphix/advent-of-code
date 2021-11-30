@@ -1,6 +1,5 @@
 module Day05 where
 
-import Advent
 import Data.List.Toolbox (iterateWhileUnique)
 import Data.Text qualified as T
 

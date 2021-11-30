@@ -1,8 +1,5 @@
 module Day21 where
 
-import Advent
-import Data.List.Toolbox (chunksOf)
-
 type Grid = [String]
 
 begin :: Grid
@@ -37,7 +34,7 @@ grow g
      in glueChunks $ chunks <&> \chunkRow -> chunkRow <&> \chunk -> in21 !? chunk ?: []
 
 part1 :: Natural
-part1 = count (== '#') . fold $ applyN (5 :: Int) grow begin
+part1 = count (== '#') . fold $ applyN 5 grow begin
 
 part2 :: Natural
-part2 = count (== '#') . fold $ applyN (18 :: Int) grow begin
+part2 = count (== '#') . fold $ applyN 18 grow begin

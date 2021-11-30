@@ -1,6 +1,5 @@
 module Day17 where
 
-import Advent
 import Data.Sequence qualified as Seq
 
 spinlock :: Part -> Int -> Int -> Int -> Seq Int -> Seq Int

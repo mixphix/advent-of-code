@@ -2,7 +2,6 @@
 
 module Day23 where
 
-import Advent
 import Control.Lens (makeLenses, (+~))
 import GHC.Show qualified (show)
 

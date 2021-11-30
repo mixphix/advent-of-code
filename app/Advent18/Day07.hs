@@ -1,7 +1,5 @@
 module Day07 where
 
-import Advent
-import Data.List.Toolbox ((\\))
 import Data.List.Toolbox qualified as List
 import Data.Map.Monoidal.Strict qualified as Mop
 import Data.Map.Strict qualified as Map

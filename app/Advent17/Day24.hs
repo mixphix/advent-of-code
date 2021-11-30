@@ -1,7 +1,5 @@
 module Day24 where
 
-import Advent
-import Data.List.Toolbox (groupSortOn, (\\))
 import Data.Sequence qualified as Seq
 
 data Component = Component Natural Natural
@@ -37,7 +35,7 @@ in24 :: [Component]
 in24 = mapMaybe (parsedWith $ Component <$> (number <* string "/") <*> number) $ lines (input 2017 24)
 
 part1 :: Natural
-part1 = maximumOf (sumOn strength) (bridgify in24 Empty) ?: 0
+part1 = withNonEmpty 0 (maximumOf1 (sumOn strength)) $ bridgify in24 Empty
 
 part2 :: Natural
-part2 = (maximumOf (sumOn strength) <=< viaNonEmpty head) (groupSortOn (Down . length) (bridgify in24 Empty)) ?: 0
+part2 = withNonEmpty 0 (maximumOf1 (sumOn strength) . head . groupAllWith1 (Down . length)) $ bridgify in24 Empty

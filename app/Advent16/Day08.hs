@@ -1,6 +1,5 @@
 module Day08 where
 
-import Advent
 import Control.Lens (from)
 import Data.Map.Strict qualified as Map
 
@@ -39,13 +38,13 @@ runCommand = \case
   RotateRow r k -> \m ->
     let row = relist $ (`Point2` r) <$> [0 .. 49]
         curs = Map.restrictKeys m row
-        shift (Point2 x y) = Point2 ((50 + x - k) `mod` 50) y
-     in foldr (\v -> alter (const $ curs !? shift v) v) m row
+        shifted (Point2 x y) = Point2 ((50 + x - k) `mod` 50) y
+     in foldr (\v -> alter (const $ curs !? shifted v) v) m row
   RotateCol c k -> \m ->
     let col = relist $ Point2 c <$> [0 .. 5]
         curs = Map.restrictKeys m col
-        shift (Point2 x y) = Point2 x ((6 + y - k) `mod` 6)
-     in foldr (\v -> alter (const $ curs !? shift v) v) m col
+        shifted (Point2 x y) = Point2 x ((6 + y - k) `mod` 6)
+     in foldr (\v -> alter (const $ curs !? shifted v) v) m col
 
 in08 :: [Command]
 in08 = mapMaybe (parsedWith command) $ lines (input 2016 8)

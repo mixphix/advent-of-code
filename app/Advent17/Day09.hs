@@ -1,7 +1,5 @@
 module Day09 where
 
-import Advent
-
 garbageP :: Parser Int
 garbageP = do
   k <- string "<" >> many (choice [0 <$ (string "!" >> anyChar), 1 <$ satisfy (/= '>')])

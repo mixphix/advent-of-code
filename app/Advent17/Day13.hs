@@ -1,7 +1,5 @@
 module Day13 where
 
-import Advent
-
 in13 :: [(Int, Int)]
 in13 = mapMaybe (parsedWith ((,) <$> number <*> (string ": " *> number))) $ lines (input 2017 13)
 

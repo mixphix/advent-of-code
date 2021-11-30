@@ -1,14 +1,12 @@
 module Day02 where
 
-import Advent
-import Data.List.NonEmpty qualified as NE
 import Data.Text qualified as T
 
 in02 :: [Text]
 in02 = lines (input 2018 2)
 
 charCounts :: Text -> Mop Int String
-charCounts (toString -> cs) = relist . map (length &&& one . head) . NE.group $ sort cs
+charCounts = withNonEmpty mempty (relist . map (length &&& one . head) . group1) . sort . toString
 
 part1 :: Natural
 part1 = app $ ((*) . count anyTwice &&& count anyThrice) in02

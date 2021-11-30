@@ -1,6 +1,5 @@
 module Day09 where
 
-import Advent
 import Data.Text qualified as T
 import Text.Parsec qualified as P
 

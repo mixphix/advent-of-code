@@ -1,6 +1,5 @@
 module Day04 where
 
-import Advent
 import Data.List.NonEmpty.Toolbox qualified as NE
 import Data.Text qualified as T
 

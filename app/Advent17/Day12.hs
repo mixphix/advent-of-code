@@ -1,6 +1,5 @@
 module Day12 where
 
-import Advent
 import Data.Graph (Graph, buildG, reachable, scc)
 import Data.Map.Strict qualified as Map
 

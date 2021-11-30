@@ -1,7 +1,5 @@
 module Day03 where
 
-import Advent
-
 in03 :: [Cardinal]
 in03 = parsedWith (many cardinalP) (input 2015 3) ?: []
 

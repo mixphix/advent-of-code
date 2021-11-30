@@ -2,7 +2,6 @@
 
 module Main where
 
-import Advent.Output
 import Data.Time.Clock
 import Data.Time.Clock.System
 import Day01 qualified

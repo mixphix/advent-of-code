@@ -1,7 +1,5 @@
 module Day06 where
 
-import Advent
-
 type Lights = Map (Point 2 Natural) Integer
 
 lights :: Lights

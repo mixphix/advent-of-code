@@ -1,12 +1,10 @@
 module Day18 where
 
-import Advent
 import Control.Comonad
 import Control.Comonad.Representable.Store
 import Control.Lens
 import Data.Distributive (Distributive (..))
 import Data.Functor.Rep (Representable (..), distributeRep)
-import Data.List.Toolbox (iterate')
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
 import Data.Vector qualified as Vec

@@ -1,14 +1,12 @@
 module Day05 where
 
-import Advent hiding (Vector)
-import Data.Vector.Unboxed (Vector)
 import Data.Vector.Unboxed qualified as V
 import Data.Vector.Unboxed.Mutable qualified as VM
 
-in05 :: Vector Int
+in05 :: V.Vector Int
 in05 = relist . mapMaybe (parsedWith number) $ lines (input 2017 5)
 
-data Program = Program {instructions :: Vector Int, position :: Int} deriving (Eq)
+data Program = Program {instructions :: V.Vector Int, position :: Int} deriving (Eq)
 
 instruction :: Part -> Program -> Natural
 instruction pt (Program v n)

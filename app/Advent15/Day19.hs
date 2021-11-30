@@ -1,6 +1,5 @@
 module Day19 where
 
-import Advent
 import Data.Map.Monoidal.Strict qualified as Mop
 import Data.Sequence (Seq ((:<|)))
 import Data.Sequence qualified as Seq

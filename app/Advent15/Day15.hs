@@ -1,7 +1,5 @@
 module Day15 where
 
-import Advent
-
 type Ingredient = (Integer, V 4 Integer)
 
 ingredient :: Parser (String, Ingredient)
@@ -31,7 +29,7 @@ cookie tsps =
    in (sum cals, productOn (max 0) $ sumV ingrs)
 
 part1 :: Integer
-part1 = maximumOf (snd . cookie) teaspoons ?: 0
+part1 = withNonEmpty 0 (maximumOf1 (snd . cookie)) teaspoons
 
 part2 :: Integer
-part2 = maximum $ mapMaybe (snd <<$>> guarded ((500 ==) . fst) . cookie) teaspoons
+part2 = withNonEmpty 0 maximum1 $ mapMaybe (snd <<$>> guarded ((500 ==) . fst) . cookie) teaspoons

@@ -2,10 +2,8 @@
 
 module Day16 where
 
-import Advent
 import Control.Lens (toListOf)
 import Control.Lens.Extras (template)
-import Data.List (elemIndex, findIndex)
 import Data.Map.Strict qualified as Map
 
 data Sue = Sue

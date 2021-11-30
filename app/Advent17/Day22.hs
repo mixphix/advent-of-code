@@ -1,8 +1,6 @@
 module Day22 where
 
-import Advent
 import Data.Map.Strict qualified as Map
-import Data.Maybe (fromJust)
 
 virus :: Part -> (Ant, Map (Point 2 Integer) Char) -> (Ant, Map (Point 2 Integer) Char)
 virus Part1 (a@(view position -> p), m) =
@@ -20,7 +18,7 @@ in22 :: Map (Point 2 Integer) Char
 in22 = Map.mapKeys (dihedralTransform TR2 . fmap fromIntegral) . view grid . map toString $ lines (input 2017 22)
 
 start :: Ant
-start = Ant North . fmap (`div` 2) . fromJust . maximumOn (sumOn abs) $ keys in22
+start = Ant North . fmap (`div` 2) . withNonEmpty origin (maximumOn1 (manhattan origin)) $ keys in22
 
 part1 :: Natural
 part1 =

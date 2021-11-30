@@ -1,23 +1,15 @@
 module Day09 where
 
-import Advent
 import Control.Lens ((+~))
-import Data.Vector qualified as Vector
-import Data.Vector.NonEmpty qualified as NEVector
+import Data.Sequence qualified as Seq
 
 type Elf = Int
 
 type Marble = Int
 
-type Scoreboard = Map Elf Int
+type Scoreboard = NEMap Elf Int
 
-data Circle = Circle {contents :: NEVector Int, current :: Int} deriving (Eq, Show)
-
-cvec :: Circle -> NEVector Int
-cvec Circle {..} =
-  let v = relist contents
-      v' = Vector.take (length contents) $ NEVector.drop current (v <> v)
-   in relist v'
+data Circle = Circle {contents :: Seq Int, current :: Int} deriving (Eq, Show)
 
 in09 :: (Elf, Marble)
 players :: Elf
@@ -33,17 +25,16 @@ circle = Circle (one 0) 0
 
 insertAt :: Int -> Int -> Circle -> Circle
 insertAt k0 a c =
-  let v = cvec c
+  let v = contents c
       k = (current c + k0) `mod` length v
-      v' = NEVector.take k v <> one a <> NEVector.drop k v
-   in Circle v' k
+   in Circle (Seq.insertAt k a v) k
 
 deleteAt :: Int -> Circle -> (Int, Circle)
 deleteAt k0 c =
-  let v = cvec c
+  let v = contents c
       k = (current c + k0) `mod` length v
-      Just v' = (liftM2 (<>) `on` nonEmpty) (NEVector.take k v) (NEVector.drop (k + 1) v)
-   in (v NEVector.! k, Circle v' k)
+      v' = Seq.deleteAt k v
+   in (v `Seq.index` k, Circle v' k)
 
 place :: Elf -> Marble -> (Scoreboard, Circle) -> (Scoreboard, Circle)
 place e m (s, c)
@@ -54,7 +45,7 @@ place e m (s, c)
 
 part1 :: Int
 part1 =
-  maximum
+  maximum1
     . fst
     . foldl' (flip $ uncurry place) (elves, circle)
     $ zip (cycle [1 .. players]) [1 .. himarble]

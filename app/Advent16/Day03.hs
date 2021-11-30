@@ -1,8 +1,5 @@
 module Day03 where
 
-import Advent
-import Data.List.Toolbox (chunksOf)
-
 three :: Parser (Point 3 Natural)
 three = do
   x <- many space *> number

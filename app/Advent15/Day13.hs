@@ -1,8 +1,5 @@
 module Day13 where
 
-import Advent
-import Data.List.NonEmpty.Toolbox (groupWith, maximumOf1)
-
 type Table = Mop String (Mop String (Sum Integer))
 
 table :: Parser (String, (String, Sum Integer))
@@ -32,7 +29,7 @@ happiness lx@(x :| _) = sum $ pairwise happy xs
     xs = relist (lx |> x)
 
 part1 :: Integer
-part1 = maximumOf1 happiness (permutationsNE names)
+part1 = maximumOf1 happiness $ permutationsNE names
 
 part2 :: Integer
-part2 = maximumOf1 happiness (permutationsNE $ "Melanie" <| names)
+part2 = maximumOf1 happiness . permutationsNE $ "Melanie" <| names

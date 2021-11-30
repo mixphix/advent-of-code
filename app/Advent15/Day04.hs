@@ -1,6 +1,5 @@
 module Day04 where
 
-import Advent
 import Crypto.Hash (Digest, MD5, hash)
 import Data.Text qualified as T
 

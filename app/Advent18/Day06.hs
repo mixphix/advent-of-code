@@ -1,6 +1,5 @@
 module Day06 where
 
-import Advent
 import Algorithms.Geometry.ConvexHull (convexHull)
 import Data.Ext (ext, _core)
 import Data.Geometry.Polygon (toPoints)

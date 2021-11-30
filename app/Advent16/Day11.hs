@@ -1,10 +1,7 @@
 module Day11 where
 
-import Advent
 import Control.Lens (Lens', lens)
 import Control.Monad.ST
-import Data.List.Toolbox ((\\))
-import Data.Monoid.Toolbox
 import Data.STRef
 import Text.Show qualified (show)
 
@@ -132,10 +129,10 @@ move as n a0@(Area {..}) ((e, gs : gizmos) : ms) = do
   let a' = do
         f <- unFloors floors !? me
         newoldfloor <- irradiate $ f \\ gs
-        let removed = alter (newoldfloor <$) me $ unFloors floors
-        f' <- removed !? e
+        let moved = alter (newoldfloor <$) me $ unFloors floors
+        f' <- moved !? e
         newnewfloor <- irradiate $ f' <> gs
-        pure . traceShowId . Area e . Floors $ alter (newnewfloor <$) e removed
+        pure . traceShowId . Area e . Floors $ alter (newnewfloor <$) e moved
   case a' of
     Nothing -> pure Nothing
     Just a@Area {}

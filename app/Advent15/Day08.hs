@@ -1,8 +1,5 @@
 module Day08 where
 
-import Advent
-import Data.List.Toolbox (dropEnd)
-
 stringcode :: Parser String
 stringcode = many1 anyChar <&> drop 1 . dropEnd 1
 

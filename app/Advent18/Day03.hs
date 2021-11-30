@@ -1,6 +1,5 @@
 module Day03 where
 
-import Advent
 import Data.Map.Monoidal.Strict qualified as Mop
 
 claimP :: Parser (Int, [Point 2 Natural])

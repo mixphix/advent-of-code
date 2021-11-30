@@ -1,7 +1,5 @@
 module Day16 where
 
-import Advent
-import Data.List (elemIndex)
 import Data.Text qualified as T
 import Data.Vector (backpermute)
 import Data.Vector qualified as V

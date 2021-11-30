@@ -1,7 +1,5 @@
 module Day19 where
 
-import Advent
-import Data.List ((\\))
 import Data.Map.Strict qualified as Map
 
 in19 :: Map (Point 2 Integer) Char

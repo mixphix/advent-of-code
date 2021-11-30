@@ -1,9 +1,6 @@
 module Day14 where
 
-import Advent
-import Data.Bits (testBit)
 import Data.Map.Strict qualified as Map
-import Data.Set ((\\))
 import Data.Set qualified as Set
 import Data.Text qualified as T
 import Day10 (knotHash)
@@ -23,9 +20,9 @@ part1 = length used
 
 contiguous :: Set (Point 2 Integer) -> Set (Point 2 Integer) -> Set (Point 2 Integer)
 contiguous vs set =
-  case Set.intersection set $ relist (foldMap vonNeumann vs) \\ vs of
+  case Set.intersection set $ relist (foldMap vonNeumann vs) Set.\\ vs of
     Empty -> vs
-    ws -> contiguous (vs <> ws) (set \\ (vs <> ws))
+    ws -> contiguous (vs <> ws) (set Set.\\ (vs <> ws))
 
 regions :: Set (Point 2 Integer) -> Integer
 regions = go 0
@@ -33,8 +30,8 @@ regions = go 0
     go :: Integer -> Set (Point 2 Integer) -> Integer
     go n Empty = n
     go n set =
-      let Just v = minimumOn sum set
-       in go (succ n) $! set \\ contiguous (one v) set
+      let v = withNonEmpty origin (minimumOn1 sum) set
+       in go (succ n) $! set Set.\\ contiguous (one v) set
 
 part2 :: Integer
 part2 = regions used

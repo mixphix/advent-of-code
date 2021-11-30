@@ -1,7 +1,5 @@
 module Day03 where
 
-import Advent
-
 in03 :: Natural
 in03 = parsedWith number (input 2017 3) ?: 0
 

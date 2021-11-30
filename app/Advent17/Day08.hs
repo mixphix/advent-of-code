@@ -1,8 +1,5 @@
 module Day08 where
 
-import Advent
-import Relude.Extra.Foldable1 (maximum1)
-
 data Comparing
   = LessThan Int
   | GreaterThan Int
@@ -60,7 +57,7 @@ execute i m = case i of
       else m
 
 part1 :: Int
-part1 = maximum $ foldl' (flip execute) Empty in08
+part1 = withNonEmpty 0 maximum1 $ foldl' (flip execute) Empty in08
 
 part2 :: Int
-part2 = fromMaybe 0 . maximumOf (withNonEmpty 0 maximum1) $ scanl' (flip execute) Empty in08
+part2 = withNonEmpty 0 (maximumOf1 (withNonEmpty 0 maximum1)) $ scanl' (flip execute) Empty in08

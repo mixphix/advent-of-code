@@ -1,7 +1,5 @@
 module Day05 where
 
-import Advent
-import Data.List.Toolbox (anySame)
 import Data.Text qualified as T
 
 in05 :: [Text]

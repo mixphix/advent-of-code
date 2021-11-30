@@ -1,8 +1,5 @@
 module Day24 where
 
-import Advent
-import Data.List.Toolbox ((\\))
-
 in24 :: [Natural]
 weight :: Natural
 (in24, weight) = (id &&& sum) . mapMaybe (parsedWith number) $ lines (input 2015 24)
@@ -24,7 +21,7 @@ smallestSizeOver :: Natural -> Int
 smallestSizeOver n = succ . genericLength . takeWhile ((n >=) . sum) $ inits (reverse in24)
 
 part1 :: Natural
-part1 = minimumOf snd footsacks ?: 0
+part1 = withNonEmpty 0 (minimumOf1 snd) footsacks
 
 trunksacks :: [(Int, Natural)]
 trunksacks = takeWhile ((smallestSizeOver wgt ==) . fst) $ do
@@ -43,4 +40,4 @@ trunksacks = takeWhile ((smallestSizeOver wgt ==) . fst) $ do
     equal x = sum x == wgt
 
 part2 :: Natural
-part2 = minimumOf snd trunksacks ?: 0
+part2 = withNonEmpty 0 (minimumOf1 snd) trunksacks

@@ -2,9 +2,7 @@
 
 module Day22 where
 
-import Advent
 import Control.Lens (makeLenses, (+~), (-~))
-import Data.List.NonEmpty.Toolbox (minimumOf1)
 import Data.Map.Strict qualified as Map
 import Data.Text qualified as T
 
@@ -89,7 +87,7 @@ a `hit` b = points < _health b ? (health -~ points) b
       _ -> 1
 
 fight :: Part -> Turn -> Map Effect Natural -> Player -> Player -> Spell -> Alt [] [Spell]
-fight diff Yours effects0 you0 me0 spell =
+fight difficulty Yours effects0 you0 me0 spell =
   let active = keys effects0
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
       effects = effectuate effects0
@@ -98,7 +96,7 @@ fight diff Yours effects0 you0 me0 spell =
         Nothing -> pure []
         Just you -> case hit (you ^. dmg) me1 of
           Nothing -> empty
-          Just me -> fight diff Mine effects you me spell
+          Just me -> fight difficulty Mine effects you me spell
 fight Part1 Mine effects0 you0 me0 spell =
   let active = keys effects0
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active

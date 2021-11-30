@@ -1,8 +1,5 @@
 module Day01 where
 
-import Advent
-import Data.List (elemIndex)
-
 in01 :: String
 in01 = toString $ input 2015 1
 

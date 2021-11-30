@@ -1,7 +1,5 @@
 module Day06 where
 
-import Advent
-import Data.List.Toolbox (groupSort)
 import Data.Text qualified as T
 
 in06 :: [String]

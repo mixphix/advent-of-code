@@ -2,10 +2,8 @@
 
 module Day18 where
 
-import Advent
 import Control.Lens (makeLenses, (+~))
 import Control.Monad.Toolbox (loop)
-import Data.List (iterate')
 import GHC.Show qualified
 
 data Instruction

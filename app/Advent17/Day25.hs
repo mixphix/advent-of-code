@@ -1,6 +1,5 @@
 module Day25 where
 
-import Advent
 import Data.Set qualified as Set
 
 type Tape = Set Integer
@@ -33,7 +32,7 @@ stateP = do
           s'
         )
 
-turingP :: Parser (Char, Int, Map Char [Instruction])
+turingP :: Parser (Char, Natural, Map Char [Instruction])
 turingP = do
   st8 <- string "Begin in state " *> anyChar <* string "." <* many space
   steps <- string "Perform a diagnostic checksum after " *> number <* string " steps." <* many space
@@ -47,10 +46,10 @@ transition ts (p, t, s) = case ts !? s ?: [] of
     [(m, w, c)] -> ((case m of Lf -> pred; _ -> succ) p, case w of O -> Set.insert p t; _ -> Set.delete p t, c)
     _ -> (p, t, s)
 
-run :: (Char, Int, Map Char [Instruction]) -> Turing
+run :: (Char, Natural, Map Char [Instruction]) -> Turing
 run (c, steps, ts) = applyN steps (transition ts) (turing c)
 
-in25 :: Either ParseError (Char, Int, Map Char [Instruction])
+in25 :: Either ParseError (Char, Natural, Map Char [Instruction])
 in25 = parse turingP "" (input 2017 25)
 
 part1 :: Natural

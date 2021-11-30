@@ -1,9 +1,5 @@
 module Day07 where
 
-import Advent
-import Data.Bits
-import Data.List (elemIndex)
-
 type Wires = Map String (Either Command Word16)
 
 registers :: [String]

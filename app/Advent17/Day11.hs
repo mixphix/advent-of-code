@@ -1,10 +1,9 @@
 module Day11 where
 
-import Advent
 import Data.Text qualified as T
 
 hexManhattan :: V 3 Integer -> V 3 Integer -> Integer
-hexManhattan v w = maximum $ fmap abs (v ^-^ w)
+hexManhattan v w = maximum1 $ fmap abs (v ^-^ w)
 
 data HexCardinal
   = Up
@@ -39,7 +38,7 @@ in11 :: [HexCardinal]
 in11 = mapMaybe (parsedWith hexcardinalP) . T.splitOn "," . withNonEmpty "" head $ lines (input 2017 11)
 
 part1 :: Integer
-part1 = hexManhattan (Vector3 0 0 0) $ foldl' (flip hexCardinal) (Vector3 0 0 0) in11
+part1 = hexManhattan zero $ foldl' (flip hexCardinal) zero in11
 
 part2 :: Integer
-part2 = maximumOf (hexManhattan (Vector3 0 0 0)) (scanl' (flip hexCardinal) (Vector3 0 0 0) in11) ?: 0
+part2 = withNonEmpty 0 (maximumOf1 (hexManhattan zero)) $ scanl' (flip hexCardinal) zero in11

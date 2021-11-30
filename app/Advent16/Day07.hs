@@ -1,8 +1,5 @@
 module Day07 where
 
-import Advent
-import Data.List (intersect)
-
 data IPv7Part
   = Hypernet Text
   | Supernet Text

@@ -1,8 +1,5 @@
 module Day04 where
 
-import Advent
-import Data.List.Toolbox (anySame)
-
 in04 :: [Text]
 in04 = lines (input 2017 4)
 

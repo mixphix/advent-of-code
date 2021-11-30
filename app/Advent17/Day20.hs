@@ -1,8 +1,6 @@
 module Day20 where
 
-import Advent
 import Data.Geometry.Vector qualified as V
-import Data.List.Toolbox (groupSort)
 
 particle :: Parser (V 3 (V 3 Integer))
 particle = do
@@ -28,7 +26,9 @@ reposition n (Vector3 (Vector3 px vx ax) (Vector3 py vy ay) (Vector3 pz vz az)) 
     (Vector3 (pz + (n * vz) + (n * n * az)) (vz + (n * az)) az)
 
 part1 :: Natural
-part1 = maybe 0 fst . minimumOn (manhattan origin . Point . fmap V.head . reposition 1000000 . snd) $ zip [0 ..] in20
+part1 =
+  withNonEmpty 0 (fst . minimumOn1 (manhattan origin . Point . fmap V.head . reposition 1000000 . snd)) $
+    zip [0 ..] in20
 
 simulate :: Integer -> [V 3 (V 3 Integer)] -> [V 3 (V 3 Integer)]
 simulate 0 vs = vs

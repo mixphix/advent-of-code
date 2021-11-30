@@ -1,6 +1,5 @@
 module Day14 where
 
-import Advent
 import Data.Map.Strict qualified as Map
 
 type Speed = Integer
@@ -29,7 +28,7 @@ race time name =
    in speed * flydur * q + speed * min r flydur
 
 part1 :: Integer
-part1 = maximumOf (race 2503) (keys in14) ?: 0
+part1 = withNonEmpty 0 (maximumOf1 (race 2503)) (keys in14)
 
 type Points = Integer
 
@@ -39,12 +38,12 @@ points :: Duration -> Points
 points time = go (Map.fromSet (const (-1, 0)) (Map.keysSet in14)) time
   where
     go :: Racing -> Duration -> Points
-    go m 0 = fst $ maximum m
+    go m 0 = withNonEmpty 0 (fst . maximum1) m
     go m n = go m' (pred n)
       where
         elapsed = time - n
         distances = Map.fromSet (race elapsed) (Map.keysSet in14)
-        m' = Map.adjust (first succ) (maybe "" fst $ maximumOn snd (Map.assocs distances)) m
+        m' = Map.adjust (first succ) (withNonEmpty "" (fst . maximumOn1 snd) (Map.assocs distances)) m
 
 part2 :: Integer
 part2 = points 2503

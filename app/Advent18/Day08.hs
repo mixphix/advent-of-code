@@ -1,6 +1,5 @@
 module Day08 where
 
-import Advent
 import Data.Text qualified as T
 import Data.Tree
 import Text.Parsec qualified as P

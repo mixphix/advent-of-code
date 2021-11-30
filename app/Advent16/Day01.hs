@@ -1,7 +1,5 @@
 module Day01 where
 
-import Advent
-
 directions :: Parser [(Integer, Ant -> Ant)]
 directions = choice [l, r] `sepEndBy1` string ", "
   where

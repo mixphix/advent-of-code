@@ -1,8 +1,5 @@
 module Day20 where
 
-import Advent
-import Data.List.Toolbox (findIndex)
-
 in20 :: Natural
 in20 = parsedWith number (input 2015 20) ?: 0
 

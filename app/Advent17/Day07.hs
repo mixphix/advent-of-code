@@ -1,10 +1,8 @@
 module Day07 where
 
-import Advent
 import Control.Comonad.Cofree (Cofree (..))
 import Data.Functor.Base (TreeF (..))
 import Data.Functor.Foldable (histo)
-import Data.List.Toolbox (allSame, (\\))
 import Data.Map.Strict qualified as Map
 import Data.Tree (Tree (..), foldTree, levels, unfoldTree)
 
