@@ -6,15 +6,15 @@ import Advent.Output
 import Data.Time.Clock
 import Data.Time.Clock.System
 import Day01 qualified
+import Day02 qualified
+import Day03 qualified
+import Day04 qualified
+import Day05 qualified
+import Day06 qualified
+import Day07 qualified
+import Day08 qualified
+import Day09 qualified
 
--- import Day02 qualified
--- import Day03 qualified
--- import Day04 qualified
--- import Day05 qualified
--- import Day06 qualified
--- import Day07 qualified
--- import Day08 qualified
--- import Day09 qualified
 -- import Day10 qualified
 -- import Day11 qualified
 -- import Day12 qualified
