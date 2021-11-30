@@ -11,7 +11,7 @@ input y@(show -> year) d@(show -> day) = unsafePerformIO $ do
   let inputfile = "./input" </> year </> day <.> "txt"
       aocopts =
         AoCOpts
-          { _aSessionKey = "53616c7465645f5fc17036fcdfe1e13dbbc124e1151a6fa12c2af184ebaf0bc272988346ece9d9f382a1b142d580dbb2",
+          { _aSessionKey = "53616c7465645f5f48f11406b57218c1af2b45d64fdd6ad11aa1299f4502d4c23c1473baa0d7ed10c6ca05591b9c6743",
             _aYear = fromIntegral y,
             _aCache = Nothing,
             _aForce = False,
