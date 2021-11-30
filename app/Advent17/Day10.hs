@@ -10,7 +10,7 @@ twist pos len v = V.fromList $ fromIntegral <$> twisted
     twisted = [0 .. V.length v - 1] <&> \n -> (v V.!) $ elemIndex n l >>= (l !!?) . (pred (length l) -) ?: n
 
 prepASCII :: Text -> [Word8]
-prepASCII = (<> [17, 31, 73, 47, 23]) . map (fromIntegral . ord) . toString . T.strip
+prepASCII = (<> [17, 31, 73, 47, 23]) . map (fromIntegral . ord) . toString . strip
 
 in10 :: Part -> [Word8]
 in10 part = ($ input 2017 10) $ case part of

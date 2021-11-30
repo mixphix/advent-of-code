@@ -9,7 +9,7 @@ md5 :: Text -> Text
 md5 t = show (hash (encodeUtf8 t :: ByteString) :: Digest MD5)
 
 in05 :: Text
-in05 = T.strip $ input 2016 5
+in05 = input 2016 5
 
 hashStartFiveZeros :: Int -> Maybe Text
 hashStartFiveZeros = T.stripPrefix "00000" . md5 . (in05 <>) . show

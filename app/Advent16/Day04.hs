@@ -23,7 +23,7 @@ part1 = sumOn sectorID $ filter (not . decoy) in04
 decrypt :: Text -> (Natural, Text)
 decrypt t =
   let n = sectorID t
-   in (n,) . T.strip . flip T.map (T.dropWhileEnd (/= '[') t) $ \case
+   in (n,) . strip . flip T.map (T.dropWhileEnd (/= '[') t) $ \case
         '-' -> ' '
         '[' -> ' '
         ']' -> ' '

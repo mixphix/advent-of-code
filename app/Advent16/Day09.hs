@@ -25,7 +25,7 @@ marker Part2 = many1 $ choice [repeated, nomarker]
     nomarker = NoMarker <$> many1 (satisfy (/= '('))
 
 in09 :: Part -> [Marker]
-in09 part = parse (marker part) $ strip (input 2016 9)
+in09 part = parse (marker part) (input 2016 9)
 
 markerLength :: Marker -> Natural
 markerLength = \case

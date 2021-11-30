@@ -11,7 +11,7 @@ stepP = do
   pure $ one (dep, [suc])
 
 in07 :: Mop Char String
-in07 = fmap sort . fold . parse stepP <$> lines (input 2018 7)
+in07 = fmap sort . fold $ parse stepP <$> lines (input 2018 7)
 
 dependencies :: Mop Char String
 dependencies = Mop.foldMapWithKey (\k vs -> relist $ (,[k]) <$> vs) in07

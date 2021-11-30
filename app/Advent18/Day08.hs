@@ -12,7 +12,7 @@ treeP = do
   pure $ Node entries subtree
 
 in08 :: Tree [Int]
-in08 = parse treeP $ strip (input 2018 8)
+in08 = parse treeP (input 2018 8)
 
 part1 :: Int
 part1 = foldTree (\as bss -> sum as + sum bss) in08

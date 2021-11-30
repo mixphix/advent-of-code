@@ -7,7 +7,7 @@ md5 :: Text -> Text
 md5 t = show (hash (encodeUtf8 t :: ByteString) :: Digest MD5)
 
 in04 :: Text
-in04 = strip $ input 2015 4
+in04 = input 2015 4
 
 part1 :: Natural
 part1 = find (T.isPrefixOf "00000" . md5 . (in04 <>) . show) [1 ..] ?: 0

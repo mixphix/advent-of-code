@@ -13,7 +13,7 @@ incr (Z :| word) = withNonEmpty (:| []) (\w -> (<| incr w)) word A
 incr (l :| word) = succ l :| word
 
 in11 :: Password
-in11 = toPassword . toString $ strip (input 2015 11)
+in11 = toPassword $ toString (input 2015 11)
 
 toPassword :: String -> Password
 toPassword = relist . reverse . mapMaybe (inverseMap lowercase)

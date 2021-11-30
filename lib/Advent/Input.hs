@@ -1,6 +1,7 @@
 module Advent.Input where
 
 import AdventAPI
+import Data.Text (strip)
 import GHC.IO (unsafePerformIO)
 import System.Directory
 import System.FilePath ((<.>), (</>))
@@ -16,7 +17,7 @@ input y@(show -> year) d@(show -> day) = unsafePerformIO $ do
             _aForce = False,
             _aThrottle = 10 ^ (6 :: Int)
           }
-  ifM (doesFileExist inputfile) (readFileText inputfile) $ do
+  fmap strip . ifM (doesFileExist inputfile) (readFileText inputfile) $ do
     t <- runAoC_ aocopts (AoCInput . mkDay_ $ fromIntegral d)
     writeFileText inputfile t
     pure t

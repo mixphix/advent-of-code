@@ -10,7 +10,7 @@ claimP = do
   pure . (ident,) $ Point2 <$> [x .. x + w - 1] <*> [y .. y + h - 1]
 
 in03 :: Mop Int [Point 2 Natural]
-in03 = relist . parse claimP <$> lines (input 2018 3)
+in03 = relist $ parse claimP <$> lines (input 2018 3)
 
 inv :: Mop (Point 2 Natural) [Int]
 inv = Mop.foldMapWithKey (\k vs -> relist $ (,[k]) <$> vs) in03

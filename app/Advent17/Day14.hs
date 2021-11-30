@@ -2,12 +2,11 @@ module Day14 where
 
 import Data.Map.Strict qualified as Map
 import Data.Set qualified as Set
-import Data.Text qualified as T
 import Day10 (knotHash)
 
 in14 :: [Text]
 in14 =
-  let i = T.strip $ input 2017 14
+  let i = input 2017 14
    in [0 .. 127 :: Word8] <&> \n -> i <> "-" <> show n
 
 used :: Set (Point 2 Integer)

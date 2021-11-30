@@ -1,10 +1,9 @@
 module Day05 where
 
-import Data.List.Toolbox (iterateWhileUnique)
 import Data.Text qualified as T
 
 in05 :: Text
-in05 = T.strip $ input 2018 5
+in05 = input 2018 5
 
 units :: [Text]
 units = zipWith (on (<>) one) (['A' .. 'Z'] <> ['a' .. 'z']) (['a' .. 'z'] <> ['A' .. 'Z'])
@@ -19,4 +18,6 @@ part1 :: Int
 part1 = T.length $ react in05
 
 part2 :: Int
-part2 = minimumOf (T.length . react) (['a' .. 'z'] <&> \c -> fold $ T.split (`elem` [c, toUpper c]) in05) ?: 0
+part2 =
+  withNonEmpty 0 (minimumOf1 (T.length . react)) $
+    ['a' .. 'z'] <&> \c -> fold $ T.split (`elem` [c, toUpper c]) in05
