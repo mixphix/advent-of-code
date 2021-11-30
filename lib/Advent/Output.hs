@@ -32,7 +32,7 @@ mainFor yr =
 maxDay :: Natural -> Natural
 {-# NOINLINE maxDay #-}
 maxDay yr = unsafePerformIO $ do
-  projdir <- toString . strip <$> readFileText "projdir.txt"
+  projdir <- toString . strip <$> readFileText "/home/melanie/projdir.txt"
   let [_, _, y1, y2] = relist $ digits yr
       advent = projdir </> "app" </> "Advent" <> show (10 * y1 + y2)
   numbers <-
