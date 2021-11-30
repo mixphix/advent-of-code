@@ -1,8 +1,9 @@
 module Advent.Functions where
 
-import Control.Lens (AsEmpty, Iso', iso, (^.), pattern Empty)
+import Advent.Orphans
+import Control.Lens (AsEmpty, Iso', iso, (^.))
 import Data.Char (toLower)
-import Data.Containers.NonEmpty (withNonEmpty, pattern IsEmpty, pattern IsNonEmpty)
+import Data.Containers.NonEmpty (HasNonEmpty, withNonEmpty)
 import Data.Geometry.Point
 import Data.List.NonEmpty ((<|))
 import Data.List.NonEmpty qualified as NE
@@ -106,9 +107,9 @@ firstDuplicate = go Empty
       | otherwise = go (Set.insert a seen) as
 
 takeL :: Natural -> Seq a -> Seq a
-takeL 0 _ = IsEmpty
-takeL n (IsNonEmpty (a :<|| as)) = a :<| takeL (pred n) as
-takeL _ _ = IsEmpty
+takeL 0 _ = Empty
+takeL n (NonEmpty (a :<|| as)) = a :<| takeL (pred n) as
+takeL _ _ = Empty
 
 takeLNE :: Natural -> NESeq a -> NESeq a
 takeLNE 0 _ = error "takeLNE 0"
@@ -116,17 +117,17 @@ takeLNE n (a :<|| as) = a :<|| takeL (pred n) as
 
 dropL :: Natural -> Seq a -> Seq a
 dropL 0 as = as
-dropL n (IsNonEmpty (_ :<|| as)) = dropL (pred n) as
-dropL _ _ = IsEmpty
+dropL n (NonEmpty (_ :<|| as)) = dropL (pred n) as
+dropL _ _ = Empty
 
 dropLNE :: Natural -> NESeq a -> Seq a
-dropLNE 0 as = IsNonEmpty as
+dropLNE 0 as = NonEmpty as
 dropLNE n (_ :<|| as) = dropL (pred n) as
 
 takeR :: Natural -> Seq a -> Seq a
-takeR 0 _ = IsEmpty
-takeR n (IsNonEmpty (as :||> a)) = takeR (pred n) as :|> a
-takeR _ _ = IsEmpty
+takeR 0 _ = Empty
+takeR n (NonEmpty (as :||> a)) = takeR (pred n) as :|> a
+takeR _ _ = Empty
 
 takeRNE :: Natural -> NESeq a -> NESeq a
 takeRNE 0 _ = error "takeLNE 0"
@@ -134,11 +135,11 @@ takeRNE n (as :||> a) = takeR (pred n) as :||> a
 
 dropR :: Natural -> Seq a -> Seq a
 dropR 0 as = as
-dropR n (IsNonEmpty (as :||> _)) = dropR (pred n) as
-dropR _ _ = IsEmpty
+dropR n (NonEmpty (as :||> _)) = dropR (pred n) as
+dropR _ _ = Empty
 
 dropRNE :: Natural -> NESeq a -> Seq a
-dropRNE 0 as = IsNonEmpty as
+dropRNE 0 as = NonEmpty as
 dropRNE n (as :||> _) = dropR (pred n) as
 
 slice :: (IsList f) => Natural -> Natural -> f -> f
@@ -176,7 +177,7 @@ alphabetPos :: Char -> Natural
 alphabetPos c = maybe (error "not a letter") fromIntegral $ toLower c `elemIndex` ['a' .. 'z']
 
 popKeys ::
-  (One m, OneItem m ~ (Key m, Val m), AsEmpty m, Monoid m, DynamicMap m, Foldable t) =>
+  (One m, OneItem m ~ (Key m, Val m), AsEmpty m, Monoid m, DynamicMap m, Foldable t, HasNonEmpty m) =>
   t (Key m) ->
   m ->
   (m, m)

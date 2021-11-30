@@ -222,7 +222,7 @@ ulampos n =
       half = flip quot 2 . fromIntegral
       f = fmap $ if even k then negate else id
       k2pos = if even k then Point2 (1 - half k) (half k) else Point2 (half $ fromIntegral k - 1) (half $ 1 - fromIntegral k)
-      k2k1pos = if even k then Point2 (- half k) (- half k) else Point2 (half $ k + 1) (half $ k + 1)
+      k2k1pos = if even k then Point2 (-half k) (-half k) else Point2 (half $ k + 1) (half $ k + 1)
    in if fromIntegral n == k * k
         then k2pos
         else

@@ -8,7 +8,6 @@ import Advent.D4 (D4 (..))
 import Advent.Suspension (Suspension (..))
 import Control.Lens (Iso', Lens', abbreviatedFields, from, iso, makeLensesWith)
 import Data.Complex (Complex (..))
-import Data.Foldable.Toolbox (sumOn)
 import Data.Geometry (Additive ((^-^)), Arity, Point (..))
 import Data.Ratio ((%))
 import Data.Semiring (Ring (..), Semiring (..), minus)
@@ -29,7 +28,7 @@ cpair :: Iso' (Complex a) (a, a)
 cpair = from complex . pair
 
 manhattan :: (Arity d, Num a) => Point d a -> Point d a -> a
-manhattan (Point v) (Point w) = sumOn abs (v ^-^ w)
+manhattan (Point v) (Point w) = sum $ abs <$> (v ^-^ w)
 
 dihedralTransform :: (Ring a) => D4 -> Point 2 a -> Point 2 a
 dihedralTransform = \case

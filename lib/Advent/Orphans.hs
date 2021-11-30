@@ -11,7 +11,7 @@ module Advent.Orphans
   )
 where
 
-import Advent.Functions (relist)
+import Advent.Maps
 import Control.Lens hiding (pattern Empty)
 import Data.Containers.NonEmpty (HasNonEmpty (..), pattern IsEmpty, pattern IsNonEmpty)
 import Data.IntMap.Monoidal.Strict qualified as IntMop
@@ -45,17 +45,21 @@ type NEVector = NonEmptyVector
 type CVector = CircularVector
 
 -- Folds and listlikes
+instance One (Vector a) where
+  type OneItem _ = a
+  one = pure
+
 instance One (NEVector a) where
   type OneItem _ = a
   one = pure
 
 instance IsList (NEVector a) where
   type Item _ = a
-  fromList = relist . Vector.fromList
+  fromList = NEVector.unsafeFromVector . Vector.fromList
   toList = NEVector.toList
 
 instance Data.Semigroup.Foldable.Foldable1 NEVector where
-  foldMap1 f (relist -> v :: Vector a) = fromJust $ foldMap (Just . f) v
+  foldMap1 f (NEVector.toVector -> v :: Vector a) = fromJust $ foldMap (Just . f) v
 
 instance Foldable1 NEVector where
   foldMap1 = Data.Semigroup.Foldable.foldMap1
@@ -103,7 +107,7 @@ instance One NEIntSet where
 instance IsList NEIntSet where
   type Item _ = Int
   fromList xs = viaNonEmpty NEIntSet.fromList xs ?: error "NEIntSet: fromList []"
-  toList = relist . NEIntSet.toList
+  toList = toList . NEIntSet.toList
 
 instance (Ord k) => One (NEMap k a) where
   type OneItem _ = (k, a)
@@ -155,41 +159,39 @@ instance DynamicMap (NEIntMap v) where
   delete k = NEIntMap.unsafeFromMap . NEIntMap.delete k
   alter f k = NEIntMap.unsafeFromMap . NEIntMap.alter f k
 
-instance (Semigroup v) => One (IntMop.IntMap v) where
+instance (Semigroup v) => One (IntMop v) where
   type OneItem _ = (Int, v)
   one = IntMop.fromList . one
 
-instance StaticMap (IntMop.IntMap v) where
+instance StaticMap (IntMop v) where
   type Key _ = Int
   type Val _ = v
   size = IntMop.size
   lookup = IntMop.lookup
   member = IntMop.member
 
-instance (Semigroup v) => DynamicMap (IntMop.IntMap v) where
+instance (Semigroup v) => DynamicMap (IntMop v) where
   insert = IntMop.insert
   insertWith = IntMop.insertWith
   delete = IntMop.delete
   alter = IntMop.alter
 
-instance (Ord k, Semigroup v) => One (Mop.Map k v) where
+instance (Ord k, Semigroup v) => One (Mop k v) where
   type OneItem _ = (k, v)
   one = Mop.fromList . one
 
-instance (Ord k) => StaticMap (Mop.Map k v) where
+instance (Ord k) => StaticMap (Mop k v) where
   type Key _ = k
   type Val _ = v
   size = Mop.size
   lookup = Mop.lookup
   member = Mop.member
 
-instance (Ord k, Semigroup v) => DynamicMap (Mop.Map k v) where
+instance (Ord k, Semigroup v) => DynamicMap (Mop k v) where
   insert = Mop.insert
   insertWith = Mop.insertWith
   delete = Mop.delete
   alter = Mop.alter
-
-instance (Ord k, Eq v, Semigroup v) => AsEmpty (Mop.Map k v)
 
 instance (Ord k, Semigroup (DeepMap ks v)) => One (DeepMap (k ': ks) v) where
   type OneItem _ = (k, DeepMap ks v)
@@ -238,9 +240,9 @@ pattern NonEmpty a = IsNonEmpty a
 
 {-# COMPLETE Empty, NonEmpty :: IntMap #-}
 
-{-# COMPLETE Empty, NonEmpty :: Mop.Map #-}
+{-# COMPLETE Empty, NonEmpty :: Mop #-}
 
-{-# COMPLETE Empty, NonEmpty :: IntMop.IntMap #-}
+{-# COMPLETE Empty, NonEmpty :: IntMop #-}
 
 {-# COMPLETE Empty, NonEmpty :: DeepMap #-}
 
@@ -409,49 +411,6 @@ instance FunctorWithIndex Int NEIntMap
 instance FoldableWithIndex Int NEIntMap
 
 instance TraversableWithIndex Int NEIntMap
-
-type instance Index (Mop.Map k v) = k
-
-type instance IxValue (Mop.Map k v) = v
-
-instance (Ord k, Semigroup v) => Ixed (Mop.Map k v) where
-  ix k f m = case lookup k m of
-    Just v -> f v <&> \v' -> insert k v' m
-    Nothing -> pure m
-  {-# INLINE ix #-}
-
-instance (Ord k, Semigroup v) => At (Mop.Map k v) where
-  at k f = Mop.alterF f k
-  {-# INLINE at #-}
-
-instance FunctorWithIndex k (Mop.Map k)
-
-instance FoldableWithIndex k (Mop.Map k)
-
-instance TraversableWithIndex k (Mop.Map k) where
-  itraverse = Mop.traverseWithKey
-
-type instance Index (IntMop.IntMap v) = Int
-
-type instance IxValue (IntMop.IntMap v) = v
-
-instance (Semigroup v) => Ixed (IntMop.IntMap v) where
-  ix k f m = case lookup k m of
-    Just v -> f v <&> \v' -> insert k v' m
-    Nothing -> pure m
-  {-# INLINE ix #-}
-
-instance (Semigroup v) => At (IntMop.IntMap v) where
-  at k f = IntMop.alterF f k
-  {-# INLINE at #-}
-
-instance Each (IntMop.IntMap a) (IntMop.IntMap b) a b
-
-instance FunctorWithIndex Int IntMop.IntMap
-
-instance FoldableWithIndex Int IntMop.IntMap
-
-instance TraversableWithIndex Int IntMop.IntMap
 
 type instance Index (DeepMap (k ': ks) v) = k
 

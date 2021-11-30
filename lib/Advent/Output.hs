@@ -3,6 +3,7 @@
 module Advent.Output where
 
 import Advent
+import Data.Foldable (maximum)
 import Data.Text qualified as T
 import Data.Time (NominalDiffTime)
 import GHC.IO (unsafePerformIO)

@@ -34,16 +34,18 @@ common advent
       , containers ^>= 0.6.5
       , cryptonite ^>= 0.29
       , data-fix
+      , deep-map
       , directory
       , distributive
       , filepath
       , fixed-vector ^>= 1.2.1
       , free
       , group-theory
-      , hgeometry ^>= 0.13
+      , hgeometry ^>= 0.14
       , hgeometry-combinatorial ^>= 0.13
       , lens ^>= 5.1
       , lens-aeson ^>= 1.1.3
+      , monoidal-containers >= 0.6.1
       , nonempty-containers >= 0.3.4.4
       , nonempty-vector >= 0.2.1.0
       , parsec ^>= 3.1.15
@@ -96,11 +98,6 @@ common advent
     ghc-options: -O2 -Wall
     default-language:
       Haskell2010
-    mixins:
-      base hiding (Prelude)
-      , relude (Relude as Prelude)
-      , relude
-      , advent-of-code-api (Advent as AdventAPI, Advent.API as AdventAPI.API, Advent.Types as AdventAPI.Types)
 
 library
     import: advent
@@ -113,6 +110,7 @@ library
       Advent.Functions
       Advent.Infinite
       Advent.Input
+      Advent.Maps
       Advent.Numbers
       Advent.Orphans
       Advent.Parsers
@@ -120,6 +118,12 @@ library
       Advent.Suspension
     hs-source-dirs:
       lib
+    mixins:
+      base hiding (Prelude)
+      , relude (Relude as Prelude)
+      , relude
+      , advent-of-code-api (Advent as AdventAPI, Advent.API as AdventAPI.API, Advent.Types as AdventAPI.Types)
+      , toolbox hiding (Data.Map.Monoidal.Strict, Data.IntMap.Monoidal.Strict)
 
 executable advent-of-code
     import: advent
@@ -132,6 +136,17 @@ executable advent-of-code
       advent-of-code
     hs-source-dirs:
       app
+    mixins:
+      base hiding (Prelude)
+      , relude (Relude as Prelude)
+      , relude
+      , advent-of-code-api (Advent as AdventAPI, Advent.API as AdventAPI.API, Advent.Types as AdventAPI.Types)
+
+common years
+    import: advent
+    mixins:
+      base hiding (Prelude)
+      , advent-of-code (Advent as Prelude)
 
 executable advent15
     import: advent

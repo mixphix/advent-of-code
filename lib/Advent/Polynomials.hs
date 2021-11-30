@@ -5,12 +5,11 @@
 
 module Advent.Polynomials where
 
-import Data.Foldable.Toolbox (productOn)
+import Control.Arrow ((***))
 import Data.Poly.Sparse.Semiring (pattern X)
 import Data.Poly.Sparse.Semiring qualified as P
 import Data.Semiring (Ring, zero)
 import Data.Semiring qualified as S
-import Data.Tuple.Toolbox ((***))
 import Data.Vector.Unboxed qualified as V
 import Relude.Extra.Map
 
@@ -36,7 +35,7 @@ coeffsTo n a = sum [X ^ k | k <- [0, a .. fromIntegral n]]
 
 partitionPieces :: [Natural] -> Natural -> Natural
 partitionPieces xs n =
-  let p = productOn (coeffsTo n . fromIntegral) xs
+  let p = product $ coeffsTo n . fromIntegral <$> xs
    in maybe 0 fromIntegral $ p !? fromIntegral n
 
 instance StaticMap Polynomial where
