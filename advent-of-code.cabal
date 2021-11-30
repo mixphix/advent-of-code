@@ -123,7 +123,7 @@ library
       , relude (Relude as Prelude)
       , relude
       , advent-of-code-api (Advent as AdventAPI, Advent.API as AdventAPI.API, Advent.Types as AdventAPI.Types)
-      , toolbox hiding (Data.Map.Monoidal.Strict, Data.IntMap.Monoidal.Strict)
+      , toolbox
 
 executable advent-of-code
     import: advent
@@ -147,9 +147,10 @@ common years
     mixins:
       base hiding (Prelude)
       , advent-of-code (Advent as Prelude)
+      , toolbox
 
 executable advent15
-    import: advent
+    import: years
     main-is:
       Main.hs
 
@@ -186,7 +187,7 @@ executable advent15
       app/Advent15
 
 executable advent16
-    import: advent
+    import: years
     main-is:
       Main.hs
 
@@ -223,7 +224,7 @@ executable advent16
       app/Advent16
 
 executable advent17
-    import: advent
+    import: years
     main-is:
       Main.hs
 
@@ -260,7 +261,7 @@ executable advent17
       app/Advent17
 
 executable advent18
-    import: advent
+    import: years
     main-is:
       Main.hs
 

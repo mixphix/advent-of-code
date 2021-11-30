@@ -1,11 +1,15 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
+-- {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Advent.Orphans
   ( NEVector,
     CVector,
+    V,
+    NEMop (..),
+    NEIntMop (..),
     pattern Empty,
     pattern NonEmpty,
   )
@@ -14,13 +18,17 @@ where
 import Advent.Maps
 import Control.Lens hiding (pattern Empty)
 import Data.Containers.NonEmpty (HasNonEmpty (..), pattern IsEmpty, pattern IsNonEmpty)
+import Data.Functor.Classes (Eq1, Ord1, Show1)
+import Data.Geometry.Point (Point)
+import Data.Geometry.Vector (Arity)
+import Data.Geometry.Vector qualified
 import Data.IntMap.Monoidal.Strict qualified as IntMop
 import Data.IntMap.NonEmpty (NEIntMap)
 import Data.IntMap.NonEmpty qualified as NEIntMap
 import Data.IntSet.NonEmpty (NEIntSet)
 import Data.IntSet.NonEmpty qualified as NEIntSet
-import Data.Map.Monoidal.Deep (DeepMap)
-import Data.Map.Monoidal.Deep qualified as DM
+import Data.Map.Deep (DeepMap)
+import Data.Map.Deep qualified as DM
 import Data.Map.Monoidal.Strict qualified as Mop
 import Data.Map.NonEmpty (NEMap)
 import Data.Map.NonEmpty qualified as NEMap
@@ -38,11 +46,82 @@ import Data.Vector.Circular qualified as CVector
 import Data.Vector.NonEmpty (NonEmptyVector)
 import Data.Vector.NonEmpty qualified as NEVector
 import GHC.Exts qualified
+import GHC.TypeNats (type (<=))
 import Relude.Extra (DynamicMap (..), Foldable1 (..), StaticMap (..))
 
 type NEVector = NonEmptyVector
 
 type CVector = CircularVector
+
+newtype NEMop k a = NEMop {getNEMap :: NEMap k a}
+  deriving (Eq, Ord, Show)
+  deriving newtype
+    ( Eq1,
+      Ord1,
+      Show1,
+      Functor,
+      Foldable,
+      FunctorWithIndex k,
+      FoldableWithIndex k,
+      Data.Semigroup.Foldable.Foldable1,
+      Foldable1
+    )
+
+instance Traversable (NEMop k) where
+  traverse f (NEMop m) = NEMop <$> traverse f m
+
+instance TraversableWithIndex k (NEMop k) where
+  itraverse f (NEMop m) = NEMop <$> itraverse f m
+
+instance Wrapped (NEMop k a) where
+  type Unwrapped _ = NEMap k a
+  _Wrapped' = iso getNEMap NEMop
+
+instance Rewrapped (NEMop k a) (NEMop k a)
+
+instance Rewrapped (NEMop k a) (NEMap k a)
+
+newtype NEIntMop a = NEIntMop {getNEIntMap :: NEIntMap a}
+  deriving (Eq, Ord, Show)
+  deriving newtype
+    ( Eq1,
+      Ord1,
+      Show1,
+      Functor,
+      Foldable,
+      FunctorWithIndex Int,
+      FoldableWithIndex Int,
+      Data.Semigroup.Foldable.Foldable1,
+      Foldable1
+    )
+
+instance Wrapped (NEIntMop a) where
+  type Unwrapped _ = NEIntMap a
+  _Wrapped' = iso getNEIntMap NEIntMop
+
+instance Rewrapped (NEIntMop a) (NEIntMop a)
+
+instance Rewrapped (NEIntMop a) (NEIntMap a)
+
+-- instance HasNonEmpty (Mop k a) where
+--   type NE _ = NEMop k a
+--   withNonEmpty x y (Mop.MonoidalMap m) = withNonEmpty x (y . NEMop) m
+--   empty = Empty
+--   fromNonEmpty = Mop.MonoidalMap . fromNonEmpty . getNEMap
+
+-- instance HasNonEmpty (IntMop a) where
+--   type NE _ = NEIntMop a
+--   withNonEmpty x y (IntMop.MonoidalIntMap m) = withNonEmpty x (y . NEIntMop) m
+--   empty = Empty
+--   fromNonEmpty = IntMop.MonoidalIntMap . fromNonEmpty . getNEIntMap
+
+instance Traversable NEIntMop where
+  traverse f (NEIntMop m) = NEIntMop <$> traverse f m
+
+instance TraversableWithIndex Int NEIntMop where
+  itraverse f (NEIntMop m) = NEIntMop <$> itraverse f m
+
+type V = Data.Geometry.Vector.Vector
 
 -- Folds and listlikes
 instance One (Vector a) where
@@ -75,6 +154,12 @@ instance IsList (CVector a) where
 
 instance Foldable1 CVector where
   foldMap1 = Data.Semigroup.Foldable.foldMap1
+
+instance (Arity d, 1 <= d) => Foldable1 (Point d) where
+  foldMap1 f v = fromJust $ foldMap (Just . f) v
+
+instance (Arity d, 1 <= d) => Foldable1 (V d) where
+  foldMap1 f v = fromJust $ foldMap (Just . f) v
 
 instance One (NESeq a) where
   type OneItem _ = a
@@ -176,6 +261,28 @@ instance (Semigroup v) => DynamicMap (IntMop v) where
   delete = IntMop.delete
   alter = IntMop.alter
 
+instance One (NEIntMop a) where
+  type OneItem _ = (Int, a)
+  one = fromList . one
+
+instance IsList (NEIntMop a) where
+  type Item _ = (Int, a)
+  fromList xs = Wrapped $ viaNonEmpty NEIntMap.fromList xs ?: error "NEIntMap: fromList []"
+  toList = toList . NEIntMap.assocs . Unwrapped
+
+instance StaticMap (NEIntMop v) where
+  type Key _ = Int
+  type Val _ = Val (IntMop v)
+  size = NEIntMap.size . Unwrapped
+  lookup k = NEIntMap.lookup k . Unwrapped
+  member k = NEIntMap.member k . Unwrapped
+
+instance DynamicMap (NEIntMop v) where
+  insert = coerce <<$>> NEIntMap.insert
+  insertWith = (coerce <<$>>) . NEIntMap.insertWith
+  delete k = Wrapped . NEIntMap.unsafeFromMap . NEIntMap.delete k . Unwrapped
+  alter f k = Wrapped . NEIntMap.unsafeFromMap . NEIntMap.alter f k . Unwrapped
+
 instance (Ord k, Semigroup v) => One (Mop k v) where
   type OneItem _ = (k, v)
   one = Mop.fromList . one
@@ -192,6 +299,28 @@ instance (Ord k, Semigroup v) => DynamicMap (Mop k v) where
   insertWith = Mop.insertWith
   delete = Mop.delete
   alter = Mop.alter
+
+instance (Ord k) => One (NEMop k a) where
+  type OneItem _ = (k, a)
+  one = fromList . one
+
+instance (Ord k) => IsList (NEMop k a) where
+  type Item _ = (k, a)
+  fromList xs = Wrapped $ viaNonEmpty NEMap.fromList xs ?: error "NEMap: fromList []"
+  toList = toList . NEMap.assocs . Unwrapped
+
+instance (Ord k) => StaticMap (NEMop k v) where
+  type Key _ = k
+  type Val _ = v
+  size = NEMap.size . Unwrapped
+  lookup k = NEMap.lookup k . Unwrapped
+  member k = NEMap.member k . Unwrapped
+
+instance (Ord k) => DynamicMap (NEMop k v) where
+  insert = coerce <<$>> NEMap.insert
+  insertWith = (coerce <<$>>) . NEMap.insertWith
+  delete k = Wrapped . NEMap.unsafeFromMap . NEMap.delete k . Unwrapped
+  alter f k = Wrapped . NEMap.unsafeFromMap . NEMap.alter f k . Unwrapped
 
 instance (Ord k, Semigroup (DeepMap ks v)) => One (DeepMap (k ': ks) v) where
   type OneItem _ = (k, DeepMap ks v)
@@ -425,10 +554,3 @@ instance (Ord k, Semigroup (DeepMap ks v)) => Ixed (DeepMap (k ': ks) v) where
 instance (Ord k, Semigroup (DeepMap ks v)) => At (DeepMap (k ': ks) v) where
   at k f = DM.alterF f k
   {-# INLINE at #-}
-
-instance TraversableWithIndex j (DeepMap ks) => FunctorWithIndex (k, j) (DeepMap (k ': ks))
-
-instance TraversableWithIndex j (DeepMap ks) => FoldableWithIndex (k, j) (DeepMap (k ': ks))
-
-instance TraversableWithIndex j (DeepMap ks) => TraversableWithIndex (k, j) (DeepMap (k ': ks)) where
-  itraverse f = DM.traverseDeepWithKey (itraverse . curry f)

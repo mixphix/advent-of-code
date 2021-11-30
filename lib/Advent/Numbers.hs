@@ -8,6 +8,7 @@ import Data.Geometry.Vector (Additive (..))
 import Data.List.NonEmpty.Toolbox qualified as NE
 import Data.List.Toolbox (allSame)
 import Data.Ratio ((%))
+import Data.Semiring (Add (..), Mul (..), Semiring)
 import Data.Sequence.NonEmpty (NESeq, (|>), pattern (:||>))
 import Data.Sequence.NonEmpty qualified as NESeq
 import Data.Set qualified as Set
@@ -18,11 +19,18 @@ import Math.NumberTheory.Primes qualified as NT
 import Math.NumberTheory.Primes.Counting qualified as NT
 import Math.NumberTheory.Recurrences qualified as NT
 import Relude.Extra.Map (StaticMap (..))
+import Relude.Extra.Newtype ((#.))
 import Relude.Unsafe ((!!))
 
 type Prime = NT.Prime Natural
 
 type Ration = Ratio Natural
+
+sumOn :: forall r t a. (Semiring r, Foldable t) => (a -> r) -> t a -> r
+sumOn f = coerce #. foldMap' (coerce @_ @(Add r) . f)
+
+productOn :: forall r t a. (Semiring r, Foldable t) => (a -> r) -> t a -> r
+productOn f = coerce #. foldMap' (coerce @_ @(Mul r) . f)
 
 primes :: [Prime]
 primes = NT.primes

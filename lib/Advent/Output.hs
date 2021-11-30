@@ -3,7 +3,6 @@
 module Advent.Output where
 
 import Advent
-import Data.Foldable (maximum)
 import Data.Text qualified as T
 import Data.Time (NominalDiffTime)
 import GHC.IO (unsafePerformIO)
@@ -35,8 +34,10 @@ maxDay :: Natural -> Natural
 maxDay yr = unsafePerformIO $ do
   let [_, _, y1, y2] = relist $ digits yr
       advent = "./app/Advent" <> show (10 * y1 + y2)
-  files <- mapMaybe (T.stripPrefix "Day" . toText <=< stripExtension "hs") <$> listDirectory advent
-  pure $ maximum (parsedWith number <$> files) ?: 0
+  numbers <-
+    mapMaybe (parsedWith number <=< T.stripPrefix "Day" . toText <=< stripExtension "hs")
+      <$> listDirectory advent
+  pure $ withNonEmpty 0 maximum1 numbers
 
 mainHelper :: Natural -> Q Exp
 mainHelper yr =

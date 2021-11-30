@@ -1,21 +1,24 @@
 module Advent.Functions where
 
-import Advent.Orphans
+import Advent.Orphans (pattern Empty, pattern NonEmpty)
 import Control.Lens (AsEmpty, Iso', iso, (^.))
 import Data.Char (toLower)
 import Data.Containers.NonEmpty (HasNonEmpty, withNonEmpty)
-import Data.Geometry.Point
+import Data.Geometry.Point (Point (..))
 import Data.List.NonEmpty ((<|))
 import Data.List.NonEmpty qualified as NE
 import Data.List.Toolbox (elemIndex)
 import Data.Map.Strict qualified as Map
+import Data.Monoid.Toolbox (Max (..))
 import Data.Sequence (Seq ((:<|), (:|>)))
 import Data.Sequence.NonEmpty (NESeq (..))
 import Data.Set qualified as Set
 import Data.Time.Clock (diffUTCTime)
 import Data.Time.Clock.System (getSystemTime, systemToUTCTime)
 import GHC.Exts (IsList (..))
-import Relude.Extra.Map
+import Relude.Extra.Foldable1 (Foldable1, foldMap1)
+import Relude.Extra.Map (DynamicMap (..), StaticMap (..), (!?))
+import Relude.Extra.Newtype ((#.))
 
 enum :: (Enum a, Enum b) => Iso' a b
 enum = iso (toEnum . fromEnum) (toEnum . fromEnum)
@@ -182,3 +185,9 @@ popKeys ::
   m ->
   (m, m)
 popKeys ks m0 = foldl' (\(acc, m) x -> (acc <> maybe mempty (one . (x,)) (m !? x), delete x m)) (Empty, m0) ks
+
+maximumOf1 :: forall b a t. (Foldable1 t, Ord b) => (a -> b) -> t a -> b
+maximumOf1 f = coerce #. foldMap1 (coerce @_ @(Max b) . f)
+
+minimumOf1 :: forall b a t. (Foldable1 t, Ord b) => (a -> b) -> t a -> b
+minimumOf1 f = coerce #. foldMap1 (coerce @_ @(Max b) . f)
