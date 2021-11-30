@@ -40,8 +40,7 @@ in18 =
     . Map.keysSet
     . Map.filter id
     . view grid
-    . mapMaybe (parsedWith $ many1 light)
-    $ lines (input 2015 18)
+    $ parse (many1 light) <$> lines (input 2015 18)
 
 step :: [(Word8, Word8)] -> Grid Bool -> Bool
 step alwayson p

@@ -19,7 +19,7 @@ roster = do
   pure (reindeer, (speed, duration, rest))
 
 in14 :: Roster
-in14 = relist . mapMaybe (parsedWith roster) $ lines (input 2015 14)
+in14 = relist $ parse roster <$> lines (input 2015 14)
 
 race :: Duration -> String -> Integer
 race time name =

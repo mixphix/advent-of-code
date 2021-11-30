@@ -129,7 +129,7 @@ humans n = relist $ uncurry (Player 100) . (attack &&& defense) <$> spend n
 
 boss :: Player
 boss =
-  let [h, d, a] = mapMaybe (parsedWith number . T.filter isDigit) $ lines (input 2015 21)
+  let [h, d, a] = parse number . T.filter isDigit <$> lines (input 2015 21)
    in Player h d a
 
 data Turn = Mine | Yours deriving (Eq, Show)

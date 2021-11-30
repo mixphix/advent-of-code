@@ -76,7 +76,7 @@ gizmoFloor = do
   pure (f, gs)
 
 in11 :: Map Floor [Gizmo]
-in11 = relist . mapMaybe (parsedWith gizmoFloor) $ lines (input 2016 11)
+in11 = relist $ parse gizmoFloor <$> lines (input 2016 11)
 
 irradiate :: [Gizmo] -> Maybe [Gizmo]
 irradiate = guarded $ (null . gens) ||^ (null . liftM2 (\\) chips gens)

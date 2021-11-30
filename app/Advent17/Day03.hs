@@ -1,7 +1,7 @@
 module Day03 where
 
 in03 :: Natural
-in03 = parsedWith number (input 2017 3) ?: 0
+in03 = parse number (input 2017 3)
 
 part1 :: Integer
 part1 = manhattan origin $ in03 ^. ulam

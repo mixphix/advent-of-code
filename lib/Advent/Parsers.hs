@@ -4,21 +4,20 @@ import Advent.Coordinates (Cardinal (..))
 import Advent.Functions (relist)
 import Advent.Numbers (undigits)
 import Data.Char (digitToInt)
-import Data.Either.Toolbox (keepRight)
-import Text.Parsec (Parsec, ParsecT, char, digit, many1, oneOf, parse, runParser, runParserT, sepEndBy1, try)
+import Text.Parsec (Parsec, ParsecT, char, digit, many1, oneOf, runParser, runParserT, sepEndBy1, try)
 import Text.Parsec qualified
 
 choice :: [Parsec Text u a] -> Parsec Text u a
 choice = Text.Parsec.choice . map try
 
-parsedWithStateM :: (Monad m) => ParsecT Text u m a -> u -> Text -> m (Maybe a)
-parsedWithStateM p u = fmap keepRight . runParserT p u ""
+parsedWithStateM :: (Monad m) => ParsecT Text u m a -> u -> Text -> m a
+parsedWithStateM p u = either (error . show) id <<$>> runParserT p u ""
 
-parsedWithState :: Parsec Text u a -> u -> Text -> Maybe a
-parsedWithState p u = keepRight . runParser p u ""
+parsedWithState :: Parsec Text u a -> u -> Text -> a
+parsedWithState p u = either (error . show) id . runParser p u ""
 
-parsedWith :: Parsec Text () a -> Text -> Maybe a
-parsedWith p = keepRight . parse p ""
+parse :: Parsec Text () a -> Text -> a
+parse p = either (error . show) id . Text.Parsec.parse p ""
 
 number :: (Integral n, Monad m) => ParsecT Text u m n
 number = do

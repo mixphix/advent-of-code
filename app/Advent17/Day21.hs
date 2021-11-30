@@ -16,7 +16,7 @@ ruleP = do
   pure $ map (,target) sources
 
 in21 :: Map Grid Grid
-in21 = relist . fold . mapMaybe (parsedWith ruleP) $ lines (input 2017 21)
+in21 = relist $ fold . parse ruleP <$> lines (input 2017 21)
 
 gridChunks :: Int -> Grid -> [[Grid]]
 gridChunks k = transpose . map (chunksOf k) . transpose . map (chunksOf k)

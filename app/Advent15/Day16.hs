@@ -71,7 +71,7 @@ sue = do
         <$> ((,) <$> choice l <*> (string ": " *> number)) `sepBy1` string ", "
 
 in16 :: [Sue]
-in16 = mapMaybe (parsedWith sue) $ lines (input 2015 16)
+in16 = parse sue <$> lines (input 2015 16)
 
 part1 :: Int
 part1 = maybe 0 succ $ elemIndex target in16

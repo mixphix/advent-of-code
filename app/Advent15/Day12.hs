@@ -10,7 +10,7 @@ in12 :: Value
 in12 = Aeson.decodeStrict (encodeUtf8 (input 2015 12)) ?: error "hmm"
 
 numbers :: Value -> [Integer]
-numbers (decodeUtf8 . Aeson.encode -> t) = parsedWith (optional p *> number `sepEndBy1` many (oneOf " ,:\"{}[]" <|> letter)) t ?: []
+numbers = parse (optional p *> number `sepEndBy1` p) . decodeUtf8 . Aeson.encode
   where
     p = many (oneOf " ,:\"{}[]" <|> letter)
 

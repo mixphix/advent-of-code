@@ -18,7 +18,7 @@ in09 =
     . map (fst . head &&& foldMap (one . snd))
     . groupWith fst
     . sort
-    . foldMap (fromMaybe [] . parsedWith route)
+    . foldMap (parse route)
     $ lines (input 2015 9)
 
 places :: Set String

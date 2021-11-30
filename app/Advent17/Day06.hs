@@ -4,7 +4,7 @@ import Data.Vector.Unboxed qualified as V
 import Data.Vector.Unboxed.Mutable qualified as VM
 
 in06 :: V.Vector Int
-in06 = relist . mapMaybe (parsedWith number) $ words (input 2017 6)
+in06 = relist $ parse number <$> words (input 2017 6)
 
 stepFrom :: Int -> Int -> V.Vector Int -> V.Vector Int
 stepFrom _ 0 v = v

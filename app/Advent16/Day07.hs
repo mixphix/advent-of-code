@@ -14,7 +14,7 @@ ipv7 = many (asum [Supernet <$> reg, Hypernet <$> hyper])
     reg = toText <$> many1 lower
 
 in07 :: [IPv7]
-in07 = mapMaybe (parsedWith ipv7) $ lines (input 2016 7)
+in07 = parse ipv7 <$> lines (input 2016 7)
 
 tls :: IPv7 -> Bool
 tls ip = none abba [toString t | Hypernet t <- ip] && any abba [toString t | Supernet t <- ip]

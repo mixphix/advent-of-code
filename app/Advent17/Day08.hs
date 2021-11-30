@@ -43,7 +43,7 @@ instructionP = do
   instr reg1 qty reg2 <$> comparingP
 
 in08 :: [Instruction]
-in08 = mapMaybe (parsedWith instructionP) $ lines (input 2017 8)
+in08 = parse instructionP <$> lines (input 2017 8)
 
 execute :: Instruction -> Map Text Int -> Map Text Int
 execute i m = case i of

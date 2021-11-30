@@ -105,7 +105,7 @@ instruction Part2 (s, c@Computer {..}) is = case is !!? _instrpos of
       reg z = _registers !? z ?: 0
 
 in18 :: [Instruction]
-in18 = mapMaybe (parsedWith instructionP) $ lines (input 2017 18)
+in18 = parse instructionP <$> lines (input 2017 18)
 
 part1 :: Integer
 part1 =

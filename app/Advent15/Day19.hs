@@ -22,7 +22,7 @@ rules :: Mop Text [Text]
 medicine :: Seq Text
 in19@(rules, medicine) =
   let text = lines $ input 2015 19
-      rrs = Mop.fromList $ mapMaybe (parsedWith reactionRule) text
+      rrs = relist $ parse reactionRule <$> text
       med = withNonEmpty "" (toString . last) text
    in (rrs, molecules med)
 

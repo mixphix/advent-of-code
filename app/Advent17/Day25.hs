@@ -49,8 +49,8 @@ transition ts (p, t, s) = case ts !? s ?: [] of
 run :: (Char, Natural, Map Char [Instruction]) -> Turing
 run (c, steps, ts) = applyN steps (transition ts) (turing c)
 
-in25 :: Either ParseError (Char, Natural, Map Char [Instruction])
-in25 = parse turingP "" (input 2017 25)
+in25 :: (Char, Natural, Map Char [Instruction])
+in25 = parse turingP (input 2017 25)
 
 part1 :: Natural
-part1 = either (const 0) (count every . view _2 . run) in25
+part1 = count every $ run in25 ^. _2

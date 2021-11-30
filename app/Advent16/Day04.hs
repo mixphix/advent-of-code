@@ -12,7 +12,7 @@ decoy t =
    in foldMap one ['[', a, b, c, d, e, ']'] /= checksum
 
 sectorID :: Text -> Natural
-sectorID t = parsedWith number (T.filter isDigit t) ?: 0
+sectorID = parse number . T.filter isDigit
 
 in04 :: [Text]
 in04 = lines (input 2016 4)

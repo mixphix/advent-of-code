@@ -2,15 +2,14 @@ module Day15 where
 
 type Ingredient = (Integer, V 4 Integer)
 
-ingredient :: Parser (String, Ingredient)
+ingredient :: Parser Ingredient
 ingredient = do
-  name <- many1 alphaNum
-  capacity <- string ": capacity " *> number
+  capacity <- many1 alphaNum *> string ": capacity " *> number
   durability <- string ", durability " *> number
   flavor <- string ", flavor " *> number
   texture <- string ", texture " *> number
   calories <- string ", calories " *> number
-  pure (name, (calories, Vector4 capacity durability flavor texture))
+  pure (calories, Vector4 capacity durability flavor texture)
 
 teaspoons :: [[Integer]]
 teaspoons = do
@@ -21,7 +20,7 @@ teaspoons = do
   sum [a, b, c, d] == 100 ? [a, b, c, d]
 
 in15 :: [Ingredient]
-in15 = mapMaybe (snd <<$>> parsedWith ingredient) $ lines (input 2015 15)
+in15 = parse ingredient <$> lines (input 2015 15)
 
 cookie :: [Integer] -> (Integer, Integer)
 cookie tsps =

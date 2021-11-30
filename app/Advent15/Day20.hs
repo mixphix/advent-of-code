@@ -1,7 +1,7 @@
 module Day20 where
 
 in20 :: Natural
-in20 = parsedWith number (input 2015 20) ?: 0
+in20 = parse number (input 2015 20)
 
 part1 :: Int
 part1 = maybe 0 succ $ findIndex ((in20 <=) . sumOn (10 *) . divisors) [1 ..]

@@ -1,7 +1,7 @@
 module Day03 where
 
 in03 :: [Cardinal]
-in03 = parsedWith (many cardinalP) (input 2015 3) ?: []
+in03 = parse (many cardinalP) (input 2015 3)
 
 type Visits = Mop (Point 2 Integer) (Sum Int)
 

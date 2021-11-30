@@ -4,7 +4,7 @@ directions :: Parser Cardinal
 directions = choice [North <$ char 'U', East <$ char 'R', West <$ char 'L', South <$ char 'D']
 
 in02 :: [[Cardinal]]
-in02 = mapMaybe (parsedWith $ many1 directions) $ lines (input 2016 2)
+in02 = parse (many1 directions) <$> lines (input 2016 2)
 
 gridFor :: Part -> [Point 2 Integer]
 gridFor Part1 = surrounding (Point2 0 0)

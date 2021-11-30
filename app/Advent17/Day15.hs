@@ -4,7 +4,7 @@ import Data.Text qualified as T
 
 in15 :: (Word, Word)
 in15 =
-  let [a, b] = mapMaybe (parsedWith number . T.filter isDigit) $ lines (input 2017 15)
+  let [a, b] = parse number . T.filter isDigit <$> lines (input 2017 15)
    in (a, b)
 
 stepA, stepB :: Word -> Word

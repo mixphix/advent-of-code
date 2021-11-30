@@ -14,7 +14,7 @@ prepASCII = (<> [17, 31, 73, 47, 23]) . map (fromIntegral . ord) . toString . T.
 
 in10 :: Part -> [Word8]
 in10 part = ($ input 2017 10) $ case part of
-  Part1 -> mapMaybe (parsedWith number) . T.splitOn ","
+  Part1 -> map (parse number) . T.splitOn ","
   Part2 -> prepASCII
 
 runTwists :: Int -> Int -> [Word8] -> V.Vector Word8 -> V.Vector Word8

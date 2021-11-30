@@ -9,6 +9,7 @@ import Advent.Numbers as Advent
 import Advent.Orphans as Advent
 import Advent.Parsers as Advent
 import Advent.Polynomials as Advent
+import Advent.Suspension as Advent
 import AdventAPI as Advent (Part (..))
 import Control.Applicative as Advent
 import Control.Arrow as Advent hiding (ArrowLoop (..), first, second)
@@ -139,7 +140,7 @@ import Relude.Extra.Group as Advent
 import Relude.Extra.Map as Advent
 import Relude.Extra.Newtype as Advent
 import Relude.Extra.Tuple as Advent
-import Text.Parsec as Advent hiding (State (..), choice, count, many, optional, uncons, (<|>), pattern Empty)
+import Text.Parsec as Advent hiding (State (..), choice, count, many, optional, parse, uncons, (<|>), pattern Empty)
 import Text.Parsec.Text as Advent (Parser)
 
 applyN :: Natural -> (a -> a) -> a -> a

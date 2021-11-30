@@ -52,7 +52,7 @@ instruction = choice [hlf, tpl, inc, jmp, jie, jio]
       Jio r . f <$> number
 
 in23 :: Vector Instruction
-in23 = relist . mapMaybe (parsedWith instruction) $ lines (input 2015 23)
+in23 = relist $ parse instruction <$> lines (input 2015 23)
 
 compute :: Vector Instruction -> Computer -> Computer
 compute program c = case program V.!? _cursor c of

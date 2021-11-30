@@ -21,9 +21,8 @@ in07 :: (Map Text Natural, Map Text [Text])
 weights :: Map Text Natural
 relations :: Map Text [Text]
 in07@(weights, relations) =
-  foldMap (one . (name &&& weight) &&& one . (name &&& aboves))
-    . mapMaybe (parsedWith program)
-    $ lines (input 2017 7)
+  foldMap (one . (name &&& weight) &&& one . (name &&& aboves)) $
+    parse program <$> lines (input 2017 7)
 
 inverseRelations :: Map Text Text
 inverseRelations = Map.foldMapWithKey (\k vs -> relist $ (,k) <$> vs) relations

@@ -36,7 +36,7 @@ instance Monoid Permutation where
   mempty = Permutation $ VF.fromList [0 .. 15]
 
 in16 :: [Dance]
-in16 = mapMaybe (parsedWith danceP) $ T.splitOn "," (input 2017 16)
+in16 = parse danceP <$> T.splitOn "," (input 2017 16)
 
 toPerm :: Vector Char -> Permutation
 toPerm = Permutation . VF.fromList . mapMaybe (`elemIndex` ['a' .. 'p']) . relist

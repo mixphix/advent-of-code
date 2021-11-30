@@ -1,7 +1,7 @@
 module Day17 where
 
 in17 :: [Natural]
-in17 = mapMaybe (parsedWith number) $ lines (input 2015 17)
+in17 = parse number <$> lines (input 2015 17)
 
 part1 :: Natural
 part1 = count ((150 ==) . sum) $ subsequences in17

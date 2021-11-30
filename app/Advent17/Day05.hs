@@ -4,7 +4,7 @@ import Data.Vector.Unboxed qualified as V
 import Data.Vector.Unboxed.Mutable qualified as VM
 
 in05 :: V.Vector Int
-in05 = relist . mapMaybe (parsedWith number) $ lines (input 2017 5)
+in05 = relist $ parse number <$> lines (input 2017 5)
 
 data Program = Program {instructions :: V.Vector Int, position :: Int} deriving (Eq)
 

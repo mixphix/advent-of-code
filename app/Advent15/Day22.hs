@@ -73,7 +73,7 @@ effectuate = Map.foldMapWithKey (\eff dur -> if dur > 1 then one (eff, pred dur)
 
 boss :: Player
 boss =
-  let [h, d] = mapMaybe (parsedWith number . T.filter isDigit) $ lines (input 2015 22)
+  let [h, d] = parse number . T.filter isDigit <$> lines (input 2015 22)
    in Player h d 0 0
 
 data Turn = Mine | Yours deriving (Eq, Show)

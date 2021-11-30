@@ -11,7 +11,7 @@ edgeP = do
 
 in12 :: Graph
 in12 =
-  let m = relist . mapMaybe (parsedWith edgeP) $ lines (input 2017 12)
+  let m = relist $ parse edgeP <$> lines (input 2017 12)
       (lo, _) = Map.findMin m
       (hi, _) = Map.findMax m
    in buildG (lo, hi) $ Map.foldMapWithKey (\k v -> (k,) <$> v) m

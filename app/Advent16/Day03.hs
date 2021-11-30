@@ -13,7 +13,7 @@ triangle (Point3 x y z) =
    in a + b > c
 
 in03 :: [Point 3 Natural]
-in03 = mapMaybe (parsedWith three) $ lines (input 2016 3)
+in03 = parse three <$> lines (input 2016 3)
 
 part1 :: Natural
 part1 = count triangle in03

@@ -14,10 +14,8 @@ in13 :: Table
 in13 =
   relist
     . map (fst . head &&& foldMap (one . snd))
-    . groupWith fst
-    . sort
-    . foldMap (maybe [] pure . parsedWith table)
-    $ lines (input 2015 13)
+    . groupAllWith fst
+    $ parse table <$> lines (input 2015 13)
 
 names :: NonEmpty String
 names = relist $ keys in13

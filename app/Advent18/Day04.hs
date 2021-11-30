@@ -27,8 +27,7 @@ guardP = do
 in04 :: Mop Int [Int]
 in04 =
   foldMap (\(_, grd, mins) -> one (grd, mins))
-    . (?: [])
-    . parsedWith (many guardP)
+    . parse (many guardP)
     . unlines
     . sort
     $ lines (input 2018 4)

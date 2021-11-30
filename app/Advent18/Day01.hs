@@ -1,7 +1,7 @@
 module Day01 where
 
 in01 :: [Integer]
-in01 = mapMaybe (parsedWith $ optional (char '+') *> number) $ lines (input 2018 1)
+in01 = parse (optional (char '+') *> number) <$> lines (input 2018 1)
 
 part1 :: Integer
 part1 = sum in01

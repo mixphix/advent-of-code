@@ -11,10 +11,10 @@ groupP s = between (string "{") (string "}") $ do
   pure $ s + sum subscores
 
 part1 :: Int
-part1 = parsedWith (groupP 1) (input 2017 9) ?: 0
+part1 = parse (groupP 1) (input 2017 9)
 
 removeGarbageP :: Parser Int
 removeGarbageP = sum <$> many (choice [garbageP, 0 <$ anyChar])
 
 part2 :: Int
-part2 = parsedWith removeGarbageP (input 2017 9) ?: 0
+part2 = parse removeGarbageP (input 2017 9)

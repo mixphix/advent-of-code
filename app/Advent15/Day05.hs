@@ -3,7 +3,7 @@ module Day05 where
 import Data.Text qualified as T
 
 in05 :: [Text]
-in05 = filter (/= "") . lines $ input 2015 5
+in05 = filter (/= "") $ lines (input 2015 5)
 
 nice1 :: Text -> Bool
 nice1 t@(toString -> tstr) =

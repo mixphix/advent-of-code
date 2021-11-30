@@ -100,7 +100,7 @@ wires = choice [constant, anded, ored, lshifted, rshifted, complemented]
     register = choice [Left <$> name, Right <$> number]
 
 in07 :: Wires
-in07 = relist . mapMaybe (parsedWith wires) $ lines (input 2015 7)
+in07 = relist $ parse wires <$> lines (input 2015 7)
 
 part1 :: Word16
 part1 = keepRight =<< command "a" in07 !? "a" ?: 0

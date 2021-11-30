@@ -44,7 +44,7 @@ execute part (g@(Give has lo hi) : cs) m
 execute _ _ m = Right m
 
 in10 :: [Command]
-in10 = sort . mapMaybe (parsedWith command) $ lines (input 2016 10)
+in10 = sort $ parse command <$> lines (input 2016 10)
 
 part1 :: Natural
 part1 =

@@ -11,7 +11,7 @@ directions = choice [l, r] `sepEndBy1` string ", "
       pure (n, turnR)
 
 in01 :: [(Integer, Ant -> Ant)]
-in01 = parsedWith directions (input 2016 1) ?: []
+in01 = parse directions (input 2016 1)
 
 part1 :: Natural
 part1 = sumOn (fromIntegral . abs) . antPosition $ foldl' (\ant (n, t) -> scurry n $ t ant) (antCentre North) in01

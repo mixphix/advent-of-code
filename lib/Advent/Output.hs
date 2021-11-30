@@ -9,7 +9,7 @@ import GHC.IO (unsafePerformIO)
 import Language.Haskell.TH
 import Numeric (showFFloat)
 import System.Directory (listDirectory)
-import System.FilePath (stripExtension)
+import System.FilePath (stripExtension, (</>))
 
 seconds :: NominalDiffTime -> String
 seconds t = showFFloat (Just 3) (realToFrac @_ @Double t) []
@@ -32,11 +32,11 @@ mainFor yr =
 maxDay :: Natural -> Natural
 {-# NOINLINE maxDay #-}
 maxDay yr = unsafePerformIO $ do
+  projdir <- toString . strip <$> readFileText "projdir.txt"
   let [_, _, y1, y2] = relist $ digits yr
-      advent = "./app/Advent" <> show (10 * y1 + y2)
+      advent = projdir </> "app" </> "Advent" <> show (10 * y1 + y2)
   numbers <-
-    mapMaybe (parsedWith number <=< T.stripPrefix "Day" . toText <=< stripExtension "hs")
-      <$> listDirectory advent
+    mapMaybe (parse number <<$>> T.stripPrefix "Day" . toText <=< stripExtension "hs") <$> listDirectory advent
   pure $ withNonEmpty 0 maximum1 numbers
 
 mainHelper :: Natural -> Q Exp

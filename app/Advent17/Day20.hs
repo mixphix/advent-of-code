@@ -16,7 +16,7 @@ particle = do
   pure $ Vector3 (Vector3 px vx ax) (Vector3 py vy ay) (Vector3 pz vz az)
 
 in20 :: [V 3 (V 3 Integer)]
-in20 = mapMaybe (parsedWith particle) $ lines (input 2017 20)
+in20 = parse particle <$> lines (input 2017 20)
 
 reposition :: Integer -> V 3 (V 3 Integer) -> V 3 (V 3 Integer)
 reposition n (Vector3 (Vector3 px vx ax) (Vector3 py vy ay) (Vector3 pz vz az)) =

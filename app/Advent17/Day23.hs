@@ -36,7 +36,7 @@ instructionP = choice [setP, subP, mulP, jnzP]
       Jnz r <$> (string " " *> eti)
 
 in23 :: [Instruction]
-in23 = mapMaybe (parsedWith instructionP) $ lines (input 2017 23)
+in23 = parse instructionP <$> lines (input 2017 23)
 
 data Computer = Computer
   { _registers :: Map Text Integer,

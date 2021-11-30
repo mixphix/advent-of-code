@@ -35,7 +35,7 @@ hexcardinalP =
     ]
 
 in11 :: [HexCardinal]
-in11 = mapMaybe (parsedWith hexcardinalP) . T.splitOn "," . withNonEmpty "" head $ lines (input 2017 11)
+in11 = parse hexcardinalP <$> T.splitOn "," (input 2017 11)
 
 part1 :: Integer
 part1 = hexManhattan zero $ foldl' (flip hexCardinal) zero in11

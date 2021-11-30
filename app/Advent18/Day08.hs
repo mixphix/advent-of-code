@@ -1,6 +1,5 @@
 module Day08 where
 
-import Data.Text qualified as T
 import Data.Tree
 import Text.Parsec qualified as P
 
@@ -13,7 +12,7 @@ treeP = do
   pure $ Node entries subtree
 
 in08 :: Tree [Int]
-in08 = fromMaybe (Node [] []) . parsedWith treeP $ T.strip (input 2018 8)
+in08 = parse treeP $ strip (input 2018 8)
 
 part1 :: Int
 part1 = foldTree (\as bss -> sum as + sum bss) in08

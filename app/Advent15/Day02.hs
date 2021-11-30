@@ -7,7 +7,7 @@ cube = do
   Point3 n1 n2 <$> number
 
 in02 :: [Point 3 Natural]
-in02 = mapMaybe (parsedWith cube) $ lines (input 2015 2)
+in02 = parse cube <$> lines (input 2015 2)
 
 part1 :: Natural
 part1 = sumOn (((+) <$> sumOn (2 *) <*> minimum1) . areas) in02

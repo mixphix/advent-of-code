@@ -4,11 +4,10 @@ import Algorithms.Geometry.ConvexHull (convexHull)
 import Data.Ext (ext, _core)
 import Data.Geometry.Polygon (toPoints)
 import Data.Geometry.Polygon.Convex (simplePolygon)
-import Data.List.Toolbox (groupSortOn)
 import Data.Map.Monoidal.Strict qualified as Mop
 
 in06 :: NonEmpty (Point 2 Integer)
-in06 = relist . mapMaybe (parsedWith $ Point2 <$> number <*> (string ", " *> number)) $ lines (input 2018 6)
+in06 = relist $ parse (Point2 <$> number <*> (string ", " *> number)) <$> lines (input 2018 6)
 
 m :: Mop (Point 2 Integer) [Point 2 Integer]
 m =
@@ -17,8 +16,7 @@ m =
 
 part1 :: Int
 part1 =
-  fromMaybe 0
-    . maximumOf length
+  withNonEmpty 0 (maximumOf1 length)
     . Mop.filter (none $ ((`elem` [0, 500]) . view xCoord) ||^ ((`elem` [0, 500]) . view yCoord))
     $ m `Mop.withoutKeys` relist (_core <$> toPoints (convexHull (in06 <&> ext) ^. simplePolygon))
 

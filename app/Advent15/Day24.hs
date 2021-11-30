@@ -2,7 +2,7 @@ module Day24 where
 
 in24 :: [Natural]
 weight :: Natural
-(in24, weight) = (id &&& sum) . mapMaybe (parsedWith number) $ lines (input 2015 24)
+(in24, weight) = (id &&& sum) $ parse number <$> lines (input 2015 24)
 
 footsacks :: [(Int, Natural)]
 footsacks = takeWhile ((smallestSizeOver wgt ==) . fst) $ do

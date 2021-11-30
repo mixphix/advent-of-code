@@ -32,7 +32,7 @@ bridgify cs bs@(_ Seq.:|> Component _ p) =
         ns -> ns >-< \n -> bridgify (map canonical cs \\ [canonical n]) (bs Seq.:|> n)
 
 in24 :: [Component]
-in24 = mapMaybe (parsedWith $ Component <$> (number <* string "/") <*> number) $ lines (input 2017 24)
+in24 = parse (Component <$> (number <* string "/") <*> number) <$> lines (input 2017 24)
 
 part1 :: Natural
 part1 = withNonEmpty 0 (maximumOf1 (sumOn strength)) $ bridgify in24 Empty

@@ -7,7 +7,7 @@ uncantor (Point2 r c) =
 
 in25 :: Point 2 Natural
 in25 =
-  let [a, b] = mapMaybe (parsedWith number) $ words (input 2015 25)
+  let [a, b] = parse number <$> words (input 2015 25)
    in Point2 a b
 
 codes :: [Natural]

@@ -1,6 +1,5 @@
 module Day09 where
 
-import Data.Text qualified as T
 import Text.Parsec qualified as P
 
 data Marker
@@ -22,11 +21,11 @@ marker Part2 = many1 $ choice [repeated, nomarker]
       chars <- char '(' *> number
       n <- char 'x' *> number <* char ')'
       t <- toText <$> P.count chars anyChar
-      pure . Repeated n $ parsedWith (marker Part2) t ?: []
+      pure . Repeated n $ parse (marker Part2) t
     nomarker = NoMarker <$> many1 (satisfy (/= '('))
 
 in09 :: Part -> [Marker]
-in09 part = parsedWith (marker part) (T.strip $ input 2016 9) ?: []
+in09 part = parse (marker part) $ strip (input 2016 9)
 
 markerLength :: Marker -> Natural
 markerLength = \case

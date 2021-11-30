@@ -1,7 +1,7 @@
 module Day10 where
 
 in10 :: [Natural]
-in10 = relist . digits $ parsedWith number (input 2015 10) ?: 0
+in10 = relist . digits $ parse number (input 2015 10)
 
 lookAndSay :: [Natural] -> [Natural]
 lookAndSay = withNonEmpty [] (say . group1)

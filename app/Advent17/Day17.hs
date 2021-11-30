@@ -10,7 +10,7 @@ spinlock part n step pos0 v =
    in spinlock part (pred n) step pos $ Seq.insertAt pos inserted v
 
 in17 :: Int
-in17 = parsedWith number (input 2017 17) ?: 0
+in17 = parse number (input 2017 17)
 
 part1 :: Int
 part1 =

@@ -47,7 +47,7 @@ runCommand = \case
      in foldr (\v -> alter (const $ curs !? shifted v) v) m col
 
 in08 :: [Command]
-in08 = mapMaybe (parsedWith command) $ lines (input 2016 8)
+in08 = parse command <$> lines (input 2016 8)
 
 part1 :: Natural
 part1 = yeas $ foldl' (flip runCommand) blank in08
