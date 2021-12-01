@@ -41,7 +41,7 @@ place e m (s, c)
   | multipleOf 23 m =
     let (m', c') = deleteAt (-7) c
      in (s & ix e +~ (m + m'), c')
-  | otherwise = (s, insertAt 1 m c)
+  | otherwise = (s, insertAt 2 m c)
 
 part1 :: Int
 part1 =
@@ -49,3 +49,10 @@ part1 =
     . fst
     . foldl' (flip $ uncurry place) (elves, circle)
     $ zip (cycle [1 .. players]) [1 .. himarble]
+
+part2 :: Int
+part2 =
+  maximum1
+    . fst
+    . foldl' (flip $ uncurry place) (elves, circle)
+    $ zip (cycle [1 .. players]) [1 .. himarble * 100]

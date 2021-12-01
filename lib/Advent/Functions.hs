@@ -1,10 +1,11 @@
 module Advent.Functions where
 
 import Advent.Orphans (pattern Empty, pattern NonEmpty)
-import Control.Lens (AsEmpty, Iso', iso, (^.))
+import Control.Lens (AsEmpty, Iso', Lens', iso, (^.))
 import Data.Char (toLower)
 import Data.Containers.NonEmpty (HasNonEmpty, withNonEmpty)
 import Data.Geometry.Point (Point (..))
+import Data.Geometry.Vector (Arity, C (C), Vector (..), element)
 import Data.List.NonEmpty ((<|))
 import Data.List.NonEmpty qualified as NE
 import Data.List.Toolbox (elemIndex)
@@ -16,6 +17,7 @@ import Data.Set qualified as Set
 import Data.Time.Clock (diffUTCTime)
 import Data.Time.Clock.System (getSystemTime, systemToUTCTime)
 import GHC.Exts (IsList (..))
+import GHC.TypeLits (type (<=))
 import Relude.Extra.Foldable1 (Foldable1, foldMap1)
 import Relude.Extra.Map (DynamicMap (..), StaticMap (..), (!?))
 import Relude.Extra.Newtype ((#.))
@@ -84,20 +86,20 @@ uninterleave (x : y : zs) =
    in (x : xs, y : ys)
 uninterleave xs = (xs, [])
 
-gridToMap :: [[a]] -> Map (Point 2 Natural) a
+gridToMap :: [[a]] -> Map (Point 2 Integer) a
 gridToMap = go 0 0 Map.empty
   where
     go _ _ !m [] = m
     go r _ !m ([] : xss) = go (succ r) 0 m xss
     go r c !m ((x : xs) : xss) = go r (succ c) (insert (Point2 c r) x m) (xs : xss)
 
-mapToGrid :: Map (Point 2 Natural) a -> [[a]]
+mapToGrid :: Map (Point 2 Integer) a -> [[a]]
 mapToGrid m =
   let (Point2 c r, _) = Map.findMax m
    in [catMaybes [m !? Point2 col row | col <- [0 .. c]] | row <- [0 .. r]]
 
 -- | (0, 0) is the top-left corner
-grid :: Iso' [[a]] (Map (Point 2 Natural) a)
+grid :: Iso' [[a]] (Map (Point 2 Integer) a)
 grid = iso gridToMap mapToGrid
 
 firstDuplicate :: forall a. (Ord a) => [a] -> Maybe a
@@ -191,3 +193,12 @@ maximumOf1 f = coerce #. foldMap1 (coerce @_ @(Max b) . f)
 
 minimumOf1 :: forall b a t. (Foldable1 t, Ord b) => (a -> b) -> t a -> b
 minimumOf1 f = coerce #. foldMap1 (coerce @_ @(Max b) . f)
+
+_x :: (Arity d, 1 <= d) => Lens' (Vector d r) r
+_x = element (C @0)
+
+_y :: (Arity d, 2 <= d) => Lens' (Vector d r) r
+_y = element (C @1)
+
+_z :: (Arity d, 3 <= d) => Lens' (Vector d r) r
+_z = element (C @2)

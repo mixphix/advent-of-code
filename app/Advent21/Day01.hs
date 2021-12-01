@@ -1,1 +1,1 @@
-module Advent21.Day01 where
+module Day01 where

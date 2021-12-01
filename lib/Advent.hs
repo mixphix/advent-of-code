@@ -13,7 +13,7 @@ import Advent.Suspension as Advent
 import AdventAPI as Advent (Part (..))
 import Control.Applicative as Advent
 import Control.Arrow as Advent hiding (ArrowLoop (..), first, second)
-import Control.Lens as Advent (at, ix, none, view, (%~), (.~), (<>~), (?~), (^.), _1, _2, _3, _4)
+import Control.Lens as Advent (at, from, ix, none, to, view, (%~), (.~), (<>~), (?~), (^.), _1, _2, _3, _4)
 import Control.Monad as Advent
 import Data.Bits as Advent
 import Data.Char as Advent
