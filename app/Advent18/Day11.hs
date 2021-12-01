@@ -18,10 +18,23 @@ fuelcells =
 
 cumulcells :: NEMop (Point 2 Integer) (Sum Integer)
 cumulcells =
-  NEMop
-    . NEMap.fromSet (Sum . (\(Point2 x y) -> sumOn powerlevel $ liftM2 Point2 [1 .. x] [1 .. y]))
-    . relist
-    $ join (liftM2 Point2) [1 .. 300]
+  relist @(Map (Point 2 Integer)) @(NEMop (Point 2 Integer)) . foldl' f Empty $ join (liftM2 Point2) [1 .. 300]
+  where
+    f m p@(Point2 x y) =
+      insert p (Sum (powerlevel p) + m ! Point2 (x - 1) y + m ! Point2 x (y - 1) - m ! Point2 (x - 1) (y - 1)) m
+
+subcell :: Integer -> Point 2 Integer -> Integer
+subcell w (Point2 x0 y0) =
+  let x = x0 - 1
+      y = y0 - 1
+      x' = x + w
+      y' = y + w
+      [a, b, c, d] = getSum . (cumulcells !) <$> [Point2 x y, Point2 x y', Point2 x' y, Point2 x' y']
+   in d - b - c + a
+
+maxsubcumul :: Integer -> (Point 2 Integer, Integer)
+maxsubcumul w =
+  withNonEmpty (Point2 0 0, 0) (maximumOn1 snd) [(p, subcell w p) | p <- join (liftM2 Point2) [1 .. 301 - w]]
 
 part1 :: (Integer, Integer)
 part1 =
@@ -30,11 +43,4 @@ part1 =
 
 part2 :: (Integer, Integer, Integer)
 part2 =
-  let totalpower w p@(Point2 x y) =
-        let [a, b, c, d] = getSum . (cumulcells !) <$> [Point2 (x - w) (y - w), Point2 x (y - w), Point2 (x - w) y, p]
-         in a + d - (b + c)
-   in withNonEmpty (0, 0, 0) (fst . maximumOn1 snd) $
-        [ ((x, y, w), totalpower w p)
-          | w@(fromIntegral -> w') <- [1 .. 300],
-            p@(Point2 x y) <- join (liftM2 Point2) [succ w' .. 300 - succ w']
-        ]
+  withNonEmpty (0, 0, 0) (fst . maximumOn1 snd) [((x, y, w), l) | w <- [3 .. 300], let (Point2 x y, l) = maxsubcumul w]

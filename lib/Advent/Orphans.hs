@@ -18,6 +18,7 @@ where
 import Advent.Maps
 import Control.Lens hiding (pattern Empty)
 import Data.Containers.NonEmpty (HasNonEmpty (..), pattern IsEmpty, pattern IsNonEmpty)
+import Data.Data (Data)
 import Data.Functor.Classes (Eq1, Ord1, Show1)
 import Data.Geometry.Point (Point)
 import Data.Geometry.Vector (Arity)
@@ -58,7 +59,7 @@ type NEVector = NonEmptyVector
 type CVector = CircularVector
 
 newtype NEMop k a = NEMop {getNEMap :: NEMap k a}
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Read, Data, Typeable)
   deriving newtype
     ( Eq1,
       Ord1,
@@ -68,7 +69,8 @@ newtype NEMop k a = NEMop {getNEMap :: NEMap k a}
       FunctorWithIndex k,
       FoldableWithIndex k,
       Data.Semigroup.Foldable.Foldable1,
-      Foldable1
+      Foldable1,
+      NFData
     )
 
 instance Traversable (NEMop k) where
@@ -86,7 +88,7 @@ instance Rewrapped (NEMop k a) (NEMop k a)
 instance Rewrapped (NEMop k a) (NEMap k a)
 
 newtype NEIntMop a = NEIntMop {getNEIntMap :: NEIntMap a}
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Read, Data, Typeable)
   deriving newtype
     ( Eq1,
       Ord1,
@@ -96,7 +98,8 @@ newtype NEIntMop a = NEIntMop {getNEIntMap :: NEIntMap a}
       FunctorWithIndex Int,
       FoldableWithIndex Int,
       Data.Semigroup.Foldable.Foldable1,
-      Foldable1
+      Foldable1,
+      NFData
     )
 
 instance Wrapped (NEIntMop a) where
