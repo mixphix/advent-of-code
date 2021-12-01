@@ -11,11 +11,9 @@ in25 =
    in Point2 a b
 
 codes :: [Natural]
-codes = 20151125 : go 20151125
+codes = go 20151125
   where
-    go n =
-      let n' = n * 252533 `rem` 33554393
-       in n' : go n'
+    go n = n : go (n * 252533 `rem` 33554393)
 
 part1 :: Natural
 part1 = withNonEmpty 0 head $ drop (pred $ uncantor in25) codes

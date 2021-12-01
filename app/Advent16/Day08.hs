@@ -1,17 +1,16 @@
 module Day08 where
 
-import Control.Lens (from)
 import Data.Map.Strict qualified as Map
 
-type Screen = Map (Point 2 Natural) Bool
+type Screen = Map (Point 2 Integer) Bool
 
 blank :: Screen
 blank = foldr (`insert` False) Empty $ Point2 <$> [0 .. 49] <*> [0 .. 5]
 
 data Command
-  = Rect Natural Natural
-  | RotateRow Natural Natural
-  | RotateCol Natural Natural
+  = Rect Integer Integer
+  | RotateRow Integer Integer
+  | RotateCol Integer Integer
   deriving (Show)
 
 command :: Parser Command
@@ -53,4 +52,4 @@ part1 :: Natural
 part1 = yeas $ foldl' (flip runCommand) blank in08
 
 part2 :: [String]
-part2 = map (map (\case True -> '#'; _ -> ' ')) $ foldl' (flip runCommand) blank in08 ^. from grid
+part2 = map (\case True -> '#'; _ -> ' ') <$> foldl' (flip runCommand) blank in08 ^. from grid

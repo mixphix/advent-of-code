@@ -126,7 +126,6 @@ import Data.List.Toolbox as Advent
     zipWith7,
     (\\),
   )
-import Data.Map.Monoidal.Strict as Advent ((!))
 import Data.Map.NonEmpty as Advent (NEMap)
 import Data.Monoid.Toolbox as Advent hiding (option)
 import Data.Set.NonEmpty as Advent (NESet)

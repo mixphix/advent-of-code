@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -5,15 +6,19 @@
 module Advent.Coordinates where
 
 import Advent.D4 (D4 (..))
+import Advent.Functions (relist, (>-<))
+import Advent.Orphans ()
 import Advent.Suspension (Suspension (..))
 import Control.Lens (Iso', Lens', abbreviatedFields, from, iso, makeLensesWith)
 import Data.Complex (Complex (..))
+import Data.Foldable.Toolbox (sumOn)
 import Data.Geometry (Additive ((^-^)), Arity, Point (..))
 import Data.Ratio ((%))
-import Data.Semiring (Ring (..), Semiring (..), minus)
+import Data.Semiring (Ring (..), Semiring (plus, times, zero), minus)
 import Data.Semiring qualified as R
+import Data.Set.NonEmpty (NESet)
 import GHC.Show qualified (show)
-import Prelude hiding (negate, one)
+import Prelude hiding (negate)
 
 int :: (Integral n, Ring r) => n -> r
 int = R.fromIntegral
@@ -27,8 +32,8 @@ pair = iso (\(Point2 x y) -> (x, y)) (uncurry Point2)
 cpair :: Iso' (Complex a) (a, a)
 cpair = from complex . pair
 
-manhattan :: (Arity d, Num a) => Point d a -> Point d a -> a
-manhattan (Point v) (Point w) = sum $ abs <$> (v ^-^ w)
+manhattan :: (Arity d) => Point d Integer -> Point d Integer -> Natural
+manhattan (Point v) (Point w) = fromIntegral $ sumOn abs (v ^-^ w)
 
 dihedralTransform :: (Ring a) => D4 -> Point 2 a -> Point 2 a
 dihedralTransform = \case
@@ -44,9 +49,9 @@ dihedralTransform = \case
 dihedralTransformC :: (Ring a) => D4 -> Complex a -> Complex a
 dihedralTransformC = \case
   E -> id
-  R -> times (zero :+ one)
+  R -> times (zero :+ R.one)
   R2 -> fmap negate
-  R3 -> times (zero :+ negate one)
+  R3 -> times (zero :+ negate R.one)
   T -> \(x :+ y) -> negate x :+ y
   TR -> \(x :+ y) -> negate y :+ negate x
   TR2 -> \(x :+ y) -> x :+ negate y
@@ -99,11 +104,20 @@ cardinalC n c (x :+ y) = case c of
 vonNeumann :: (Ring a) => Point 2 a -> [Point 2 a]
 vonNeumann = (cardinal 1 <$> [North, East, South, West] ??)
 
+taxicab :: (Ord a, Ring a) => Natural -> Point 2 a -> NESet (Point 2 a)
+taxicab n0 = relist . go n0 . one
+  where
+    go 0 sp = sp
+    go n sp = go (pred n) sp >-< relist @_ @Set . vonNeumann
+
 moore :: (Ring a) => Point 2 a -> [Point 2 a]
 moore = (cardinal 1 <$> universe ??)
 
-surrounding :: (Ring a) => Point 2 a -> [Point 2 a]
-surrounding = (:) <*> moore
+surrounding :: (Ord a, Ring a) => Natural -> Point 2 a -> NESet (Point 2 a)
+surrounding n0 = relist . go n0 . one
+  where
+    go 0 sp = sp
+    go n sp = go (pred n) sp >-< relist @_ @Set . moore
 
 data Ant = Ant
   { antDirection :: Cardinal,
