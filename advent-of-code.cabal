@@ -277,7 +277,7 @@ executable advent21
       app/Advent21
     other-modules:
       Day01
-      -- Day02
+      Day02
       -- Day03
       -- Day04
       -- Day05
