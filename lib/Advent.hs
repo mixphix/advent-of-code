@@ -128,6 +128,7 @@ import Data.List.Toolbox as Advent
   )
 import Data.Map.NonEmpty as Advent (NEMap)
 import Data.Monoid.Toolbox as Advent hiding (option)
+import Data.Sequence.NonEmpty as Advent (NESeq)
 import Data.Set.NonEmpty as Advent (NESet)
 import Data.Text as Advent (strip)
 import Data.Traversable as Advent
