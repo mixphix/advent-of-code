@@ -18,6 +18,7 @@ import Data.Time.Clock (diffUTCTime)
 import Data.Time.Clock.System (getSystemTime, systemToUTCTime)
 import GHC.Exts (IsList (..))
 import GHC.TypeLits (type (<=))
+import Relude qualified
 import Relude.Extra.Foldable1 (Foldable1, foldMap1)
 import Relude.Extra.Map (DynamicMap (..), StaticMap (..), (!?))
 import Relude.Extra.Newtype ((#.))
@@ -48,6 +49,16 @@ infixr 1 >-<
 
 (>-<) :: (Foldable t, Monoid m) => t a -> (a -> m) -> m
 (>-<) = flip foldMap
+
+infixr 2 ||^
+
+(||^) :: (Monad m) => m Bool -> m Bool -> m Bool
+(||^) = (Relude.||^)
+
+infixr 3 &&^
+
+(&&^) :: (Monad m) => m Bool -> m Bool -> m Bool
+(&&^) = (Relude.&&^)
 
 padWith :: (Show a) => Int -> Char -> a -> String
 padWith n c x = paddedWith n c (show x)

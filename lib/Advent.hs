@@ -133,7 +133,7 @@ import Data.Set.NonEmpty as Advent (NESet)
 import Data.Text as Advent (strip)
 import Data.Traversable as Advent
 import Data.Vector as Advent (Vector)
-import Relude as Advent hiding (First (..), Last (..), map, nonEmpty)
+import Relude as Advent hiding (First (..), Last (..), map, nonEmpty, (&&^), (||^))
 import Relude.Extra.Enum as Advent
 import Relude.Extra.Foldable1 as Advent
 import Relude.Extra.Group as Advent
