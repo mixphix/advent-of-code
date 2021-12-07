@@ -10,7 +10,7 @@ import Data.List.NonEmpty ((<|))
 import Data.List.NonEmpty qualified as NE
 import Data.List.Toolbox (elemIndex)
 import Data.Map.Strict qualified as Map
-import Data.Monoid.Toolbox (Max (..))
+import Data.Monoid.Toolbox (Max (..), Min (..))
 import Data.Sequence (Seq ((:<|), (:|>)))
 import Data.Sequence.NonEmpty (NESeq (..))
 import Data.Set qualified as Set
@@ -203,7 +203,7 @@ maximumOf1 :: forall b a t. (Foldable1 t, Ord b) => (a -> b) -> t a -> b
 maximumOf1 f = coerce #. foldMap1 (coerce @_ @(Max b) . f)
 
 minimumOf1 :: forall b a t. (Foldable1 t, Ord b) => (a -> b) -> t a -> b
-minimumOf1 f = coerce #. foldMap1 (coerce @_ @(Max b) . f)
+minimumOf1 f = coerce #. foldMap1 (coerce @_ @(Min b) . f)
 
 _x :: (Arity d, 1 <= d) => Lens' (Vector d r) r
 _x = element (C @0)
