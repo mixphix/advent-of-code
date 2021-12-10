@@ -6,10 +6,11 @@ module Advent.Output.Internal where
 import Advent.Functions (padWith, relist)
 import Advent.Numbers (digits)
 import Advent.Parsers (number, parse)
-import Data.List (maximum)
+import Data.Containers.NonEmpty (withNonEmpty)
 import Data.Text qualified as T
 import GHC.IO (unsafePerformIO)
 import Language.Haskell.TH
+import Relude.Extra.Foldable1 (maximum1)
 import System.Directory (listDirectory)
 import System.FilePath (stripExtension)
 
@@ -19,7 +20,7 @@ maxDay yr = unsafePerformIO $ do
   let [_, _, y1, y2] = relist $ digits yr
       advent = "./app/Advent" <> show (10 * y1 + y2)
   files <- mapMaybe (T.stripPrefix "Day" . toText <=< stripExtension "hs") <$> listDirectory advent
-  pure $ maximum (parse number <$> files) ?: 0
+  pure $ withNonEmpty 0 maximum1 (parse number <$> files)
 
 mainHelper :: Natural -> Q Exp
 mainHelper yr =

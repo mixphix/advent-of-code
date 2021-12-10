@@ -99,6 +99,7 @@ library
     Advent.Maps
     Advent.Numbers
     Advent.Orphans
+    Advent.Output.Internal
     Advent.Parsers
     Advent.Polynomials
     Advent.Suspension
