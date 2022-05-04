@@ -12,8 +12,7 @@ ruleP :: Parser [(Grid, Grid)]
 ruleP = do
   source <- gridP
   target <- string " => " *> gridP
-  let sources = universe <&> (`dihedralGrid` source)
-  pure $ map (,target) sources
+  pure $ (,target) . (`dihedralGrid` source) <$> universe
 
 in21 :: Map Grid Grid
 in21 = relist $ fold . parse ruleP <$> lines (input 2017 21)

@@ -19,9 +19,9 @@ chug m ant = case m !? p of
       _ -> Just $ Ant East p
     _ -> Nothing
   Just _ -> Just step
-  where
-    step = scurry 1 ant
-    p = antPosition step
+ where
+  step = scurry 1 ant
+  p = antPosition step
 
 trail :: [Point 2 Integer]
 trail = unfoldr (fmapToFst antPosition . chug in19) (Ant North start)

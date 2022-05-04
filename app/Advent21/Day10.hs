@@ -8,17 +8,17 @@ opens = "([{<"
 
 illegalCharacter :: String -> Maybe Char
 illegalCharacter = go []
-  where
-    go _ [] = Nothing
-    go [] (c : cs)
-      | c `elem` opens = go [c] cs
-      | otherwise = Just c
-    go (s : ss) (c : cs) = case (s, c) of
-      ('(', ')') -> go ss cs
-      ('[', ']') -> go ss cs
-      ('{', '}') -> go ss cs
-      ('<', '>') -> go ss cs
-      _ -> if c `elem` opens then go (c : s : ss) cs else Just c
+ where
+  go _ [] = Nothing
+  go [] (c : cs)
+    | c `elem` opens = go [c] cs
+    | otherwise = Just c
+  go (s : ss) (c : cs) = case (s, c) of
+    ('(', ')') -> go ss cs
+    ('[', ']') -> go ss cs
+    ('{', '}') -> go ss cs
+    ('<', '>') -> go ss cs
+    _ -> if c `elem` opens then go (c : s : ss) cs else Just c
 
 syntaxErrorScore :: Char -> Natural
 syntaxErrorScore ')' = 3
@@ -32,36 +32,36 @@ part1 = sumOn (maybe 0 syntaxErrorScore . illegalCharacter) in10
 
 complete :: String -> String
 complete = go []
-  where
-    go xs [] = map bracket xs
-    go [] (c : cs)
-      | c `elem` opens = go [c] cs
-      | otherwise = []
-    go (s : ss) (c : cs) = case (s, c) of
-      ('(', ')') -> go ss cs
-      ('[', ']') -> go ss cs
-      ('{', '}') -> go ss cs
-      ('<', '>') -> go ss cs
-      _ -> if c `elem` opens then go (c : s : ss) cs else []
+ where
+  go xs [] = map bracket xs
+  go [] (c : cs)
+    | c `elem` opens = go [c] cs
+    | otherwise = []
+  go (s : ss) (c : cs) = case (s, c) of
+    ('(', ')') -> go ss cs
+    ('[', ']') -> go ss cs
+    ('{', '}') -> go ss cs
+    ('<', '>') -> go ss cs
+    _ -> if c `elem` opens then go (c : s : ss) cs else []
 
-    bracket :: Char -> Char
-    bracket = \case
-      '(' -> ')'
-      '[' -> ']'
-      '{' -> '}'
-      '<' -> '>'
-      _ -> error "not a bracket"
+  bracket :: Char -> Char
+  bracket = \case
+    '(' -> ')'
+    '[' -> ']'
+    '{' -> '}'
+    '<' -> '>'
+    _ -> error "not a bracket"
 
 autocompleteScore :: String -> Natural
 autocompleteScore = go 0
-  where
-    go n [] = n
-    go n (c : cs) = (`go` cs) . ((5 * n) +) $ case c of
-      ')' -> 1
-      ']' -> 2
-      '}' -> 3
-      '>' -> 4
-      x -> error $ "unexpected character: " <> one x
+ where
+  go n [] = n
+  go n (c : cs) = (`go` cs) . ((5 * n) +) $ case c of
+    ')' -> 1
+    ']' -> 2
+    '}' -> 3
+    '>' -> 4
+    x -> error $ "unexpected character: " <> one x
 
 part2 :: Natural
 part2 =

@@ -18,6 +18,7 @@ import Math.NumberTheory.ArithmeticFunctions qualified as NT
 import Math.NumberTheory.Primes qualified as NT
 import Math.NumberTheory.Primes.Counting qualified as NT
 import Math.NumberTheory.Recurrences qualified as NT
+import Relude
 import Relude.Extra.Map (StaticMap (..))
 import Relude.Extra.Newtype ((#.))
 import Relude.Unsafe ((!!))

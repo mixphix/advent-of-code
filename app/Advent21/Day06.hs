@@ -1,7 +1,7 @@
 module Day06 where
 
-import qualified Data.Text as T
-import qualified Data.Map.Monoidal.Strict as Mop
+import Data.Map.Monoidal.Strict qualified as Mop
+import Data.Text qualified as T
 
 in06 :: Mop Natural (Sum Natural)
 in06 = foldMap (\n -> one (n, 1)) $ parse number <$> T.splitOn "," (input 2021 6)

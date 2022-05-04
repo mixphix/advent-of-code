@@ -15,21 +15,21 @@ data Command
 
 command :: Parser Command
 command = choice [rect, row, col]
-  where
-    rect = do
-      w <- string "rect " *> number
-      h <- char 'x' *> number
-      pure $ Rect w h
+ where
+  rect = do
+    w <- string "rect " *> number
+    h <- char 'x' *> number
+    pure $ Rect w h
 
-    row = do
-      r <- string "rotate row y=" *> number
-      k <- string " by " *> number
-      pure $ RotateRow r k
+  row = do
+    r <- string "rotate row y=" *> number
+    k <- string " by " *> number
+    pure $ RotateRow r k
 
-    col = do
-      c <- string "rotate column x=" *> number
-      k <- string " by " *> number
-      pure $ RotateCol c k
+  col = do
+    c <- string "rotate column x=" *> number
+    k <- string " by " *> number
+    pure $ RotateCol c k
 
 runCommand :: Command -> Screen -> Screen
 runCommand = \case

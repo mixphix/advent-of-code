@@ -26,12 +26,12 @@ hexCardinal = \case
 hexcardinalP :: Parser HexCardinal
 hexcardinalP =
   choice
-    [ UpLeft <$ string "nw",
-      UpRight <$ string "ne",
-      Up <$ string "n",
-      DnLeft <$ string "sw",
-      DnRight <$ string "se",
-      Dn <$ string "s"
+    [ UpLeft <$ string "nw"
+    , UpRight <$ string "ne"
+    , Up <$ string "n"
+    , DnLeft <$ string "sw"
+    , DnRight <$ string "se"
+    , Dn <$ string "s"
     ]
 
 in11 :: [HexCardinal]

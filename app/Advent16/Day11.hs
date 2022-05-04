@@ -16,11 +16,11 @@ data Isotope
 isotopes :: Parser Isotope
 isotopes =
   choice
-    [ Pm <$ string "promethium",
-      Co <$ string "cobalt",
-      Cu <$ string "curium",
-      Ru <$ string "ruthenium",
-      Pu <$ string "plutonium"
+    [ Pm <$ string "promethium"
+    , Co <$ string "cobalt"
+    , Cu <$ string "curium"
+    , Ru <$ string "ruthenium"
+    , Pu <$ string "plutonium"
     ]
 
 data Gizmo
@@ -63,10 +63,10 @@ gizmoFloor = do
   f <-
     string "The "
       *> choice
-        [ One <$ string "first",
-          Two <$ string "second",
-          Three <$ string "third",
-          Four <$ string "fourth"
+        [ One <$ string "first"
+        , Two <$ string "second"
+        , Three <$ string "third"
+        , Four <$ string "fourth"
         ]
   gs <- fmap (?: []) . optional . try $ do
     void $ string " floor contains"
@@ -92,7 +92,7 @@ data Area = Area {me :: Floor, floors :: Floors}
   deriving (Eq)
 
 instance Show Area where
-  show Area {..} =
+  show Area{..} =
     let t = lines $ show floors
      in toString . unlines $ t & ix (fromEnum me) <>~ "<"
 
@@ -106,10 +106,10 @@ equivalent a b =
         in Area (me b) (Floors $ unFloors (floors b) <&> sort) `elem` equivs
 
 end :: Area -> Bool
-end Area {..} = me == Four && sort (unFloors floors !? Four ?: []) == sort (fold [[Chip i, RTG i] | i <- universe])
+end Area{..} = me == Four && sort (unFloors floors !? Four ?: []) == sort (fold [[Chip i, RTG i] | i <- universe])
 
 moves :: Area -> [(Floor, [[Gizmo]])]
-moves Area {..} =
+moves Area{..} =
   let att 1 = maybe [] (map one . sort) (unFloors floors !? me)
       att 2 = case unFloors floors !? me ?: [] of
         [] -> []
@@ -124,7 +124,7 @@ moves Area {..} =
 move :: forall s. STRef s [Area] -> Natural -> Area -> [(Floor, [[Gizmo]])] -> ST s (Maybe (Min Natural))
 move _ _ _ [] = pure empty
 move as n a ((_, []) : ms) = move as n a ms
-move as n a0@(Area {..}) ((e, gs : gizmos) : ms) = do
+move as n a0@(Area{..}) ((e, gs : gizmos) : ms) = do
   seen <- readSTRef as
   let a' = do
         f <- unFloors floors !? me
@@ -135,7 +135,7 @@ move as n a0@(Area {..}) ((e, gs : gizmos) : ms) = do
         pure . traceShowId . Area e . Floors $ alter (newnewfloor <$) e moved
   case a' of
     Nothing -> pure Nothing
-    Just a@Area {}
+    Just a@Area{}
       | any (equivalent a) seen -> pure Nothing
       | end a -> pure . Just $ Min n
       | otherwise ->

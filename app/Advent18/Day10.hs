@@ -4,14 +4,14 @@ import Data.Set qualified as Set
 
 in10 :: [V 2 (V 2 Integer)]
 in10 = (lines (input 2018 10) <&>) . parse $ do
-  p <-
-    Vector2
-      <$> (string "position=<" *> optional (char ' ') *> number)
-      <*> (string ", " *> optional (char ' ') *> number <* char '>')
-  v <-
-    Vector2
-      <$> (string " velocity=<" *> optional (char ' ') *> number)
-      <*> (string ", " *> optional (char ' ') *> number <* char '>')
+  p <- do
+    xcoord <- string "position=<" *> optional (char ' ') *> number
+    ycoord <- string ", " *> optional (char ' ') *> number <* char '>'
+    pure $ Vector2 xcoord ycoord
+  v <- do
+    xcoord <- string " velocity=<" *> optional (char ' ') *> number
+    ycoord <- string ", " *> optional (char ' ') *> number <* char '>'
+    pure $ Vector2 xcoord ycoord
   pure $ Vector2 p v
 
 step :: V 2 (V 2 Integer) -> V 2 (V 2 Integer)
@@ -28,6 +28,6 @@ part2 :: Int
       stars = relist $ vs <&> (^-^ v) . toVec
       starmap = relist [(Point c, if c `Set.member` stars then '#' else ' ') | c <- liftM2 Vector2 [-1 .. x1] [-1 .. y1]]
    in (starmap ^. from grid, p2)
-  where
-    nearby :: V 2 (V 2 Integer) -> V 2 (V 2 Integer) -> Bool
-    nearby (Vector2 p _) (Vector2 p' _) = on manhattan Point zero (p' ^-^ p) <= 1
+ where
+  nearby :: V 2 (V 2 Integer) -> V 2 (V 2 Integer) -> Bool
+  nearby (Vector2 p _) (Vector2 p' _) = on manhattan Point zero (p' ^-^ p) <= 1

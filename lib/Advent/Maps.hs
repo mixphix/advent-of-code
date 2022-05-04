@@ -4,7 +4,8 @@ module Advent.Maps (Mop, (!), IntMop) where
 
 import Data.IntMap.Monoidal.Strict (MonoidalIntMap)
 import Data.Map.Monoidal.Strict (MonoidalMap)
-import Relude.Extra.Map
+import Relude (Monoid (mempty), Ord, (?:))
+import Relude.Extra.Map (DynamicMap, StaticMap (Key, Val), (!?))
 
 type Mop = MonoidalMap
 

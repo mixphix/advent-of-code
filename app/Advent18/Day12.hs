@@ -23,12 +23,12 @@ in12@(inpots, rules) =
 
 step :: Set Int -> Set Int
 step s = foldl' go Empty [withNonEmpty 0 minimum1 s - 3 .. withNonEmpty 0 maximum1 s + 3]
-  where
-    go :: Set Int -> Int -> Set Int
-    go m i = case [i - 2 .. i + 2] <&> (`member` s) of
-      ls -> case rules !? ls of
-        Just k | k -> Set.insert i m
-        _ -> Set.delete i m
+ where
+  go :: Set Int -> Int -> Set Int
+  go m i = case [i - 2 .. i + 2] <&> (`member` s) of
+    ls -> case rules !? ls of
+      Just k | k -> Set.insert i m
+      _ -> Set.delete i m
 
 part1 :: Int
 part1 = maybe 0 sum $ iterate' step inpots !!? 20

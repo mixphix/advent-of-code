@@ -21,13 +21,13 @@ initial = keys in07 \\ keys dependencies
 
 part1 :: String
 part1 = go (sort initial) in07 dependencies
-  where
-    go :: String -> Mop Char String -> Mop Char String -> String
-    go [] _ _ = []
-    go (x : xs) m d =
-      let (fold -> str, m') = popKeys [x] m
-          d' = List.delete x <$> d
-       in x : go (sort $ xs <> filter (null . (d' !)) str) m' d'
+ where
+  go :: String -> Mop Char String -> Mop Char String -> String
+  go [] _ _ = []
+  go (x : xs) m d =
+    let (fold -> str, m') = popKeys [x] m
+        d' = List.delete x <$> d
+     in x : go (sort $ xs <> filter (null . (d' !)) str) m' d'
 
 stepTime :: Char -> Natural
 stepTime = (61 +) . alphabetPos

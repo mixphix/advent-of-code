@@ -5,9 +5,9 @@ import Data.Vector.Unboxed qualified as V
 
 twist :: Int -> Int -> V.Vector Word8 -> V.Vector Word8
 twist pos len v = V.fromList $ fromIntegral <$> twisted
-  where
-    l = reverse $ [pos .. pos + len - 1] <&> (`mod` V.length v)
-    twisted = [0 .. V.length v - 1] <&> \n -> (v V.!) $ elemIndex n l >>= (l !!?) . (pred (length l) -) ?: n
+ where
+  l = reverse $ [pos .. pos + len - 1] <&> (`mod` V.length v)
+  twisted = [0 .. V.length v - 1] <&> \n -> (v V.!) $ elemIndex n l >>= (l !!?) . (pred (length l) -) ?: n
 
 prepASCII :: Text -> [Word8]
 prepASCII = (<> [17, 31, 73, 47, 23]) . map (fromIntegral . ord) . toString . strip

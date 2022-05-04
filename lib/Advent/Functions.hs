@@ -18,7 +18,7 @@ import GHC.Exts (IsList (..))
 import GHC.TypeLits (type (<=))
 import Geometry.Point (Point (..))
 import Geometry.Vector (Arity, Vector (..), element)
-import Relude qualified
+import Relude
 import Relude.Extra.Foldable1 (Foldable1, foldMap1)
 import Relude.Extra.Map (DynamicMap (..), StaticMap (..), (!?))
 import Relude.Extra.Newtype ((#.))

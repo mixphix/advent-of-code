@@ -10,9 +10,9 @@ units = zipWith (on (<>) one) (['A' .. 'Z'] <> ['a' .. 'z']) (['a' .. 'z'] <> ['
 
 react :: Text -> Text
 react = withNonEmpty "" last . iterateWhileUnique (go units)
-  where
-    go (u : us) t = go us . fold $ T.splitOn u t
-    go [] t = t
+ where
+  go (u : us) t = go us . fold $ T.splitOn u t
+  go [] t = t
 
 part1 :: Int
 part1 = T.length $ react in05

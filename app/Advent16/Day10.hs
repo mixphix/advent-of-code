@@ -12,20 +12,20 @@ data Command
 
 command :: Parser Command
 command = choice [value, give]
-  where
-    value = do
-      val <- string "value " *> number
-      b <- string " goes to " *> bot
-      pure $ Value b val
+ where
+  value = do
+    val <- string "value " *> number
+    b <- string " goes to " *> bot
+    pure $ Value b val
 
-    give = do
-      has <- bot
-      lo <- string " gives low to " *> choice [bot, output]
-      hi <- string " and high to " *> choice [bot, output]
-      pure $ Give has lo hi
+  give = do
+    has <- bot
+    lo <- string " gives low to " *> choice [bot, output]
+    hi <- string " and high to " *> choice [bot, output]
+    pure $ Give has lo hi
 
-    bot = Bot <$> (string "bot " *> number)
-    output = Output <$> (string "output " *> number)
+  bot = Bot <$> (string "bot " *> number)
+  output = Output <$> (string "output " *> number)
 
 type Factory = Map Bot [Natural]
 

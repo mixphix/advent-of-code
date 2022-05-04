@@ -8,10 +8,10 @@ part1 = count (not . anySame . words) in04
 
 part2 :: Natural
 part2 = count (noAnagrams . words) in04
-  where
-    noAnagrams :: [Text] -> Bool
-    noAnagrams [] = True
-    noAnagrams (x : xs) = all (`notElem` perms x) xs && noAnagrams xs
+ where
+  noAnagrams :: [Text] -> Bool
+  noAnagrams [] = True
+  noAnagrams (x : xs) = all (`notElem` perms x) xs && noAnagrams xs
 
-    perms :: Text -> [Text]
-    perms = map toText . permutations . toString
+  perms :: Text -> [Text]
+  perms = map toText . permutations . toString

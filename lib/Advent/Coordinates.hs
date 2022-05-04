@@ -18,7 +18,7 @@ import Data.Semiring qualified as R
 import Data.Set.NonEmpty (NESet)
 import GHC.Show qualified (show)
 import Geometry (Additive ((^-^)), Arity, Point (..))
-import Prelude hiding (negate)
+import Relude hiding (negate)
 
 int :: (Integral n, Ring r) => n -> r
 int = R.fromIntegral

@@ -2,9 +2,9 @@ module Day06 where
 
 import Algorithms.Geometry.ConvexHull (convexHull)
 import Data.Ext (ext, _core)
-import Data.Geometry.Polygon (toPoints)
-import Data.Geometry.Polygon.Convex (simplePolygon)
 import Data.Map.Monoidal.Strict qualified as Mop
+import Geometry.Polygon (toPoints)
+import Geometry.Polygon.Convex (simplePolygon)
 
 in06 :: NonEmpty (Point 2 Integer)
 in06 = relist $ parse (Point2 <$> number <*> (string ", " *> number)) <$> lines (input 2018 6)

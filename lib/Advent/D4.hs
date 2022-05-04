@@ -3,6 +3,7 @@
 module Advent.D4 where
 
 import Data.Group (Group (..))
+import Relude
 
 data D4
   = E

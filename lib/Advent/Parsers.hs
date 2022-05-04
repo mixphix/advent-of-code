@@ -4,6 +4,7 @@ import Advent.Coordinates (Cardinal (..))
 import Advent.Functions (relist)
 import Advent.Numbers (undigits)
 import Data.Char (digitToInt)
+import Relude
 import Text.Parsec (Parsec, ParsecT, char, digit, many1, oneOf, runParser, runParserT, sepEndBy1, try)
 import Text.Parsec qualified
 

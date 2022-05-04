@@ -21,16 +21,16 @@ stateP = do
   on0 <- many space *> string "If the current value is 0:" *> many space *> substate
   on1 <- many space *> string "If the current value is 1:" *> many space *> substate
   pure $ one (s0, [uncurry3 (Instruction False) on0, uncurry3 (Instruction True) on1])
-  where
-    substate = do
-      write <- many space *> string "- Write the value " *> number <* string "."
-      move <- many space *> string "- Move one slot to the " *> many letter <* string "."
-      s' <- many space *> string "- Continue with state " *> anyChar <* string "."
-      pure
-        ( case move of "left" -> Lf; _ -> Rg,
-          case write :: Integer of 1 -> O; _ -> Z,
-          s'
-        )
+ where
+  substate = do
+    write <- many space *> string "- Write the value " *> number <* string "."
+    move <- many space *> string "- Move one slot to the " *> many letter <* string "."
+    s' <- many space *> string "- Continue with state " *> anyChar <* string "."
+    pure
+      ( case move of "left" -> Lf; _ -> Rg
+      , case write :: Integer of 1 -> O; _ -> Z
+      , s'
+      )
 
 turingP :: Parser (Char, Natural, Map Char [Instruction])
 turingP = do

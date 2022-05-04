@@ -60,13 +60,13 @@ determine ts =
         withNonEmpty (error "no top-right") head $
           maybe [] (foldMap toString) (m !? 7) \\ [top, middle, bottom, topleft, bottomleft, bottomright]
    in relist
-        [ (top, A),
-          (topleft, B),
-          (topright, C),
-          (middle, D),
-          (bottomleft, E),
-          (bottomright, F),
-          (bottom, G)
+        [ (top, A)
+        , (topleft, B)
+        , (topright, C)
+        , (middle, D)
+        , (bottomleft, E)
+        , (bottomright, F)
+        , (bottom, G)
         ]
 
 displaying :: Map Char Segment -> Text -> Natural

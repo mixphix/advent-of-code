@@ -1,6 +1,6 @@
 module Day20 where
 
-import Data.Geometry.Vector qualified as V
+import Geometry.Vector qualified as V
 
 particle :: Parser (V 3 (V 3 Integer))
 particle = do

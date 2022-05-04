@@ -1,25 +1,21 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module Advent.Orphans
-  ( NEVector,
-    CVector,
-    V,
-    NEMop (..),
-    NEIntMop (..),
-    pattern Empty,
-    pattern NonEmpty,
-  )
-where
+module Advent.Orphans (
+  NEVector,
+  CVector,
+  V,
+  NEMop (..),
+  NEIntMop (..),
+  pattern Empty,
+  pattern NonEmpty,
+) where
 
 import Advent.Maps
 import Control.Lens hiding (pattern Empty)
 import Data.Containers.NonEmpty (HasNonEmpty (..), pattern IsEmpty, pattern IsNonEmpty)
 import Data.Data (Data)
 import Data.Functor.Classes (Eq1, Ord1, Show1)
-import Geometry.Point (Point)
-import Geometry.Vector (Arity)
-import Geometry.Vector qualified
 import Data.IntMap.Monoidal.Strict qualified as IntMop
 import Data.IntMap.NonEmpty (NEIntMap)
 import Data.IntMap.NonEmpty qualified as NEIntMap
@@ -45,6 +41,10 @@ import Data.Vector.NonEmpty (NonEmptyVector)
 import Data.Vector.NonEmpty qualified as NEVector
 import GHC.Exts qualified
 import GHC.TypeNats (type (<=))
+import Geometry.Point (Point)
+import Geometry.Vector (Arity)
+import Geometry.Vector qualified
+import Relude
 import Relude.Extra (DynamicMap (..), Foldable1 (..), StaticMap (..))
 
 instance Rewrapped (Mop k a) (Mop k a)
@@ -58,16 +58,16 @@ type CVector = CircularVector
 newtype NEMop k a = NEMop {getNEMap :: NEMap k a}
   deriving (Eq, Ord, Show, Read, Data, Typeable)
   deriving newtype
-    ( Eq1,
-      Ord1,
-      Show1,
-      Functor,
-      Foldable,
-      FunctorWithIndex k,
-      FoldableWithIndex k,
-      Data.Semigroup.Foldable.Foldable1,
-      Foldable1,
-      NFData
+    ( Eq1
+    , Ord1
+    , Show1
+    , Functor
+    , Foldable
+    , FunctorWithIndex k
+    , FoldableWithIndex k
+    , Data.Semigroup.Foldable.Foldable1
+    , Foldable1
+    , NFData
     )
 
 instance Traversable (NEMop k) where
@@ -87,16 +87,16 @@ instance Rewrapped (NEMop k a) (NEMap k a)
 newtype NEIntMop a = NEIntMop {getNEIntMap :: NEIntMap a}
   deriving (Eq, Ord, Show, Read, Data, Typeable)
   deriving newtype
-    ( Eq1,
-      Ord1,
-      Show1,
-      Functor,
-      Foldable,
-      FunctorWithIndex Int,
-      FoldableWithIndex Int,
-      Data.Semigroup.Foldable.Foldable1,
-      Foldable1,
-      NFData
+    ( Eq1
+    , Ord1
+    , Show1
+    , Functor
+    , Foldable
+    , FunctorWithIndex Int
+    , FoldableWithIndex Int
+    , Data.Semigroup.Foldable.Foldable1
+    , Foldable1
+    , NFData
     )
 
 instance Wrapped (NEIntMop a) where

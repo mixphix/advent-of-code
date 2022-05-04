@@ -31,8 +31,8 @@ winner _ [] = error "no bingos"
 winner (n : ns) bs
   | Just b <- find winning bs' = (n, b)
   | otherwise = winner ns bs'
-  where
-    bs' = map (mark n) bs
+ where
+  bs' = map (mark n) bs
 
 part1 :: Natural
 part1 =
@@ -46,8 +46,8 @@ loser [n] (b : _) = (n, b)
 loser (n : ns) bs
   | Just wins <- nonEmpty (filter winning bs') = withNonEmpty (n, last wins) (loser ns . toList) (bs' \\ toList wins)
   | otherwise = loser ns bs'
-  where
-    bs' = map (mark n) bs
+ where
+  bs' = map (mark n) bs
 
 part2 :: Natural
 part2 =

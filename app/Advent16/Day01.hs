@@ -2,13 +2,13 @@ module Day01 where
 
 directions :: Parser [(Integer, Ant -> Ant)]
 directions = choice [l, r] `sepEndBy1` string ", "
-  where
-    l = do
-      n <- char 'L' *> number
-      pure (n, turnL)
-    r = do
-      n <- char 'R' *> number
-      pure (n, turnR)
+ where
+  l = do
+    n <- char 'L' *> number
+    pure (n, turnL)
+  r = do
+    n <- char 'R' *> number
+    pure (n, turnR)
 
 in01 :: [(Integer, Ant -> Ant)]
 in01 = parse directions (input 2016 1)

@@ -3,6 +3,7 @@ module Advent.Input where
 import AdventAPI
 import Data.Text (strip)
 import GHC.IO (unsafePerformIO)
+import Relude
 import System.Directory
 import System.FilePath ((<.>), (</>))
 

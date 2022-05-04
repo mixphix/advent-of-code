@@ -19,9 +19,9 @@ fuelcells =
 cumulcells :: NEMop (Point 2 Integer) (Sum Integer)
 cumulcells =
   relist @(Map (Point 2 Integer)) @(NEMop (Point 2 Integer)) . foldl' f Empty $ join (liftM2 Point2) [1 .. 300]
-  where
-    f m p@(Point2 x y) =
-      insert p (Sum (powerlevel p) + m ! Point2 (x - 1) y + m ! Point2 x (y - 1) - m ! Point2 (x - 1) (y - 1)) m
+ where
+  f m p@(Point2 x y) =
+    insert p (Sum (powerlevel p) + m ! Point2 (x - 1) y + m ! Point2 x (y - 1) - m ! Point2 (x - 1) (y - 1)) m
 
 subcell :: Integer -> Point 2 Integer -> Integer
 subcell w (Point2 x0 y0) =

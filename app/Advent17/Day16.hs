@@ -14,16 +14,16 @@ data Dance
 
 danceP :: Parser Dance
 danceP = choice [spin, exchange, partner]
-  where
-    spin = Spin <$> (char 's' *> number)
-    exchange = do
-      p0 <- char 'x' *> number
-      p1 <- char '/' *> number
-      pure $ Exchange p0 p1
-    partner = do
-      p0 <- char 'p' *> oneOf ['a' .. 'p']
-      p1 <- char '/' *> oneOf ['a' .. 'p']
-      pure $ Partner p0 p1
+ where
+  spin = Spin <$> (char 's' *> number)
+  exchange = do
+    p0 <- char 'x' *> number
+    p1 <- char '/' *> number
+    pure $ Exchange p0 p1
+  partner = do
+    p0 <- char 'p' *> oneOf ['a' .. 'p']
+    p1 <- char '/' *> oneOf ['a' .. 'p']
+    pure $ Partner p0 p1
 
 newtype Permutation = Permutation (VFU.Vec 16 Int)
   deriving (Eq, Ord, Show)

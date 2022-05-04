@@ -88,7 +88,7 @@ common advent
 library
   import: advent
   exposed-modules:
-    Advent
+    Prelude
     Advent.Output
   other-modules:
     Advent.Coordinates
@@ -105,9 +105,10 @@ library
     Advent.Suspension
   hs-source-dirs:
     lib
+  default-extensions:
+    NoImplicitPrelude
   mixins:
     base hiding (Prelude)
-    , relude (Relude as Prelude)
     , relude
     , advent-of-code-api (Advent as AdventAPI, Advent.API as AdventAPI.API, Advent.Types as AdventAPI.Types)
     , toolbox
@@ -122,7 +123,6 @@ executable advent-of-code
     app
   mixins:
     base hiding (Prelude)
-    , relude (Relude as Prelude)
     , relude
     , advent-of-code-api (Advent as AdventAPI, Advent.API as AdventAPI.API, Advent.Types as AdventAPI.Types)
 
@@ -132,7 +132,6 @@ common years
     advent-of-code
   mixins:
     base hiding (Prelude)
-    , advent-of-code (Advent as Prelude)
     , advent-of-code
     , toolbox
 

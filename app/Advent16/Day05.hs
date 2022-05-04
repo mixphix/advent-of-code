@@ -26,8 +26,8 @@ part2 =
       ( \case
           (m, t : ts)
             | take 8 (keys m) == [0 .. 7] -> Right m
-            | (p : q : _) <- take 2 (toString t),
-              p `elem` ['0' .. '7'] ->
+            | (p : q : _) <- take 2 (toString t)
+              , p `elem` ['0' .. '7'] ->
               Left (insert (digitToInt p) (First $ Just q) m, ts)
             | otherwise -> Left (m, ts)
           _ -> error "empty list"

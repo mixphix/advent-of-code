@@ -11,7 +11,8 @@ import Data.Poly.Sparse.Semiring qualified as P
 import Data.Semiring (Ring, zero)
 import Data.Semiring qualified as S
 import Data.Vector.Unboxed qualified as V
-import Relude.Extra.Map
+import Relude
+import Relude.Extra.Map (StaticMap (..), (!?))
 
 type Polynomial = P.UPoly Int64
 

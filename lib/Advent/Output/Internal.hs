@@ -10,6 +10,7 @@ import Data.Containers.NonEmpty (withNonEmpty)
 import Data.Text qualified as T
 import GHC.IO (unsafePerformIO)
 import Language.Haskell.TH
+import Relude
 import Relude.Extra.Foldable1 (maximum1)
 import System.Directory (listDirectory)
 import System.FilePath (stripExtension)

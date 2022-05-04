@@ -2,7 +2,6 @@
 
 module Advent.Output where
 
-import Advent
 import Data.Text qualified as T
 import Data.Time (NominalDiffTime)
 import GHC.IO (unsafePerformIO)
@@ -10,6 +9,7 @@ import Language.Haskell.TH
 import Numeric (showFFloat)
 import System.Directory (listDirectory)
 import System.FilePath (stripExtension, (</>))
+import Prelude
 
 seconds :: NominalDiffTime -> String
 seconds t = showFFloat (Just 3) (realToFrac @_ @Double t) []
@@ -32,9 +32,8 @@ mainFor yr =
 maxDay :: Natural -> Natural
 {-# NOINLINE maxDay #-}
 maxDay yr = unsafePerformIO $ do
-  projdir <- toString . strip <$> readFileText "/home/melanie/projdir.txt"
   let [_, _, y1, y2] = relist $ digits yr
-      advent = projdir </> "app" </> "Advent" <> show (10 * y1 + y2)
+      advent = "." </> "app" </> "Advent" <> show (10 * y1 + y2)
   numbers <-
     mapMaybe (parse number <<$>> T.stripPrefix "Day" . toText <=< stripExtension "hs") <$> listDirectory advent
   pure $ withNonEmpty 0 maximum1 numbers

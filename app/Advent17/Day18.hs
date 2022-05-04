@@ -18,46 +18,46 @@ data Instruction
 
 instructionP :: Parser Instruction
 instructionP = choice [soundP, setP, addP, mulP, modP, recoverP, jgzP]
-  where
-    eti :: Parser (Either Text Integer)
-    eti = choice [Right <$> number, Left . toText <$> many1 letter]
+ where
+  eti :: Parser (Either Text Integer)
+  eti = choice [Right <$> number, Left . toText <$> many1 letter]
 
-    soundP = Snd <$> (string "snd " *> eti)
-    setP = do
-      void $ string "set "
-      r <- toText <$> many1 letter
-      Set r <$> (string " " *> eti)
-    addP = do
-      void $ string "add "
-      r <- toText <$> many1 letter
-      Add r <$> (string " " *> eti)
-    mulP = do
-      void $ string "mul "
-      r <- toText <$> many1 letter
-      Mul r <$> (string " " *> eti)
-    modP = do
-      void $ string "mod "
-      r <- toText <$> many1 letter
-      Mod r <$> (string " " *> eti)
-    recoverP = do
-      void $ string "rcv "
-      Rcv . toText <$> many1 letter
-    jgzP = do
-      void $ string "jgz "
-      r <- eti
-      Jgz r <$> (string " " *> eti)
+  soundP = Snd <$> (string "snd " *> eti)
+  setP = do
+    void $ string "set "
+    r <- toText <$> many1 letter
+    Set r <$> (string " " *> eti)
+  addP = do
+    void $ string "add "
+    r <- toText <$> many1 letter
+    Add r <$> (string " " *> eti)
+  mulP = do
+    void $ string "mul "
+    r <- toText <$> many1 letter
+    Mul r <$> (string " " *> eti)
+  modP = do
+    void $ string "mod "
+    r <- toText <$> many1 letter
+    Mod r <$> (string " " *> eti)
+  recoverP = do
+    void $ string "rcv "
+    Rcv . toText <$> many1 letter
+  jgzP = do
+    void $ string "jgz "
+    r <- eti
+    Jgz r <$> (string " " *> eti)
 
 data Computer = Computer
-  { _registers :: Map Text Integer,
-    _sound :: [Integer],
-    _instrpos :: Int
+  { _registers :: Map Text Integer
+  , _sound :: [Integer]
+  , _instrpos :: Int
   }
   deriving (Eq)
 
 makeLenses ''Computer
 
 instance Show Computer where
-  show Computer {..} =
+  show Computer{..} =
     "Computer (" <> show _instrpos <> ") "
       <> foldMap (\(t, i) -> "{" <> toString t <> ": " <> show i <> "}") (relist @_ @[] _registers)
       <> " "
@@ -67,7 +67,7 @@ queue :: ([Integer] -> Identity [Integer]) -> Computer -> Identity Computer
 queue = sound
 
 instruction :: Part -> (Maybe Integer, Computer) -> [Instruction] -> Maybe (Maybe Integer, Computer)
-instruction Part1 (s, c@Computer {..}) is = Just $ case is !!? _instrpos of
+instruction Part1 (s, c@Computer{..}) is = Just $ case is !!? _instrpos of
   Nothing -> (s, c)
   Just i -> case i of
     Snd x -> (s, c' & sound %~ (either reg id x :))
@@ -81,11 +81,11 @@ instruction Part1 (s, c@Computer {..}) is = Just $ case is !!? _instrpos of
     Jgz x e
       | either reg id x > 0 -> (s, c & instrpos +~ fromIntegral (either reg id e))
       | otherwise -> (s, c')
-    where
-      c' = c & instrpos %~ succ
-      reg :: Text -> Integer
-      reg z = _registers !? z ?: 0
-instruction Part2 (s, c@Computer {..}) is = case is !!? _instrpos of
+   where
+    c' = c & instrpos %~ succ
+    reg :: Text -> Integer
+    reg z = _registers !? z ?: 0
+instruction Part2 (s, c@Computer{..}) is = case is !!? _instrpos of
   Nothing -> Nothing
   Just i -> case i of
     Snd x -> Just (Just $ either reg id x, c')
@@ -99,10 +99,10 @@ instruction Part2 (s, c@Computer {..}) is = case is !!? _instrpos of
     Jgz x e
       | either reg id x > 0 -> Just (s, c & instrpos +~ fromIntegral (either reg id e))
       | otherwise -> Just (s, c')
-    where
-      c' = c & instrpos %~ succ
-      reg :: Text -> Integer
-      reg z = _registers !? z ?: 0
+   where
+    c' = c & instrpos %~ succ
+    reg :: Text -> Integer
+    reg z = _registers !? z ?: 0
 
 in18 :: [Instruction]
 in18 = parse instructionP <$> lines (input 2017 18)
@@ -111,8 +111,8 @@ part1 :: Integer
 part1 =
   fromMaybe 0 . getAlt . foldMap (Alt . fst) $
     iterate' (\c -> instruction Part1 c in18 ?: error "boo") (empty, Computer m empty 0)
-  where
-    m = relist [(c, 0) | c <- map one "abfip"]
+ where
+  m = relist [(c, 0) | c <- map one "abfip"]
 
 data DuetState
   = Blocked0
@@ -122,8 +122,8 @@ data DuetState
 
 duet :: (Int, DuetState, Computer, Computer)
 duet = (0, Working, Computer m empty 0, Computer (m & ix "p" .~ 1) empty 0)
-  where
-    m = relist [(c, 0) | c <- map one "abfip"]
+ where
+  m = relist [(c, 0) | c <- map one "abfip"]
 
 synchronous :: (Int, DuetState, Computer, Computer) -> [Instruction] -> Either (Int, DuetState, Computer, Computer) Int
 synchronous (n, ds, c0, c1) is = case ds of

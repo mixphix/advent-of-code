@@ -25,12 +25,12 @@ contiguous vs set =
 
 regions :: Set (Point 2 Integer) -> Integer
 regions = go 0
-  where
-    go :: Integer -> Set (Point 2 Integer) -> Integer
-    go n Empty = n
-    go n set =
-      let v = withNonEmpty origin (minimumOn1 sum) set
-       in go (succ n) $! set Set.\\ contiguous (one v) set
+ where
+  go :: Integer -> Set (Point 2 Integer) -> Integer
+  go n Empty = n
+  go n set =
+    let v = withNonEmpty origin (minimumOn1 sum) set
+     in go (succ n) $! set Set.\\ contiguous (one v) set
 
 part2 :: Integer
 part2 = regions used

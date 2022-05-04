@@ -9,9 +9,9 @@ data Command
 commandP :: Parser Command
 commandP =
   choice
-    [ Forward <$> (string "forward " *> number),
-      Downward <$> (string "down " *> number),
-      Upward <$> (string "up " *> number)
+    [ Forward <$> (string "forward " *> number)
+    , Downward <$> (string "down " *> number)
+    , Upward <$> (string "up " *> number)
     ]
 
 in02 :: [Command]

@@ -13,9 +13,9 @@ program = do
   name <- pname
   weight <- string " (" *> number <* string ")"
   aboves <- option [] $ string " -> " *> (pname `sepBy` string ", ")
-  pure Program {..}
-  where
-    pname = toText <$> many letter
+  pure Program{..}
+ where
+  pname = toText <$> many letter
 
 in07 :: (Map Text Natural, Map Text [Text])
 weights :: Map Text Natural

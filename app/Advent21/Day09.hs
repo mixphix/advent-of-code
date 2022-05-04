@@ -18,13 +18,13 @@ contiguous vs set =
 
 regionSizeSum :: Set (Point 2 Integer) -> [Integer]
 regionSizeSum = go []
-  where
-    go :: [Integer] -> Set (Point 2 Integer) -> [Integer]
-    go n Empty = n
-    go n set =
-      let v = withNonEmpty origin (minimumOn1 sum) set
-          ctg = contiguous (one v) set
-       in go (fromIntegral (Set.size ctg) : n) $! set Set.\\ ctg
+ where
+  go :: [Integer] -> Set (Point 2 Integer) -> [Integer]
+  go n Empty = n
+  go n set =
+    let v = withNonEmpty origin (minimumOn1 sum) set
+        ctg = contiguous (one v) set
+     in go (fromIntegral (Set.size ctg) : n) $! set Set.\\ ctg
 
 part2 :: Integer
 part2 = product . take 3 . sortOn Down . regionSizeSum . Map.keysSet $ Map.filter (/= 9) in09
