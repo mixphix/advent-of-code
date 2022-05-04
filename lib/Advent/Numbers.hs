@@ -3,8 +3,6 @@ module Advent.Numbers where
 import Advent.Functions (pairwise, palindrome, takeLNE, takeRNE)
 import Advent.Orphans ()
 import Control.Lens (Iso', iso, (^.), pattern Empty)
-import Data.Geometry.Point
-import Data.Geometry.Vector (Additive (..))
 import Data.List.NonEmpty.Toolbox qualified as NE
 import Data.List.Toolbox (allSame)
 import Data.Ratio ((%))
@@ -14,6 +12,8 @@ import Data.Sequence.NonEmpty qualified as NESeq
 import Data.Set qualified as Set
 import Data.Set.NonEmpty (NESet)
 import Data.Set.NonEmpty qualified as NESet
+import Geometry.Point
+import Geometry.Vector (Additive (..))
 import Math.NumberTheory.ArithmeticFunctions qualified as NT
 import Math.NumberTheory.Primes qualified as NT
 import Math.NumberTheory.Primes.Counting qualified as NT
@@ -129,13 +129,16 @@ ngon s n = flip div 2 . fromIntegral $ fromIntegral (sq n) * (s - 2) - fromInteg
 
 ngonal :: Integer -> Natural -> Bool
 ngonal (fromIntegral -> s) (fromIntegral -> x) =
-  let n = (sqrt (8 * (s - 2) * x + join (*) (s - 4)) + (s - 4)) / (2 * (s - 2)) :: Double
+  let n =
+        (sqrt (8 * (s - 2) * x + join (*) (s - 4)) + (s - 4))
+          / (2 * (s - 2)) ::
+          Double
    in floor n == (ceiling n :: Int)
 
 ngons :: Natural -> [Natural]
 ngons s = go s 1 (s - 1)
-  where
-    go !s' !n !m = n : go s' (n + m) (m + s' - 2)
+ where
+  go !s' !n !m = n : go s' (n + m) (m + s' - 2)
 
 fibintseq :: (Integral n) => n -> n -> [n]
 fibintseq !n0 !n1 = n0 : fibintseq n1 (n0 + n1)
@@ -229,8 +232,14 @@ ulampos n =
       d = m - fromIntegral (k + 1)
       half = flip quot 2 . fromIntegral
       f = fmap $ if even k then negate else id
-      k2pos = if even k then Point2 (1 - half k) (half k) else Point2 (half $ fromIntegral k - 1) (half $ 1 - fromIntegral k)
-      k2k1pos = if even k then Point2 (-half k) (-half k) else Point2 (half $ k + 1) (half $ k + 1)
+      k2pos =
+        if even k
+          then Point2 (1 - half k) (half k)
+          else Point2 (half $ fromIntegral k - 1) (half $ 1 - fromIntegral k)
+      k2k1pos =
+        if even k
+          then Point2 (- half k) (- half k)
+          else Point2 (half $ k + 1) (half $ k + 1)
    in if fromIntegral n == k * k
         then k2pos
         else
@@ -254,29 +263,29 @@ ulam = iso ulampos unulampos
 
 reciprocal :: Natural -> [Natural]
 reciprocal = go 1
-  where
-    go n k = case n `divMod` k of
-      (q, 0) -> [q]
-      (digits -> (_ :||> lq), _) -> lq : go (10 * n) k
+ where
+  go n k = case n `divMod` k of
+    (q, 0) -> [q]
+    (digits -> (_ :||> lq), _) -> lq : go (10 * n) k
 
 convergents :: [Natural] -> [Ration]
 convergents [] = []
 convergents [x] = [x % 1]
 convergents (x : y : xs) = x % 1 : go (x * y + 1) y x 1 xs
-  where
-    go pn qn _ _ [] = [pn % qn]
-    go pn qn pn1 qn1 (z : zs) = pn % qn : go (z * pn + pn1) (z * qn + qn1) pn qn zs
+ where
+  go pn qn _ _ [] = [pn % qn]
+  go pn qn pn1 qn1 (z : zs) = pn % qn : go (z * pn + pn1) (z * qn + qn1) pn qn zs
 
 -- | Left = terminating
 continuedFraction :: forall a. (Ord a, RealFrac a) => a -> Either [Natural] [Natural]
 continuedFraction = cf Set.empty
-  where
-    cf :: (Ord a, RealFrac a) => Set a -> a -> Either [Natural] [Natural]
-    cf recips (properFraction -> (i, f)) =
-      bimap (i :) (i :) $
-        if f == 0 || f `member` recips
-          then Left []
-          else cf (Set.insert f recips) (recip f)
+ where
+  cf :: (Ord a, RealFrac a) => Set a -> a -> Either [Natural] [Natural]
+  cf recips (properFraction -> (i, f)) =
+    bimap (i :) (i :) $
+      if f == 0 || f `member` recips
+        then Left []
+        else cf (Set.insert f recips) (recip f)
 
 arithmetic :: (Eq a, Num a) => [a] -> Bool
 arithmetic = allSame . pairwise subtract
@@ -309,10 +318,10 @@ palindromicIn (Const n) = palindrome . toList . getConst $ base @n n
 pythags :: [Point 3 Natural]
 pythags =
   [ Point3 a b c
-    | c <- [5 ..],
-      b <- [1 .. c],
-      a <- [1 .. b],
-      sq a + sq b == sq c
+  | c <- [5 ..]
+  , b <- [1 .. c]
+  , a <- [1 .. b]
+  , sq a + sq b == sq c
   ]
 
 sums :: (Integral n) => Natural -> Set n -> Set n

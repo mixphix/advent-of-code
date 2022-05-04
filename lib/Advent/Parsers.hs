@@ -34,8 +34,8 @@ numberGridSep p = number `sepEndBy1` many p `sepEndBy1` char '\n'
 cardinalP :: Parsec Text u Cardinal
 cardinalP =
   choice
-    [ North <$ char '^',
-      East <$ char '<',
-      South <$ char 'v',
-      West <$ char '>'
+    [ North <$ char '^'
+    , East <$ char '<'
+    , South <$ char 'v'
+    , West <$ char '>'
     ]

@@ -17,9 +17,9 @@ import Control.Lens hiding (pattern Empty)
 import Data.Containers.NonEmpty (HasNonEmpty (..), pattern IsEmpty, pattern IsNonEmpty)
 import Data.Data (Data)
 import Data.Functor.Classes (Eq1, Ord1, Show1)
-import Data.Geometry.Point (Point)
-import Data.Geometry.Vector (Arity)
-import Data.Geometry.Vector qualified
+import Geometry.Point (Point)
+import Geometry.Vector (Arity)
+import Geometry.Vector qualified
 import Data.IntMap.Monoidal.Strict qualified as IntMop
 import Data.IntMap.NonEmpty (NEIntMap)
 import Data.IntMap.NonEmpty qualified as NEIntMap
@@ -125,7 +125,7 @@ instance Traversable NEIntMop where
 instance TraversableWithIndex Int NEIntMop where
   itraverse f (NEIntMop m) = NEIntMop <$> itraverse f m
 
-type V = Data.Geometry.Vector.Vector
+type V = Geometry.Vector.Vector
 
 -- Folds and listlikes
 instance One (Vector a) where

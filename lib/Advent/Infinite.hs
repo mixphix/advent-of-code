@@ -24,9 +24,9 @@ instance Monad Infinite where
 
 repeating :: NonEmpty a -> Infinite a
 repeating = join repeating'
-  where
-    repeating' :: NonEmpty a -> NonEmpty a -> Infinite a
-    repeating' whole (a :| as) = a ::: repeating' whole (nonEmpty as ?: whole)
+ where
+  repeating' :: NonEmpty a -> NonEmpty a -> Infinite a
+  repeating' whole (a :| as) = a ::: repeating' whole (nonEmpty as ?: whole)
 
 only :: Natural -> Infinite a -> [a]
 only 0 _ = []

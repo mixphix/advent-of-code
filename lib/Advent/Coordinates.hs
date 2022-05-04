@@ -12,12 +12,12 @@ import Advent.Suspension (Suspension (..))
 import Control.Lens (Iso', Lens', abbreviatedFields, from, iso, makeLensesWith)
 import Data.Complex (Complex (..))
 import Data.Foldable.Toolbox (sumOn)
-import Data.Geometry (Additive ((^-^)), Arity, Point (..))
 import Data.Ratio ((%))
 import Data.Semiring (Ring (..), Semiring (plus, times, zero), minus)
 import Data.Semiring qualified as R
 import Data.Set.NonEmpty (NESet)
 import GHC.Show qualified (show)
+import Geometry (Additive ((^-^)), Arity, Point (..))
 import Prelude hiding (negate)
 
 int :: (Integral n, Ring r) => n -> r
@@ -106,22 +106,22 @@ vonNeumann = (cardinal 1 <$> [North, East, South, West] ??)
 
 taxicab :: (Ord a, Ring a) => Natural -> Point 2 a -> NESet (Point 2 a)
 taxicab n0 = relist . go n0 . one
-  where
-    go 0 sp = sp
-    go n sp = go (pred n) sp >-< relist @_ @Set . vonNeumann
+ where
+  go 0 sp = sp
+  go n sp = go (pred n) sp >-< relist @_ @Set . vonNeumann
 
 moore :: (Ring a) => Point 2 a -> [Point 2 a]
 moore = (cardinal 1 <$> universe ??)
 
 surrounding :: (Ord a, Ring a) => Natural -> Point 2 a -> NESet (Point 2 a)
 surrounding n0 = relist . go n0 . one
-  where
-    go 0 sp = sp
-    go n sp = go (pred n) sp >-< relist @_ @Set . moore
+ where
+  go 0 sp = sp
+  go n sp = go (pred n) sp >-< relist @_ @Set . moore
 
 data Ant = Ant
-  { antDirection :: Cardinal,
-    antPosition :: Point 2 Integer
+  { antDirection :: Cardinal
+  , antPosition :: Point 2 Integer
   }
   deriving (Eq)
 
@@ -141,29 +141,29 @@ instance Show Ant where
 
 turnL :: Ant -> Ant
 turnL (Ant c p) = Ant c' p
-  where
-    c' = case c of
-      East -> North
-      Northeast -> Northwest
-      North -> West
-      Northwest -> Southwest
-      West -> South
-      Southwest -> Southeast
-      South -> East
-      Southeast -> Northeast
+ where
+  c' = case c of
+    East -> North
+    Northeast -> Northwest
+    North -> West
+    Northwest -> Southwest
+    West -> South
+    Southwest -> Southeast
+    South -> East
+    Southeast -> Northeast
 
 turnR :: Ant -> Ant
 turnR (Ant c p) = Ant c' p
-  where
-    c' = case c of
-      East -> South
-      Northeast -> Southeast
-      North -> East
-      Northwest -> Northeast
-      West -> North
-      Southwest -> Northwest
-      South -> West
-      Southeast -> Southwest
+ where
+  c' = case c of
+    East -> South
+    Northeast -> Southeast
+    North -> East
+    Northwest -> Northeast
+    West -> North
+    Southwest -> Northwest
+    South -> West
+    Southeast -> Southwest
 
 turnU :: Ant -> Ant
 turnU = turnR . turnR

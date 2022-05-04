@@ -1,14 +1,13 @@
 packages:
   .
-  ../deep-map
   ../toolbox
   ../hgeometry/hgeometry
   ../hgeometry/hgeometry-combinatorial
-  ../vector-circular
 optimization: 2
 allow-newer:
   servant-client-core:aeson
   , servant:aeson
   , hedgehog:mmorph
-  , newtype:base
-  , monoidal-containers:lens
+  , relude:base
+  , relude:ghc-prim
+  , monoidal-containers:base

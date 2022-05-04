@@ -34,25 +34,25 @@ daypart d n = pure . VarE . mkName $ "Day" <> padWith 2 '0' d <> ".part" <> show
 day :: Natural -> Q Exp
 day d =
   doE $
-    [ noBindS $ appE [|putStrLn|] [|"Day " <> dstr <> ""|],
-      noBindS $ appE [|putStr|] [|"  Part 1:"|],
-      bindS (varP $ td "'1") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|],
-      noBindS $ appE [|putStr . padWith 16 ' '|] (daypart d 1),
-      bindS (varP $ td "'2") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|],
-      letS [valD (varP $ td "'") (normalB $ appE (appE [|diffUTCTime|] (varE $ td "'2")) (varE $ td "'1")) []],
-      noBindS . appE [|putStrLn|] $ appE [|("  (" <>) . (<> " ms)")|] (ms . varE $ td "'")
+    [ noBindS $ appE [|putStrLn|] [|"Day " <> dstr <> ""|]
+    , noBindS $ appE [|putStr|] [|"  Part 1:"|]
+    , bindS (varP $ td "'1") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|]
+    , noBindS $ appE [|putStr . padWith 16 ' '|] (daypart d 1)
+    , bindS (varP $ td "'2") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|]
+    , letS [valD (varP $ td "'") (normalB $ appE (appE [|diffUTCTime|] (varE $ td "'2")) (varE $ td "'1")) []]
+    , noBindS . appE [|putStrLn|] $ appE [|("  (" <>) . (<> " ms)")|] (ms . varE $ td "'")
     ]
       ++ if d /= 25
         then
-          [ noBindS $ appE [|putStr|] [|"  Part 2:"|],
-            bindS (varP $ td "'3") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|],
-            noBindS $ appE [|putStr . padWith 16 ' '|] (daypart d 2),
-            bindS (varP $ td "'4") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|],
-            letS [valD (varP $ td "''") (normalB $ appE (appE [|diffUTCTime|] (varE $ td "'4")) (varE $ td "'3")) []],
-            noBindS . appE [|putStrLn|] $ appE [|("  (" <>) . (<> " ms)")|] (ms . varE $ td "''")
+          [ noBindS $ appE [|putStr|] [|"  Part 2:"|]
+          , bindS (varP $ td "'3") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|]
+          , noBindS $ appE [|putStr . padWith 16 ' '|] (daypart d 2)
+          , bindS (varP $ td "'4") $ appE (appE [|fmap|] [|systemToUTCTime|]) [|getSystemTime|]
+          , letS [valD (varP $ td "''") (normalB $ appE (appE [|diffUTCTime|] (varE $ td "'4")) (varE $ td "'3")) []]
+          , noBindS . appE [|putStrLn|] $ appE [|("  (" <>) . (<> " ms)")|] (ms . varE $ td "''")
           ]
         else []
-  where
-    dstr = padWith 2 '0' d
-    td k = mkName $ "t" <> dstr <> k
-    ms = appE [|paddedWith 10 ' ' . milliseconds|]
+ where
+  dstr = padWith 2 '0' d
+  td k = mkName $ "t" <> dstr <> k
+  ms = appE [|paddedWith 10 ' ' . milliseconds|]
