@@ -26,11 +26,11 @@ valid (relist -> p) =
   null (p `intersect` [I, O, L])
     && hasMoreThan 2 ((2 ==) . length) pairs
     && hasMoreThan 1 straight (triples p)
-  where
-    triples (x : y : z : xs) = [x, y, z] : triples (y : z : xs)
-    triples _ = []
-    straight xs = withNonEmpty False (\(l :| _) -> l /= A && xs == take (length xs) [l, pred l ..]) xs
-    pairs = nubOrd . filter allSame $ pairwise list2 p
+ where
+  triples (x : y : z : xs) = [x, y, z] : triples (y : z : xs)
+  triples _ = []
+  straight xs = withNonEmpty False (\(l :| _) -> l /= A && xs == take (length xs) [l, pred l ..]) xs
+  pairs = nubOrd . filter allSame $ pairwise list2 p
 
 part1 :: String
 part1 = maybe "" fromPassword $ find valid (iterate incr in11)

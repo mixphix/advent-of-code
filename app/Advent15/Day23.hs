@@ -10,8 +10,8 @@ type Register = Char
 type Memory = Map Register Natural
 
 data Computer = Computer
-  { _cursor :: Int,
-    _memory :: Memory
+  { _cursor :: Int
+  , _memory :: Memory
   }
   deriving (Eq, Show)
 
@@ -37,19 +37,19 @@ perform = \case
 
 instruction :: Parser Instruction
 instruction = choice [hlf, tpl, inc, jmp, jie, jio]
-  where
-    hlf = fmap Hlf $ string "hlf " *> oneOf "ab"
-    tpl = fmap Tpl $ string "tpl " *> oneOf "ab"
-    inc = fmap Inc $ string "inc " *> oneOf "ab"
-    jmp = fmap Jmp $ string "jmp " *> choice [id <$ char '+', negate <$ char '-'] <*> number
-    jie = do
-      r <- string "jie " *> oneOf "ab" <* string ", "
-      f <- choice [id <$ char '+', negate <$ char '-']
-      Jie r . f <$> number
-    jio = do
-      r <- string "jio " *> oneOf "ab" <* string ", "
-      f <- choice [id <$ char '+', negate <$ char '-']
-      Jio r . f <$> number
+ where
+  hlf = fmap Hlf $ string "hlf " *> oneOf "ab"
+  tpl = fmap Tpl $ string "tpl " *> oneOf "ab"
+  inc = fmap Inc $ string "inc " *> oneOf "ab"
+  jmp = fmap Jmp $ string "jmp " *> choice [id <$ char '+', negate <$ char '-'] <*> number
+  jie = do
+    r <- string "jie " *> oneOf "ab" <* string ", "
+    f <- choice [id <$ char '+', negate <$ char '-']
+    Jie r . f <$> number
+  jio = do
+    r <- string "jio " *> oneOf "ab" <* string ", "
+    f <- choice [id <$ char '+', negate <$ char '-']
+    Jio r . f <$> number
 
 in23 :: Vector Instruction
 in23 = relist $ parse instruction <$> lines (input 2015 23)

@@ -13,7 +13,13 @@ stringmem [] = 0
 in08 :: [(String, Int, Int, Int)]
 in08 =
   lines (input 2015 8)
-    <&> (\x -> (x, 2 + length x, stringmem x, length . show @String $ "\"" <> x <> "\""))
+    <&> ( \x ->
+            ( x
+            , 2 + length x
+            , stringmem x
+            , length . show @String $ "\"" <> x <> "\""
+            )
+        )
       . parse stringcode
 
 part1 :: Int

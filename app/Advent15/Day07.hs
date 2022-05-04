@@ -60,44 +60,44 @@ command w m = case m !? w ?: error "failed to complete: missing key" of
 
 wires :: Parser (String, Either Command Word16)
 wires = choice [constant, anded, ored, lshifted, rshifted, complemented]
-  where
-    constant = do
-      d <- register <* string " -> "
-      r <- name
-      pure (r, (Constant +++ id) d)
+ where
+  constant = do
+    d <- register <* string " -> "
+    r <- name
+    pure (r, (Constant +++ id) d)
 
-    anded = do
-      r1 <- register <* string " AND "
-      r2 <- name <* string " -> "
-      rz <- name
-      pure (rz, Left $ And r1 r2)
+  anded = do
+    r1 <- register <* string " AND "
+    r2 <- name <* string " -> "
+    rz <- name
+    pure (rz, Left $ And r1 r2)
 
-    ored = do
-      r1 <- register <* string " OR "
-      r2 <- name <* string " -> "
-      rz <- name
-      pure (rz, Left $ Or r1 r2)
+  ored = do
+    r1 <- register <* string " OR "
+    r2 <- name <* string " -> "
+    rz <- name
+    pure (rz, Left $ Or r1 r2)
 
-    lshifted = do
-      r1 <- name <* string " LSHIFT "
-      n <- number <* string " -> "
-      rz <- name
-      pure (rz, Left $ Lshift n r1)
+  lshifted = do
+    r1 <- name <* string " LSHIFT "
+    n <- number <* string " -> "
+    rz <- name
+    pure (rz, Left $ Lshift n r1)
 
-    rshifted = do
-      r1 <- name <* string " RSHIFT "
-      n <- number <* string " -> "
-      rz <- name
-      pure (rz, Left $ Rshift n r1)
+  rshifted = do
+    r1 <- name <* string " RSHIFT "
+    n <- number <* string " -> "
+    rz <- name
+    pure (rz, Left $ Rshift n r1)
 
-    complemented = do
-      r1 <- string "NOT " *> name
-      rz <- string " -> " *> name
-      pure (rz, Left $ Complement r1)
+  complemented = do
+    r1 <- string "NOT " *> name
+    rz <- string " -> " *> name
+    pure (rz, Left $ Complement r1)
 
-    lowercase = oneOf ['a' .. 'z']
-    name = many1 lowercase
-    register = choice [Left <$> name, Right <$> number]
+  lowercase = oneOf ['a' .. 'z']
+  name = many1 lowercase
+  register = choice [Left <$> name, Right <$> number]
 
 in07 :: Wires
 in07 = relist $ parse wires <$> lines (input 2015 7)

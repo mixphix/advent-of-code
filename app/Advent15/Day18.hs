@@ -47,9 +47,9 @@ step alwayson p
   | pos p `elem` alwayson = True
   | extract p = neighbours `elem` [2, 3]
   | otherwise = neighbours == 3
-  where
-    neighbours =
-      count (((`elem` alwayson) . fst) ||^ snd) $ getCompose (experiment moore' p)
+ where
+  neighbours =
+    count (((`elem` alwayson) . fst) ||^ snd) $ getCompose (experiment moore' p)
 
 moore' :: (Word8, Word8) -> Compose [] ((,) (Word8, Word8)) (Word8, Word8)
 moore' =
@@ -63,5 +63,5 @@ part1 = maybe 0 (count every . fromGrid) $ iterate' (extend (step [])) (toGrid i
 
 part2 :: Natural
 part2 = maybe 0 (count every . fromGrid) $ iterate' (extend (step ons)) (toGrid in18) !!? 100
-  where
-    ons = [(0, 0), (0, 99), (99, 0), (99, 99)]
+ where
+  ons = [(0, 0), (0, 99), (99, 0), (99, 99)]

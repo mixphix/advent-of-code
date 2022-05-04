@@ -94,17 +94,17 @@ armour = \case
   Rng (Just (r, Just r')) -> armour (Rng (Just (r, Nothing))) + armour (Rng (Just (r', Nothing)))
 
 data Player = Player
-  { hp :: Natural,
-    dmg :: Natural,
-    def :: Natural
+  { hp :: Natural
+  , dmg :: Natural
+  , def :: Natural
   }
   deriving (Eq, Ord, Show)
 
 smith, armoury, jeweller :: [Equipment]
 (smith, armoury, jeweller) =
-  ( Weap <$> universe,
-    Arm <$> Nothing : map Just universe,
-    map Rng $
+  ( Weap <$> universe
+  , Arm <$> Nothing : map Just universe
+  , map Rng $
       Nothing :
       map (Just . (,Nothing)) universe
         <> [Just (r, Just r') | r <- universe, r' <- universe \\ [r]]
@@ -135,11 +135,11 @@ boss =
 data Turn = Mine | Yours deriving (Eq, Show)
 
 hit :: Player -> Player -> Maybe Player
-a `hit` b = points < hp b ? b {hp = hp b - points}
-  where
-    points = case dmg a `compare` def b of
-      GT -> dmg a - def b
-      _ -> 1
+a `hit` b = points < hp b ? b{hp = hp b - points}
+ where
+  points = case dmg a `compare` def b of
+    GT -> dmg a - def b
+    _ -> 1
 
 fight :: Turn -> Player -> Player -> Bool
 fight Mine you me = case me `hit` you of

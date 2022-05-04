@@ -7,10 +7,10 @@ import Data.Map.Strict qualified as Map
 import Data.Text qualified as T
 
 data Player = Player
-  { _health :: Natural,
-    _dmg :: Natural,
-    _def :: Natural,
-    _mana :: Natural
+  { _health :: Natural
+  , _dmg :: Natural
+  , _def :: Natural
+  , _mana :: Natural
   }
   deriving (Eq, Ord, Show)
 
@@ -81,10 +81,10 @@ data Turn = Mine | Yours deriving (Eq, Show)
 hit :: Natural -> Player -> Maybe Player
 0 `hit` b = Just b
 a `hit` b = points < _health b ? (health -~ points) b
-  where
-    points = case a `compare` _def b of
-      GT -> a - _def b
-      _ -> 1
+ where
+  points = case a `compare` _def b of
+    GT -> a - _def b
+    _ -> 1
 
 fight :: Part -> Turn -> Map Effect Natural -> Player -> Player -> Spell -> Alt [] [Spell]
 fight difficulty Yours effects0 you0 me0 spell =

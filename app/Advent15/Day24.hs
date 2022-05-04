@@ -13,9 +13,9 @@ footsacks = takeWhile ((smallestSizeOver wgt ==) . fst) $ do
   guard $ equal b
   let [x, _, _] = sortOn length [a, b, in24noa \\ b]
   pure $ (length &&& product) x
-  where
-    wgt = weight `div` 3
-    equal x = sum x == wgt
+ where
+  wgt = weight `div` 3
+  equal x = sum x == wgt
 
 smallestSizeOver :: Natural -> Int
 smallestSizeOver n = succ . genericLength . takeWhile ((n >=) . sum) $ inits (reverse in24)
@@ -35,9 +35,9 @@ trunksacks = takeWhile ((smallestSizeOver wgt ==) . fst) $ do
   guard $ equal c
   let [x, _, _, _] = sortOn length [a, b, c, in24noab \\ c]
   pure $ (length &&& product) x
-  where
-    wgt = weight `div` 4
-    equal x = sum x == wgt
+ where
+  wgt = weight `div` 4
+  equal x = sum x == wgt
 
 part2 :: Natural
 part2 = withNonEmpty 0 (minimumOf1 snd) trunksacks

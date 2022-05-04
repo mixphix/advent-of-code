@@ -7,8 +7,8 @@ type Visits = Mop (Point 2 Integer) (Sum Int)
 
 move :: (Ant, Visits) -> Cardinal -> (Ant, Visits)
 move (a, m) c = (a', insert (antPosition a') (Sum 1) m)
-  where
-    a' = shimmy 1 c a
+ where
+  a' = shimmy 1 c a
 
 start :: Visits
 start = one (Point2 0 0, Sum 1)
@@ -21,5 +21,5 @@ part1 = count (>= Sum 1) $ deliver in03 start
 
 part2 :: Natural
 part2 = count (>= Sum 1) . deliver robo $ deliver santa start
-  where
-    (santa, robo) = uninterleave in03
+ where
+  (santa, robo) = uninterleave in03

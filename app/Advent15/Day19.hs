@@ -40,5 +40,5 @@ part2 =
     - length (filter (`elem` ["Rn", "Ar"]) med)
     - 2 * length (filter ("Y" ==) med)
     - 1
-  where
-    med = relist medicine
+ where
+  med = relist medicine

@@ -26,23 +26,23 @@ places = Mop.keysSet in09
 
 shortestRoute :: String -> Natural
 shortestRoute k0 = getSum $ go (Set.delete k0 places) (Sum 0) k0
-  where
-    go remaining n k
-      | null remaining = n
-      | otherwise =
-        let visited = Mop.restrictKeys (in09 ! k) remaining
-            Just (p, pn) = viaNonEmpty (minimumOn1 snd) $ Mop.assocs visited
-         in go (Set.delete p remaining) (n <> pn) p
+ where
+  go remaining n k
+    | null remaining = n
+    | otherwise =
+      let visited = Mop.restrictKeys (in09 ! k) remaining
+          Just (p, pn) = viaNonEmpty (minimumOn1 snd) $ Mop.assocs visited
+       in go (Set.delete p remaining) (n <> pn) p
 
 longestRoute :: String -> Natural
 longestRoute k0 = getSum $ go (Set.delete k0 places) (Sum 0) k0
-  where
-    go remaining n k
-      | null remaining = n
-      | otherwise =
-        let visited = Mop.restrictKeys (in09 ! k) remaining
-            Just (p, pn) = viaNonEmpty (maximumOn1 snd) $ Mop.assocs visited
-         in go (Set.delete p remaining) (n <> pn) p
+ where
+  go remaining n k
+    | null remaining = n
+    | otherwise =
+      let visited = Mop.restrictKeys (in09 ! k) remaining
+          Just (p, pn) = viaNonEmpty (maximumOn1 snd) $ Mop.assocs visited
+       in go (Set.delete p remaining) (n <> pn) p
 
 part1 :: Natural
 part1 = withNonEmpty 0 (minimumOf1 shortestRoute) places

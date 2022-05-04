@@ -12,8 +12,8 @@ in25 =
 
 codes :: [Natural]
 codes = go 20151125
-  where
-    go n = n : go (n * 252533 `rem` 33554393)
+ where
+  go n = n : go (n * 252533 `rem` 33554393)
 
 part1 :: Natural
 part1 = withNonEmpty 0 head $ drop (pred $ uncantor in25) codes

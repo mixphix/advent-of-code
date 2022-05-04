@@ -17,9 +17,9 @@ instruction :: Bool -> Parser (Lights -> Lights)
 instruction b = do
   f <-
     choice
-      [ toggle b <$ string "toggle ",
-        turnOn b <$ string "turn on ",
-        turnOff b <$ string "turn off "
+      [ toggle b <$ string "toggle "
+      , turnOn b <$ string "turn on "
+      , turnOff b <$ string "turn off "
       ]
   topl <- liftM2 Point2 (number <* char ',') number <* string " through "
   botr <- liftM2 Point2 (number <* char ',') number

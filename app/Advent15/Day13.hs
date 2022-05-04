@@ -22,9 +22,9 @@ names = relist $ keys in13
 
 happiness :: NonEmpty String -> Integer
 happiness lx@(x :| _) = sum $ pairwise happy xs
-  where
-    happy p q = getSum $ in13 ! p ! q <> in13 ! q ! p
-    xs = relist (lx |> x)
+ where
+  happy p q = getSum $ in13 ! p ! q <> in13 ! q ! p
+  xs = relist (lx |> x)
 
 part1 :: Integer
 part1 = maximumOf1 happiness $ permutationsNE names

@@ -11,11 +11,12 @@ in02 = parse cube <$> lines (input 2015 2)
 
 part1 :: Natural
 part1 = sumOn (((+) <$> sumOn (2 *) <*> minimum1) . areas) in02
-  where
-    areas (Point3 l w h) = Point3 (l * w) (w * h) (h * l)
+ where
+  areas (Point3 l w h) = Point3 (l * w) (w * h) (h * l)
 
 part2 :: Natural
 part2 = sumOn ((+) <$> minimum1 . perimeters <*> volume) in02
-  where
-    perimeters (Point3 l w h) = Point3 (2 * l + 2 * w) (2 * w + 2 * h) (2 * h + 2 * l)
-    volume (Point3 l w h) = l * w * h
+ where
+  perimeters (Point3 l w h) =
+    Point3 (2 * l + 2 * w) (2 * w + 2 * h) (2 * h + 2 * l)
+  volume (Point3 l w h) = l * w * h
