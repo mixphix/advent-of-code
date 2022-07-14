@@ -8,7 +8,7 @@ module Advent.Coordinates where
 import Advent.D4 (D4 (..))
 import Advent.Functions (relist, (>-<))
 import Advent.Orphans ()
-import Advent.Suspension (Suspension (..))
+import Algebra.Lattice.Levitated
 import Control.Lens (Iso', Lens', abbreviatedFields, from, iso, makeLensesWith)
 import Data.Complex (Complex (..))
 import Data.Foldable.Toolbox (sumOn)
@@ -181,8 +181,8 @@ positionC = position . complex
 antCentre :: Cardinal -> Ant
 antCentre c = Ant c (Point2 0 0)
 
-slope :: Point 2 Integer -> Point 2 Integer -> Suspension Rational
+slope :: Point 2 Integer -> Point 2 Integer -> Levitated Rational
 slope (Point2 x0 y0) (Point2 x1 y1)
-  | x0 == x1 && y1 > y0 = NorthPole
-  | x0 == x1 = SouthPole
-  | otherwise = Meridian $ (y1 - y0) % (x1 - x0)
+  | x0 == x1 && y1 > y0 = Top
+  | x0 == x1 = Bottom
+  | otherwise = Levitate $ (y1 - y0) % (x1 - x0)

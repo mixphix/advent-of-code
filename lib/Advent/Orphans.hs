@@ -11,7 +11,7 @@ module Advent.Orphans (
   pattern NonEmpty,
 ) where
 
-import Advent.Maps
+import Advent.Maps (IntMop, Mop, one)
 import Control.Lens hiding (pattern Empty)
 import Data.Containers.NonEmpty (HasNonEmpty (..), pattern IsEmpty, pattern IsNonEmpty)
 import Data.Data (Data)
@@ -44,7 +44,8 @@ import GHC.TypeNats (type (<=))
 import Geometry.Point (Point)
 import Geometry.Vector (Arity)
 import Geometry.Vector qualified
-import Relude
+import Relude hiding (one)
+import Relude.Container.One qualified as One
 import Relude.Extra (DynamicMap (..), Foldable1 (..), StaticMap (..))
 
 instance Rewrapped (Mop k a) (Mop k a)
