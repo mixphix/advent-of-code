@@ -15,7 +15,10 @@ numbers = parse (optional p *> number `sepEndBy1` p) . decodeUtf8 . Aeson.encode
   p = many (oneOf " ,:\"{}[]" <|> letter)
 
 noReds :: Value -> Value
-noReds = transform $ _Object %~ \m -> if Aeson.String "red" `elem` m then H.empty else m
+noReds =
+  transform $
+    _Object %~ \m ->
+      if Aeson.String "red" `elem` m then H.empty else m
 
 part1 :: Integer
 part1 = sum $ numbers in12

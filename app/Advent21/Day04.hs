@@ -5,14 +5,18 @@ import Data.Text qualified as T
 type Bingo = Map (Point 2 Integer) (Natural, Bool)
 
 bingoP :: Parser Bingo
-bingoP = fmap (,False) . view grid <$> (optional (char ' ') *> number `sepBy` many (char ' ')) `sepBy` char '\n'
+bingoP =
+  fmap (fmap (,False) . view grid) $
+    (optional (char ' ') *> number `sepBy` many (char ' ')) `sepBy` char '\n'
 
 in04 :: ([Natural], [Bingo])
 order :: [Natural]
 bingos :: [Bingo]
 in04@(order, bingos) =
   let (h : (unlines . drop 1 -> t)) = lines (input 2021 4)
-   in (parse number <$> T.splitOn "," h, parse bingoP . (<> "\n") <$> T.splitOn "\n\n" t)
+   in ( parse number <$> T.splitOn "," h
+      , parse bingoP . (<> "\n") <$> T.splitOn "\n\n" t
+      )
 
 winning :: Bingo -> Bool
 winning b =
@@ -44,7 +48,8 @@ loser _ [] = error "no bingos"
 loser [] _ = error "no draws"
 loser [n] (b : _) = (n, b)
 loser (n : ns) bs
-  | Just wins <- nonEmpty (filter winning bs') = withNonEmpty (n, last wins) (loser ns . toList) (bs' \\ toList wins)
+  | Just wins <- nonEmpty (filter winning bs') =
+    withNonEmpty (n, last wins) (loser ns . toList) (bs' \\ toList wins)
   | otherwise = loser ns bs'
  where
   bs' = map (mark n) bs

@@ -5,10 +5,24 @@ type Lights = Map (Point 2 Natural) Integer
 lights :: Lights
 lights = relist $ join (liftM2 Point2) [0 .. 999] <&> (,0)
 
-zone :: (Maybe Integer -> Integer) -> Point 2 Natural -> Point 2 Natural -> Lights -> Lights
-zone f (Point2 l b) (Point2 r t) m = foldr (alter $ Just . f) m $ liftM2 Point2 [l .. r] [b .. t]
+zone ::
+  (Maybe Integer -> Integer) ->
+  Point 2 Natural ->
+  Point 2 Natural ->
+  Lights ->
+  Lights
+zone f (Point2 l b) (Point2 r t) m =
+  foldr (alter $ Just . f) m $
+    liftM2 Point2 [l .. r] [b .. t]
 
-toggle, turnOn, turnOff :: Bool -> Point 2 Natural -> Point 2 Natural -> Lights -> Lights
+toggle
+  , turnOn
+  , turnOff ::
+    Bool ->
+    Point 2 Natural ->
+    Point 2 Natural ->
+    Lights ->
+    Lights
 toggle b = zone (if b then maybe 2 (+ 2) else maybe 1 (1 -))
 turnOn b = zone (if b then maybe 1 (+ 1) else const 1)
 turnOff b = zone (if b then maybe 0 (max 0 . subtract 1) else const 0)

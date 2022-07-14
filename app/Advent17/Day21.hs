@@ -27,10 +27,10 @@ grow :: Grid -> Grid
 grow g
   | multipleOf 2 (length g) =
     let chunks = gridChunks 2 g
-     in glueChunks $ chunks <&> \chunkRow -> chunkRow <&> \chunk -> in21 !? chunk ?: []
+     in glueChunks $ chunks <&> \chkrow -> chkrow <&> \chk -> in21 !? chk ?: []
   | otherwise =
     let chunks = gridChunks 3 g
-     in glueChunks $ chunks <&> \chunkRow -> chunkRow <&> \chunk -> in21 !? chunk ?: []
+     in glueChunks $ chunks <&> \chkrow -> chkrow <&> \chk -> in21 !? chk ?: []
 
 part1 :: Natural
 part1 = count (== '#') . fold $ applyN 5 grow begin

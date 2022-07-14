@@ -38,7 +38,7 @@ segments n
 
 determine :: [Text] -> Map Char Segment
 determine ts =
-  let m :: Mop Int [String] = foldMap one [(T.length t, [sort $ toString t]) | t <- ts]
+  let m :: Mop Int [String] = fold [T.length t @= [sort $ toString t] | t <- ts]
       uno = maybe [] (foldMap toString) (m !? 2)
       siete = maybe [] (foldMap toString) (m !? 3)
       quattro = maybe [] (foldMap toString) (m !? 4)
@@ -54,11 +54,16 @@ determine ts =
         nubOrd . fold . filter ((1 ==) . length) $
           (m !? 6 ?: []) <&> (\\ (top : bottom : quattro))
       bottomright =
-        let five = filter (elem topleft . (\\ (bottom : middle : siete)) . toString) (m !? 5 ?: [])
-         in withNonEmpty (error "no bottom-right") head $ foldMap toString five \\ [top, middle, bottom, topleft]
+        let five =
+              filter
+                (elem topleft . (\\ (bottom : middle : siete)) . toString)
+                (m !? 5 ?: [])
+         in withNonEmpty (error "no bottom-right") head $
+              foldMap toString five \\ [top, middle, bottom, topleft]
       topright =
         withNonEmpty (error "no top-right") head $
-          maybe [] (foldMap toString) (m !? 7) \\ [top, middle, bottom, topleft, bottomleft, bottomright]
+          maybe [] (foldMap toString) (m !? 7)
+            \\ [top, middle, bottom, topleft, bottomleft, bottomright]
    in relist
         [ (top, A)
         , (topleft, B)

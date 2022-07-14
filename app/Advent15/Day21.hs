@@ -56,7 +56,8 @@ cost = \case
     DEF1 -> 20
     DEF2 -> 40
     DEF3 -> 80
-  Rng (Just (r, Just r')) -> cost (Rng (Just (r, Nothing))) + cost (Rng (Just (r', Nothing)))
+  Rng (Just (r, Just r')) ->
+    cost (Rng (Just (r, Nothing))) + cost (Rng (Just (r', Nothing)))
 
 damage :: Equipment -> Natural
 damage = \case
@@ -73,7 +74,8 @@ damage = \case
     DMG2 -> 2
     DMG3 -> 3
     _ -> 0
-  Rng (Just (r, Just r')) -> damage (Rng (Just (r, Nothing))) + damage (Rng (Just (r', Nothing)))
+  Rng (Just (r, Just r')) ->
+    damage (Rng (Just (r, Nothing))) + damage (Rng (Just (r', Nothing)))
 
 armour :: Equipment -> Natural
 armour = \case
@@ -91,7 +93,8 @@ armour = \case
     DEF2 -> 2
     DEF3 -> 3
     _ -> 0
-  Rng (Just (r, Just r')) -> armour (Rng (Just (r, Nothing))) + armour (Rng (Just (r', Nothing)))
+  Rng (Just (r, Just r')) ->
+    armour (Rng (Just (r, Nothing))) + armour (Rng (Just (r', Nothing)))
 
 data Player = Player
   { hp :: Natural
@@ -118,7 +121,8 @@ spend n = do
   guarded ((n ==) . sumOn cost) [w, a, r]
 
 maxSpend :: Natural
-maxSpend = sumOn cost [Weap Greataxe, Arm (Just Platemail), Rng (Just (DMG3, Just DEF3))]
+maxSpend =
+  sumOn cost [Weap Greataxe, Arm (Just Platemail), Rng (Just (DMG3, Just DEF3))]
 
 attack, defense :: [Equipment] -> Natural
 attack = sumOn damage

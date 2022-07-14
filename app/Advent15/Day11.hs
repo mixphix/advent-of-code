@@ -1,6 +1,32 @@
 module Day11 where
 
-data Lowercase = A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z
+data Lowercase
+  = A
+  | B
+  | C
+  | D
+  | E
+  | F
+  | G
+  | H
+  | I
+  | J
+  | K
+  | L
+  | M
+  | N
+  | O
+  | P
+  | Q
+  | R
+  | S
+  | T
+  | U
+  | V
+  | W
+  | X
+  | Y
+  | Z
   deriving (Eq, Ord, Enum, Bounded)
 
 lowercase :: Lowercase -> Char
@@ -29,7 +55,11 @@ valid (relist -> p) =
  where
   triples (x : y : z : xs) = [x, y, z] : triples (y : z : xs)
   triples _ = []
-  straight xs = withNonEmpty False (\(l :| _) -> l /= A && xs == take (length xs) [l, pred l ..]) xs
+  straight xs =
+    withNonEmpty
+      False
+      (\(l :| _) -> l /= A && xs == take (length xs) [l, pred l ..])
+      xs
   pairs = nubOrd . filter allSame $ pairwise list2 p
 
 part1 :: String

@@ -15,7 +15,9 @@ in09 :: (Elf, Marble)
 players :: Elf
 himarble :: Marble
 in09@(players, himarble) =
-  parse ((,) <$> number <*> (string " players; last marble is worth " *> number)) (input 2018 9)
+  parse
+    ((,) <$> number <*> (string " players; last marble is worth " *> number))
+    (input 2018 9)
 
 elves :: Scoreboard
 elves = relist $ [1 .. players] <&> (,0)

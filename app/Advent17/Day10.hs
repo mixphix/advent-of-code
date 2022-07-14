@@ -7,10 +7,16 @@ twist :: Int -> Int -> V.Vector Word8 -> V.Vector Word8
 twist pos len v = V.fromList $ fromIntegral <$> twisted
  where
   l = reverse $ [pos .. pos + len - 1] <&> (`mod` V.length v)
-  twisted = [0 .. V.length v - 1] <&> \n -> (v V.!) $ elemIndex n l >>= (l !!?) . (pred (length l) -) ?: n
+  twisted =
+    [0 .. V.length v - 1] <&> \n ->
+      (v V.!) $ elemIndex n l >>= (l !!?) . (pred (length l) -) ?: n
 
 prepASCII :: Text -> [Word8]
-prepASCII = (<> [17, 31, 73, 47, 23]) . map (fromIntegral . ord) . toString . strip
+prepASCII =
+  (<> [17, 31, 73, 47, 23])
+    . map (fromIntegral . ord)
+    . toString
+    . strip
 
 in10 :: Part -> [Word8]
 in10 part = ($ input 2017 10) $ case part of
@@ -19,7 +25,12 @@ in10 part = ($ input 2017 10) $ case part of
 
 runTwists :: Int -> Int -> [Word8] -> V.Vector Word8 -> V.Vector Word8
 runTwists _ _ [] v = v
-runTwists pos skip (len : lens) v = runTwists ((pos + fromIntegral len + skip) `mod` V.length v) (succ skip) lens (twist pos (fromIntegral len) v)
+runTwists pos skip (len : lens) v =
+  runTwists
+    ((pos + fromIntegral len + skip) `mod` V.length v)
+    (succ skip)
+    lens
+    (twist pos (fromIntegral len) v)
 
 part1 :: Int
 part1 =

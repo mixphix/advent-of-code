@@ -6,7 +6,7 @@ in05 :: Text
 in05 = input 2018 5
 
 units :: [Text]
-units = zipWith (on (<>) one) (['A' .. 'Z'] <> ['a' .. 'z']) (['a' .. 'z'] <> ['A' .. 'Z'])
+units = join (zipWith (on (<>) T.singleton)) (['A' .. 'Z'] <> ['a' .. 'z'])
 
 react :: Text -> Text
 react = withNonEmpty "" last . iterateWhileUnique (go units)

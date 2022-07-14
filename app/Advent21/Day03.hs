@@ -1,23 +1,26 @@
 module Day03 where
 
+import Data.Text qualified as T
+
 base2P :: Parser Natural
-base2P = do
-  bits <- fmap (Const . relist) . many1 $ choice [0 <$ char '0', 1 <$ char '1']
-  pure . undigits . getConst $ rebase @2 @10 bits
+base2P = bits . relist <$> many1 (choice [0 <$ char '0', 1 <$ char '1'])
 
 in03 :: [[Natural]]
-in03 = map (parse number . one) . toString <$> lines (input 2021 3)
+in03 = map (parse number . T.singleton) . toString <$> lines (input 2021 3)
 
 gamma :: [[Natural]] -> [Natural]
-gamma = mapMaybe (viaNonEmpty (head . maximumOn1 length) . groupAll) . transpose
+gamma =
+  mapMaybe (viaNonEmpty (head . maximumOn1 length) . groupAll) . transpose
 
 epsilon :: [[Natural]] -> [Natural]
-epsilon = mapMaybe (viaNonEmpty (head . minimumOn1 length) . groupAll) . transpose
+epsilon =
+  mapMaybe (viaNonEmpty (head . minimumOn1 length) . groupAll) . transpose
 
 gammaKeep1 :: [[Natural]] -> [Natural]
 gammaKeep1 =
   mapMaybe
-    ( viaNonEmpty (head . maximumBy (liftM2 (<>) (comparing length) (comparing head)))
+    ( viaNonEmpty
+        (head . maximumBy (liftM2 (<>) (comparing length) (comparing head)))
         . groupAll
     )
     . transpose
@@ -25,16 +28,20 @@ gammaKeep1 =
 epsilonKeep0 :: [[Natural]] -> [Natural]
 epsilonKeep0 =
   mapMaybe
-    ( viaNonEmpty (head . minimumBy (liftM2 (<>) (comparing length) (comparing head)))
+    ( viaNonEmpty
+        (head . minimumBy (liftM2 (<>) (comparing length) (comparing head)))
         . groupAll
     )
     . transpose
 
+bits :: NESeq Natural -> Natural
+bits = undigits . getConst . rebase @2 @10 . Const
+
 part1 :: Natural
 part1 =
-  let g = Const $ relist (gamma in03)
-      e = Const $ relist (epsilon in03)
-   in on (*) (undigits . getConst . rebase @2 @10) g e
+  let g = relist (gamma in03)
+      e = relist (epsilon in03)
+   in bits g * bits e
 
 bitcrit :: ([[Natural]] -> [Natural]) -> Natural -> [[Natural]] -> [Natural]
 bitcrit _ _ [o] = o
@@ -51,6 +58,6 @@ co2 = bitcrit epsilonKeep0 0
 
 part2 :: Natural
 part2 =
-  let o = Const $ relist (oxygen in03)
-      c = Const $ relist (co2 in03)
-   in on (*) (undigits . getConst . rebase @2 @10) o c
+  let o = relist (oxygen in03)
+      c = relist (co2 in03)
+   in bits o * bits c

@@ -11,11 +11,17 @@ data Program = Program {instructions :: V.Vector Int, position :: Int} deriving 
 instruction :: Part -> Program -> Natural
 instruction pt (Program v n)
   | n < 0 || n >= V.length v = 0
-  | pt == Part1 = succ . instruction pt $ Program (V.modify (\w -> VM.modify w succ n) v) (n + v V.! n)
+  | pt == Part1 =
+    succ . instruction pt $
+      Program (V.modify (\w -> VM.modify w succ n) v) (n + v V.! n)
   | otherwise = case v V.! n of
     vn
-      | vn >= 3 -> succ . instruction pt $ Program (V.modify (\w -> VM.modify w pred n) v) (n + vn)
-      | otherwise -> succ . instruction pt $ Program (V.modify (\w -> VM.modify w succ n) v) (n + vn)
+      | vn >= 3 ->
+        succ . instruction pt $
+          Program (V.modify (\w -> VM.modify w pred n) v) (n + vn)
+      | otherwise ->
+        succ . instruction pt $
+          Program (V.modify (\w -> VM.modify w succ n) v) (n + vn)
 
 part1 :: Natural
 part1 = instruction Part1 $ Program in05 0

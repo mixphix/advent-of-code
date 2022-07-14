@@ -15,7 +15,9 @@ in08 :: Tree [Int]
 in08 = parse treeP (input 2018 8)
 
 part1 :: Int
-part1 = foldTree (\as bss -> sum as + sum bss) in08
+part1 = foldTree (on (+) sum) in08
 
 part2 :: Int
-part2 = foldTree (\as bss -> case bss of [] -> sum as; _ -> sum (mapMaybe ((bss !!?) . pred) as)) in08
+part2 = flip foldTree in08 $ \as bss -> case bss of
+  [] -> sum as
+  _ -> sum (mapMaybe ((bss !!?) . pred) as)

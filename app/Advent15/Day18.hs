@@ -59,9 +59,13 @@ moore' =
     . traverseOf (from pair) moore
 
 part1 :: Natural
-part1 = maybe 0 (count every . fromGrid) $ iterate' (extend (step [])) (toGrid in18) !!? 100
+part1 =
+  maybe 0 (count every . fromGrid) $
+    iterate' (extend (step [])) (toGrid in18) !!? 100
 
 part2 :: Natural
-part2 = maybe 0 (count every . fromGrid) $ iterate' (extend (step ons)) (toGrid in18) !!? 100
+part2 =
+  maybe 0 (count every . fromGrid) $
+    iterate' (extend (step ons)) (toGrid in18) !!? 100
  where
   ons = [(0, 0), (0, 99), (99, 0), (99, 99)]

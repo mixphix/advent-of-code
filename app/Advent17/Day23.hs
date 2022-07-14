@@ -3,6 +3,7 @@
 module Day23 where
 
 import Control.Lens (makeLenses, (+~))
+import Data.Text qualified as T
 import GHC.Show qualified (show)
 
 data Instruction
@@ -49,17 +50,31 @@ makeLenses ''Computer
 instance Show Computer where
   show Computer{..} =
     "Computer (" <> show _instrpos <> ") "
-      <> foldMap (\(t, i) -> "{" <> toString t <> ": " <> show i <> "}") (relist @_ @[] _registers)
+      <> foldMap
+        (\(t, i) -> "{" <> toString t <> ": " <> show i <> "}")
+        (relist @_ @[] _registers)
 
 instruction :: (Integer, Computer) -> [Instruction] -> Maybe (Integer, Computer)
 instruction (s, c@Computer{..}) is = case is !!? _instrpos of
   Nothing -> Nothing
   Just i -> Just $ case i of
-    Set x e -> (s, c' & registers %~ (ix x .~ either reg id e))
-    Sub x e -> (s, c' & registers %~ (at x %~ Just . subtract (either reg id e) . (?: 0)))
-    Mul x e -> (succ s, c' & registers %~ (at x %~ Just . (* either reg id e) . (?: 0)))
+    Set x e ->
+      ( s
+      , c' & registers %~ (ix x .~ either reg id e)
+      )
+    Sub x e ->
+      ( s
+      , c' & registers %~ (at x %~ Just . subtract (either reg id e) . (?: 0))
+      )
+    Mul x e ->
+      ( succ s
+      , c' & registers %~ (at x %~ Just . (* either reg id e) . (?: 0))
+      )
     Jnz x e
-      | either reg id x /= 0 -> (s, c & instrpos +~ fromIntegral (either reg id e))
+      | either reg id x /= 0 ->
+        ( s
+        , c & instrpos +~ fromIntegral (either reg id e)
+        )
       | otherwise -> (s, c')
    where
     c' = c & instrpos %~ succ
@@ -67,14 +82,17 @@ instruction (s, c@Computer{..}) is = case is !!? _instrpos of
     reg z = _registers !? z ?: 0
 
 part1 :: Integer
-part1 = withNonEmpty 0 last $ unfoldr (\(n, c) -> (n,) <$> instruction (n, c) in23) (0, Computer m 0)
+part1 =
+  withNonEmpty 0 last $
+    unfoldr (\(n, c) -> (n,) <$> instruction (n, c) in23) (0, Computer m 0)
  where
-  m = relist [(c, 0) | c <- map one "abcdefgh"]
+  m = fold [T.singleton c @= 0 | c <- "abcdefgh"]
 
 part2 :: Natural
 part2 = count (not . prime) $ take 1001 [fromIntegral b, fromIntegral b + 17 ..]
  where
-  m = relist [(c, fromIntegral $ fromEnum (c == "a")) | c <- map one "abcdefgh"]
+  m = fold $ zipWith ((@=) . T.singleton) "abcdefgh" (1 : repeat 0)
   Just b =
-    (((!? "b") . _registers) <=< viaNonEmpty head) . dropWhile ((< Just 100000) . (!? "b") . _registers) $
-      unfoldr (\(n, c) -> (c,) <$> instruction (n, c) in23) (0, Computer m 0)
+    (((!? "b") . _registers) <=< viaNonEmpty head)
+      . dropWhile ((< Just 100000) . (!? "b") . _registers)
+      $ unfoldr (\(n, c) -> (c,) <$> instruction (n, c) in23) (0, Computer m 0)

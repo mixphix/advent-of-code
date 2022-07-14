@@ -24,9 +24,14 @@ part2 :: Int
         (length *** withNonEmpty [] (sort . map (Point . (^. _x)) . head))
           . span ((< 135) . yeas . pairwise nearby . sort)
           $ iterate' (map step) in10
-      (Point v, Point ((^-^ v) -> (Vector2 x1 y1))) = withNonEmpty (origin, origin) (head &&& last) vs
+      (Point v, Point ((^-^ v) -> (Vector2 x1 y1))) =
+        withNonEmpty (origin, origin) (head &&& last) vs
       stars = relist $ vs <&> (^-^ v) . toVec
-      starmap = relist [(Point c, if c `Set.member` stars then '#' else ' ') | c <- liftM2 Vector2 [-1 .. x1] [-1 .. y1]]
+      starmap =
+        relist
+          [ (Point c, if c `Set.member` stars then '#' else ' ')
+          | c <- liftM2 Vector2 [-1 .. x1] [-1 .. y1]
+          ]
    in (starmap ^. from grid, p2)
  where
   nearby :: V 2 (V 2 Integer) -> V 2 (V 2 Integer) -> Bool

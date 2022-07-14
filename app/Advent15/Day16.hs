@@ -21,7 +21,9 @@ data Sue = Sue
   deriving (Data)
 
 instance Eq Sue where
-  s1 == s2 = case (toListOf (template @Sue @(Maybe Int)) s1, toListOf (template @Sue @(Maybe Int)) s2) of
+  s1 == s2 = case ( toListOf (template @Sue @(Maybe Int)) s1
+                  , toListOf (template @Sue @(Maybe Int)) s2
+                  ) of
     (s1s, s2s) -> and $ zipWith (compMissing (==)) s1s s2s
 
 compMissing :: (a -> a -> Bool) -> Maybe a -> Maybe a -> Bool
@@ -66,7 +68,19 @@ sue = do
  where
   quantities :: Parser (Map String Int)
   quantities = do
-    let l = map string ["children", "cats", "samoyeds", "pomeranians", "akitas", "vizslas", "goldfish", "trees", "cars", "perfumes"]
+    let l =
+          string
+            <$> [ "children"
+                , "cats"
+                , "samoyeds"
+                , "pomeranians"
+                , "akitas"
+                , "vizslas"
+                , "goldfish"
+                , "trees"
+                , "cars"
+                , "perfumes"
+                ]
     foldr (uncurry Map.insert) Map.empty
       <$> ((,) <$> choice l <*> (string ": " *> number)) `sepBy1` string ", "
 
@@ -78,9 +92,11 @@ part1 = maybe 0 succ $ elemIndex target in16
 
 rangeSue :: Sue -> Bool
 rangeSue s =
-  and ([children, samoyeds, akitas, vizslas, cars, perfumes] <&> \f -> on (compMissing (==)) f s target)
-    && and ([cats, trees] <&> \f -> on (compMissing (>)) f s target)
-    && and ([pomeranians, goldfish] <&> \f -> on (compMissing (<)) f s target)
+  all
+    (\f -> on (compMissing (==)) f s target)
+    [children, samoyeds, akitas, vizslas, cars, perfumes]
+    && all (\f -> on (compMissing (>)) f s target) [cats, trees]
+    && all (\f -> on (compMissing (<)) f s target) [pomeranians, goldfish]
 
 part2 :: Int
 part2 = maybe 0 succ $ findIndex rangeSue in16

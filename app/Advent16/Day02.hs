@@ -1,7 +1,13 @@
 module Day02 where
 
 directions :: Parser Cardinal
-directions = choice [North <$ char 'U', East <$ char 'R', West <$ char 'L', South <$ char 'D']
+directions =
+  choice
+    [ North <$ char 'U'
+    , East <$ char 'R'
+    , West <$ char 'L'
+    , South <$ char 'D'
+    ]
 
 in02 :: [[Cardinal]]
 in02 = parse (many1 directions) <$> lines (input 2016 2)

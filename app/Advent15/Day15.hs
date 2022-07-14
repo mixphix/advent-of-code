@@ -24,11 +24,15 @@ in15 = parse ingredient <$> lines (input 2015 15)
 
 cookie :: [Integer] -> (Integer, Integer)
 cookie tsps =
-  let (cals, ingrs) = unzip $ zipWith (\t (c, i) -> (t * c, t *^ i)) tsps $ take (length tsps) in15
+  let (cals, ingrs) =
+        unzip . zipWith (\t (c, i) -> (t * c, t *^ i)) tsps $
+          take (length tsps) in15
    in (sum cals, productOn (max 0) $ sumV ingrs)
 
 part1 :: Integer
 part1 = withNonEmpty 0 (maximumOf1 (snd . cookie)) teaspoons
 
 part2 :: Integer
-part2 = withNonEmpty 0 maximum1 $ mapMaybe (snd <<$>> guarded ((500 ==) . fst) . cookie) teaspoons
+part2 =
+  withNonEmpty 0 maximum1 $
+    mapMaybe (snd <<$>> guarded ((500 ==) . fst) . cookie) teaspoons

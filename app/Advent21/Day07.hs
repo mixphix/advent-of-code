@@ -15,7 +15,9 @@ sep n k
   | otherwise = n - k
 
 part1 :: Natural
-part1 = withNonEmpty 0 (minimumOf1 $ \n -> sumOn (sep n) in07) [lo .. hi]
+part1 =
+  withNonEmpty 0 (minimumOf1 $ \n -> sumOn (sep n) in07) [lo .. hi]
 
 part2 :: Natural
-part2 = withNonEmpty 0 (minimumOf1 $ \n -> sumOn (ngon 3 . sep n) in07) [lo .. hi]
+part2 =
+  withNonEmpty 0 (minimumOf1 $ \n -> sumOn (ngon 3 . sep n) in07) [lo .. hi]

@@ -1,5 +1,7 @@
 module Day10 where
 
+import Data.Text qualified as T
+
 in10 :: [String]
 in10 = toString <$> lines (input 2021 10)
 
@@ -25,7 +27,7 @@ syntaxErrorScore ')' = 3
 syntaxErrorScore ']' = 57
 syntaxErrorScore '}' = 1197
 syntaxErrorScore '>' = 25137
-syntaxErrorScore x = error $ "unexpected character: " <> one x
+syntaxErrorScore x = error $ "unexpected character: " <> T.singleton x
 
 part1 :: Natural
 part1 = sumOn (maybe 0 syntaxErrorScore . illegalCharacter) in10
@@ -61,9 +63,11 @@ autocompleteScore = go 0
     ']' -> 2
     '}' -> 3
     '>' -> 4
-    x -> error $ "unexpected character: " <> one x
+    x -> error $ "unexpected character: " <> T.singleton x
 
 part2 :: Natural
 part2 =
-  let scores = sort . map (autocompleteScore . complete) $ filter (isNothing . illegalCharacter) in10
+  let scores =
+        sort . map (autocompleteScore . complete) $
+          filter (isNothing . illegalCharacter) in10
    in withNonEmpty 0 head $ drop ((length scores - 1) `div` 2) scores

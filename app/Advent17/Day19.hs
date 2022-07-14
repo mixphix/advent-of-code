@@ -3,7 +3,12 @@ module Day19 where
 import Data.Map.Strict qualified as Map
 
 in19 :: Map (Point 2 Integer) Char
-in19 = Map.mapKeys (fmap fromIntegral) . Map.filter (/= ' ') . view grid . map toString $ lines (input 2017 19)
+in19 =
+  Map.mapKeys (fmap fromIntegral)
+    . Map.filter (/= ' ')
+    . view grid
+    . map toString
+    $ lines (input 2017 19)
 
 start :: Point 2 Integer
 start = find (elem 0) (keys in19) ?: Point2 0 0

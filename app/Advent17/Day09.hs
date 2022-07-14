@@ -2,7 +2,8 @@ module Day09 where
 
 garbageP :: Parser Int
 garbageP = do
-  k <- string "<" >> many (choice [0 <$ (string "!" >> anyChar), 1 <$ satisfy (/= '>')])
+  void $ string "<"
+  k <- many (choice [0 <$ (string "!" >> anyChar), 1 <$ satisfy (/= '>')])
   sum k <$ string ">"
 
 groupP :: Int -> Parser Int

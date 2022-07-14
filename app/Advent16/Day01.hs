@@ -14,7 +14,9 @@ in01 :: [(Integer, Ant -> Ant)]
 in01 = parse directions (input 2016 1)
 
 part1 :: Natural
-part1 = manhattan origin . antPosition $ foldl' (\ant (n, t) -> scurry n $ t ant) (antCentre North) in01
+part1 =
+  manhattan origin . antPosition
+    $ foldl' (\ant (n, t) -> scurry n $ t ant) (antCentre North) in01
 
 part2 :: Natural
 part2 =

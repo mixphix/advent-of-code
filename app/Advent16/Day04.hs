@@ -8,8 +8,11 @@ decoy t =
   let checksum = T.dropWhile (/= '[') $ T.dropWhileEnd (/= ']') t
       tstr = toString $ T.filter isAlpha (T.dropWhileEnd (/= '[') t)
       (a : b : c : d : e : _) =
-        map head . sortBy (comparing (Down . length) <> comparing head) . NE.group $ sort tstr
-   in foldMap one ['[', a, b, c, d, e, ']'] /= checksum
+        map head
+          . sortBy (comparing (Down . length) <> comparing head)
+          . NE.group
+          $ sort tstr
+   in foldMap T.singleton ['[', a, b, c, d, e, ']'] /= checksum
 
 sectorID :: Text -> Natural
 sectorID = parse number . T.filter isDigit

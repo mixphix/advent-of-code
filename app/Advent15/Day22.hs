@@ -69,7 +69,8 @@ effectStatus = \case
   _ -> id
 
 effectuate :: Map Effect Natural -> Map Effect Natural
-effectuate = Map.foldMapWithKey (\eff dur -> if dur > 1 then one (eff, pred dur) else Map.empty)
+effectuate =
+  Map.foldMapWithKey $ \eff dur -> dur > 1 ?> eff @= pred dur
 
 boss :: Player
 boss =
@@ -86,7 +87,14 @@ a `hit` b = points < _health b ? (health -~ points) b
     GT -> a - _def b
     _ -> 1
 
-fight :: Part -> Turn -> Map Effect Natural -> Player -> Player -> Spell -> Alt [] [Spell]
+fight ::
+  Part ->
+  Turn ->
+  Map Effect Natural ->
+  Player ->
+  Player ->
+  Spell ->
+  Alt [] [Spell]
 fight difficulty Yours effects0 you0 me0 spell =
   let active = keys effects0
       (buffs, debuffs) = unzip $ (effectStatus &&& effectDamage) <$> active
@@ -121,7 +129,8 @@ fight Part1 Mine effects0 you0 me0 spell =
                       Just (e, d)
                         | Just _ <- effects !? e -> empty
                         | otherwise ->
-                          universe >-< fight Part1 Yours (insert e d effects) you me
+                          universe
+                            >-< fight Part1 Yours (insert e d effects) you me
           | otherwise -> empty
 fight Part2 Mine effects0 you0 me0 spell =
   let active = keys effects0
@@ -149,7 +158,8 @@ fight Part2 Mine effects0 you0 me0 spell =
                         Just (e, d)
                           | Just _ <- effects !? e -> empty
                           | otherwise ->
-                            universe >-< fight Part2 Yours (insert e d effects) you me
+                            universe
+                              >-< fight Part2 Yours (insert e d effects) you me
             | otherwise -> empty
 
 part1 :: Natural

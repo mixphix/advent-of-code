@@ -10,8 +10,20 @@ dayP = fromJust . parseYmd @Day <$> (char '[' *> many (satisfy (isDigit ||^ (== 
 
 minutesOfP :: Day -> Parser [Int]
 minutesOfP (ymd -> d) = try $ do
-  nsleep <- char '[' *> string d *> string " 00:" *> number <* string "] falls asleep" <* space
-  nwake <- char '[' *> string d *> string " 00:" *> number <* string "] wakes up" <* space
+  nsleep <-
+    char '['
+      *> string d
+      *> string " 00:"
+      *> number
+      <* string "] falls asleep"
+      <* space
+  nwake <-
+    char '['
+      *> string d
+      *> string " 00:"
+      *> number
+      <* string "] wakes up"
+      <* space
   pure [nsleep .. nwake - 1]
 
 guardP :: Parser (Day, Int, [Int])
@@ -34,8 +46,14 @@ in04 =
 
 part1 :: Int
 part1 =
-  let g = Mop.foldlWithKey' (\acc k v -> if length v > length (in04 Mop.! acc) then k else acc) 0 in04
-      Just mostmin = viaNonEmpty head <=< viaNonEmpty head . sortOn (Down . length) $ maybe [] groupSort (in04 !? g)
+  let g =
+        Mop.foldlWithKey'
+          (\acc k v -> if length v > length (in04 Mop.! acc) then k else acc)
+          0
+          in04
+      Just mostmin =
+        viaNonEmpty head <=< viaNonEmpty head . sortOn (Down . length) $
+          maybe [] groupSort (in04 !? g)
    in g * mostmin
 
 part2 :: Int

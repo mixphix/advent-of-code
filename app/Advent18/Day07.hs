@@ -32,16 +32,29 @@ part1 = go (sort initial) in07 dependencies
 stepTime :: Char -> Natural
 stepTime = (61 +) . alphabetPos
 
-tick :: Natural -> Map Char Natural -> Map Char Natural -> Mop Char String -> Mop Char String -> Natural
+tick ::
+  Natural ->
+  Map Char Natural ->
+  Map Char Natural ->
+  Mop Char String ->
+  Mop Char String ->
+  Natural
 tick spent Empty _ _ _ = spent
 tick spent (fmap pred -> active) waiting yet d =
-  let (done, active') = toSnd (Map.withoutKeys active) . Map.keysSet $ Map.filter (== 0) active
+  let (done, active') =
+        toSnd (Map.withoutKeys active) $
+          Map.keysSet (Map.filter (== 0) active)
       (fold -> str, yet') = popKeys done yet
       d' = d <&> (\\ relist done)
       ready = relist . fmapToSnd stepTime $ filter (null . (d' !)) str
       waiting' = waiting <> ready
       active'' = active' <> Map.take (5 - length active') waiting'
-   in tick (succ spent) active'' (waiting' `Map.withoutKeys` Map.keysSet active'') yet' d'
+   in tick
+        (succ spent)
+        active''
+        (waiting' `Map.withoutKeys` Map.keysSet active'')
+        yet'
+        d'
 
 part2 :: Natural
 part2 = tick 0 (relist $ fmapToSnd stepTime initial) Empty in07 dependencies

@@ -32,16 +32,33 @@ perform = \case
   Tpl r -> (memory %~ alter (fmap (* 3)) r) . (cursor %~ succ)
   Inc r -> (memory %~ alter (fmap succ) r) . (cursor %~ succ)
   Jmp n -> cursor %~ (+ n)
-  Jie r n -> bool (cursor %~ succ) (cursor %~ (+ n)) =<< (maybe False even . lookup r . view memory)
-  Jio r n -> bool (cursor %~ succ) (cursor %~ (+ n)) =<< ((Just 1 ==) . lookup r . view memory)
+  Jie r n ->
+    bool (cursor %~ succ) (cursor %~ (+ n))
+      =<< (maybe False even . lookup r . view memory)
+  Jio r n ->
+    bool (cursor %~ succ) (cursor %~ (+ n))
+      =<< ((Just 1 ==) . lookup r . view memory)
 
 instruction :: Parser Instruction
 instruction = choice [hlf, tpl, inc, jmp, jie, jio]
  where
-  hlf = fmap Hlf $ string "hlf " *> oneOf "ab"
-  tpl = fmap Tpl $ string "tpl " *> oneOf "ab"
-  inc = fmap Inc $ string "inc " *> oneOf "ab"
-  jmp = fmap Jmp $ string "jmp " *> choice [id <$ char '+', negate <$ char '-'] <*> number
+  hlf =
+    fmap Hlf $
+      string "hlf "
+        *> oneOf "ab"
+  tpl =
+    fmap Tpl $
+      string "tpl "
+        *> oneOf "ab"
+  inc =
+    fmap Inc $
+      string "inc "
+        *> oneOf "ab"
+  jmp =
+    fmap Jmp $
+      string "jmp "
+        *> choice [id <$ char '+', negate <$ char '-']
+        <*> number
   jie = do
     r <- string "jie " *> oneOf "ab" <* string ", "
     f <- choice [id <$ char '+', negate <$ char '-']
@@ -60,7 +77,11 @@ compute program c = case program V.!? _cursor c of
   Just instr -> compute program $! perform instr c
 
 part1 :: Natural
-part1 = (compute in23 (Computer 0 $ relist [(c, 0) | c <- "ab"]) ^. memory) !? 'b' ?: 0
+part1 =
+  let pooter = Computer 0 $ relist [(c, 0) | c <- "ab"]
+   in (compute in23 pooter ^. memory) !? 'b' ?: 0
 
 part2 :: Natural
-part2 = (compute in23 (Computer 0 $ relist [(c, (c == 'a') ^. enum) | c <- "ab"]) ^. memory) !? 'b' ?: 0
+part2 =
+  let pooter = Computer 0 $ relist [(c, (c == 'a') ^. enum) | c <- "ab"]
+   in (compute in23 pooter ^. memory) !? 'b' ?: 0

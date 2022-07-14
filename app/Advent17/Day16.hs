@@ -30,7 +30,8 @@ newtype Permutation = Permutation (VFU.Vec 16 Int)
 
 instance Semigroup Permutation where
   Permutation v <> Permutation w =
-    Permutation . VF.fromList . relist $ (backpermute `on` relist . VF.toList) w v
+    Permutation . VF.fromList . relist $
+      (on backpermute $ relist . VF.toList) w v
 
 instance Monoid Permutation where
   mempty = Permutation $ VF.fromList [0 .. 15]
@@ -39,10 +40,16 @@ in16 :: [Dance]
 in16 = parse danceP <$> T.splitOn "," (input 2017 16)
 
 toPerm :: Vector Char -> Permutation
-toPerm = Permutation . VF.fromList . mapMaybe (`elemIndex` ['a' .. 'p']) . relist
+toPerm =
+  Permutation
+    . VF.fromList
+    . mapMaybe (`elemIndex` ['a' .. 'p'])
+    . relist
 
 dance :: Dance -> Vector Char -> Vector Char
-dance (Spin k) dancers = let (front, back) = splitAt (16 - k) (relist dancers) in relist $ back <> front
+dance (Spin k) dancers =
+  let (front, back) = splitAt (16 - k) (relist dancers)
+   in relist $ back <> front
 dance (Exchange i j) dancers =
   let [m, n] = map (dancers V.!) [i, j]
    in dancers & ix i .~ n & ix j .~ m
@@ -66,4 +73,6 @@ order :: Int
 order = maybe 0 succ . elemIndex mempty $ [1 ..] <&> \n -> permTimes n in16
 
 part2 :: String
-part2 = relist . permute (permTimes (1000000000 `mod` order) in16) $ relist ['a' .. 'p']
+part2 =
+  relist . permute (permTimes (1000000000 `mod` order) in16) $
+    relist ['a' .. 'p']

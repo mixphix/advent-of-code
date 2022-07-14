@@ -21,6 +21,7 @@ part1 = count triangle in03
 part2 :: Natural
 part2 =
   let in03chunks = chunksOf 3 in03
-      f [Point3 a b c, Point3 i j k, Point3 x y z] = [Point3 a i x, Point3 b j y, Point3 c k z]
+      f [Point3 a b c, Point3 i j k, Point3 x y z] =
+        [Point3 a i x, Point3 b j y, Point3 c k z]
       f _ = []
    in count triangle $ foldMap f in03chunks

@@ -4,6 +4,7 @@ module Day18 where
 
 import Control.Lens (makeLenses, (+~))
 import Control.Monad.Toolbox (loop)
+import Data.Text qualified as T
 import GHC.Show qualified
 
 data Instruction
@@ -59,27 +60,46 @@ makeLenses ''Computer
 instance Show Computer where
   show Computer{..} =
     "Computer (" <> show _instrpos <> ") "
-      <> foldMap (\(t, i) -> "{" <> toString t <> ": " <> show i <> "}") (relist @_ @[] _registers)
+      <> foldMap
+        (\(t, i) -> "{" <> toString t <> ": " <> show i <> "}")
+        (relist @_ @[] _registers)
       <> " "
       <> show _sound
 
 queue :: ([Integer] -> Identity [Integer]) -> Computer -> Identity Computer
 queue = sound
 
-instruction :: Part -> (Maybe Integer, Computer) -> [Instruction] -> Maybe (Maybe Integer, Computer)
+instruction ::
+  Part ->
+  (Maybe Integer, Computer) ->
+  [Instruction] ->
+  Maybe (Maybe Integer, Computer)
 instruction Part1 (s, c@Computer{..}) is = Just $ case is !!? _instrpos of
   Nothing -> (s, c)
   Just i -> case i of
     Snd x -> (s, c' & sound %~ (either reg id x :))
-    Set x e -> (s, c' & registers %~ (ix x .~ either reg id e))
-    Add x e -> (s, c' & registers %~ (at x %~ Just . (either reg id e +) . (?: 0)))
-    Mul x e -> (s, c' & registers %~ (at x %~ Just . (either reg id e *) . (?: 0)))
-    Mod x e -> (s, c' & registers %~ (at x %~ Just . (`mod` either reg id e) . (?: 0)))
+    Set x e ->
+      ( s
+      , c' & registers %~ (ix x .~ either reg id e)
+      )
+    Add x e ->
+      ( s
+      , c' & registers %~ (at x %~ Just . (either reg id e +) . (?: 0))
+      )
+    Mul x e ->
+      ( s
+      , c' & registers %~ (at x %~ Just . (either reg id e *) . (?: 0))
+      )
+    Mod x e ->
+      ( s
+      , c' & registers %~ (at x %~ Just . (`mod` either reg id e) . (?: 0))
+      )
     Rcv x
       | reg x /= 0 -> (viaNonEmpty head _sound, c')
       | otherwise -> (s, c')
     Jgz x e
-      | either reg id x > 0 -> (s, c & instrpos +~ fromIntegral (either reg id e))
+      | either reg id x > 0 ->
+        (s, c & instrpos +~ fromIntegral (either reg id e))
       | otherwise -> (s, c')
    where
     c' = c & instrpos %~ succ
@@ -89,15 +109,32 @@ instruction Part2 (s, c@Computer{..}) is = case is !!? _instrpos of
   Nothing -> Nothing
   Just i -> case i of
     Snd x -> Just (Just $ either reg id x, c')
-    Set x e -> Just (s, c' & registers %~ (ix x .~ either reg id e))
-    Add x e -> Just (s, c' & registers %~ (at x %~ Just . (either reg id e +) . (?: 0)))
-    Mul x e -> Just (s, c' & registers %~ (at x %~ Just . (either reg id e *) . (?: 0)))
-    Mod x e -> Just (s, c' & registers %~ (at x %~ Just . (`mod` either reg id e) . (?: 0)))
+    Set x e ->
+      Just
+        ( s
+        , c' & registers %~ (ix x .~ either reg id e)
+        )
+    Add x e ->
+      Just
+        ( s
+        , c' & registers %~ (at x %~ Just . (either reg id e +) . (?: 0))
+        )
+    Mul x e ->
+      Just
+        ( s
+        , c' & registers %~ (at x %~ Just . (either reg id e *) . (?: 0))
+        )
+    Mod x e ->
+      Just
+        ( s
+        , c' & registers %~ (at x %~ Just . (`mod` either reg id e) . (?: 0))
+        )
     Rcv x -> case _sound of
       [] -> Nothing
       (q : qs) -> Just (s, c' & registers %~ (ix x .~ q) & queue .~ qs)
     Jgz x e
-      | either reg id x > 0 -> Just (s, c & instrpos +~ fromIntegral (either reg id e))
+      | either reg id x > 0 ->
+        Just (s, c & instrpos +~ fromIntegral (either reg id e))
       | otherwise -> Just (s, c')
    where
     c' = c & instrpos %~ succ
@@ -109,10 +146,14 @@ in18 = parse instructionP <$> lines (input 2017 18)
 
 part1 :: Integer
 part1 =
-  fromMaybe 0 . getAlt . foldMap (Alt . fst) $
-    iterate' (\c -> instruction Part1 c in18 ?: error "boo") (empty, Computer m empty 0)
+  fromMaybe 0
+    . getAlt
+    . foldMap (Alt . fst)
+    $ iterate'
+      (\c -> instruction Part1 c in18 ?: error "boo")
+      (empty, Computer m empty 0)
  where
-  m = relist [(c, 0) | c <- map one "abfip"]
+  m = fold [T.singleton c @= 0 | c <- "abfip"]
 
 data DuetState
   = Blocked0
@@ -123,14 +164,18 @@ data DuetState
 duet :: (Int, DuetState, Computer, Computer)
 duet = (0, Working, Computer m empty 0, Computer (m & ix "p" .~ 1) empty 0)
  where
-  m = relist [(c, 0) | c <- map one "abfip"]
+  m = fold [T.singleton c @= 0 | c <- "abfip"]
 
-synchronous :: (Int, DuetState, Computer, Computer) -> [Instruction] -> Either (Int, DuetState, Computer, Computer) Int
+synchronous ::
+  (Int, DuetState, Computer, Computer) ->
+  [Instruction] ->
+  Either (Int, DuetState, Computer, Computer) Int
 synchronous (n, ds, c0, c1) is = case ds of
   Blocked0 -> case instruction Part2 (Nothing, c1) is of
     Nothing -> Right n
     Just (Nothing, c1') -> Left (n, Blocked0, c0, c1')
-    Just (Just sent, c1') -> synchronous (succ n, Working, c0 & queue <>~ [sent], c1') is
+    Just (Just sent, c1') ->
+      synchronous (succ n, Working, c0 & queue <>~ [sent], c1') is
   Blocked1 -> case instruction Part2 (Nothing, c0) is of
     Nothing -> Right n
     Just (Nothing, c0') -> Left (n, Blocked1, c0', c1)

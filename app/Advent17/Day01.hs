@@ -1,7 +1,9 @@
 module Day01 where
 
+import Data.Text qualified as T
+
 in01 :: [Natural]
-in01 = parse number . one <$> toString (input 2017 1)
+in01 = parse number . T.singleton <$> toString (input 2017 1)
 
 part1 :: Natural
 part1 = sumOn head . filter (allSame . relist) $ pairsTied in01

@@ -38,7 +38,9 @@ towerWeight = foldTree (\w disc -> w + sum disc)
 
 part2 :: Natural
 part2 =
-  let wss = relist @_ @(Map Natural) $ withNonEmpty [] last (levels $ histo go $ snd <$> tower)
+  let wss =
+        relist @_ @(Map Natural) $
+          withNonEmpty [] last (levels $ histo go $ snd <$> tower)
       Just sub = oddOneOut $ elems wss
       (w, tot) = Map.findMin $ Map.filter (sub ==) wss
 

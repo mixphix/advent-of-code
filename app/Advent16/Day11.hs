@@ -1,8 +1,8 @@
 module Day11 where
 
 import Control.Lens (Lens', lens)
-import Control.Monad.ST
-import Data.STRef
+import Data.Set (powerSet)
+import Data.Set qualified as Set
 import Text.Show qualified (show)
 
 data Isotope
@@ -53,7 +53,11 @@ transform (i, j) g
 gizmo :: Parser Gizmo
 gizmo = do
   i <- isotopes
-  g <- choice [Chip <$ string "-compatible microchip", RTG <$ string " generator"]
+  g <-
+    choice
+      [ Chip <$ string "-compatible microchip"
+      , RTG <$ string " generator"
+      ]
   pure $ g i
 
 data Floor = One | Two | Three | Four deriving (Eq, Ord, Enum, Bounded, Show)
@@ -75,80 +79,68 @@ gizmoFloor = do
     pure (g : gs)
   pure (f, gs)
 
-in11 :: Map Floor [Gizmo]
-in11 = relist $ parse gizmoFloor <$> lines (input 2016 11)
-
 irradiate :: [Gizmo] -> Maybe [Gizmo]
 irradiate = guarded $ (null . gens) ||^ (null . liftM2 (\\) chips gens)
 
-newtype Floors = Floors {unFloors :: Map Floor [Gizmo]}
-  deriving (Eq)
-
-instance Show Floors where
-  show (Floors m) =
-    toString (unlines . map show $ mapMaybe (m !?) [One .. Four])
-
-data Area = Area {me :: Floor, floors :: Floors}
-  deriving (Eq)
+data Area = Area
+  { me :: Floor
+  , floors :: Mop Floor (Set Gizmo)
+  }
+  deriving (Eq, Ord)
 
 instance Show Area where
   show Area{..} =
-    let t = lines $ show floors
+    let t = show . relist @_ @[] . (floors !) <$> [One .. Four]
      in toString . unlines $ t & ix (fromEnum me) <>~ "<"
 
+in11 :: Area
+in11 =
+  Area One . map relist . relist $
+    parse gizmoFloor <$> lines (input 2016 11)
+
 transformArea :: (Isotope, Isotope) -> Area -> Area
-transformArea is a = Area (me a) $ Floors (unFloors (floors a) <&> sort . map (transform is))
+transformArea is Area{..} = Area me $ Set.map (transform is) <$> floors
+
+equivalents :: Area -> Set Area
+equivalents =
+  relist . flap [transformArea (i, j) | i <- universe, j <- universe \\ [i]]
 
 equivalent :: Area -> Area -> Bool
-equivalent a b =
-  a == b
-    || let equivs = [transformArea (i, j) | i <- universe, j <- universe \\ [i]] ?? a
-        in Area (me b) (Floors $ unFloors (floors b) <&> sort) `elem` equivs
+equivalent a b = a == b || a `member` equivalents b
 
 end :: Area -> Bool
-end Area{..} = me == Four && sort (unFloors floors !? Four ?: []) == sort (fold [[Chip i, RTG i] | i <- universe])
+end Area{..} =
+  me == Four && floors ! Four == fold [relist [Chip i, RTG i] | i <- universe]
 
-moves :: Area -> [(Floor, [[Gizmo]])]
-moves Area{..} =
-  let att 1 = maybe [] (map one . sort) (unFloors floors !? me)
-      att 2 = case unFloors floors !? me ?: [] of
-        [] -> []
-        [_] -> []
-        _ -> nubOrd . map toList $ pairsTied (sort $ unFloors floors !? me ?: [])
-      att (_ :: Word8) = []
-   in case me of
-        One -> [(Two, att 2 <> att 1)]
-        Four -> [(Three, att 1 <> att 2)]
-        n -> [(succ n, att 2 <> att 1)] <> [(pred n, att 1 <> att 2)]
+move :: Bool -> Set Gizmo -> Area -> Maybe (Area, Set Gizmo)
+move up gizmos Area{..}
+  | up && me == Four = Nothing
+  | not up && me == One = Nothing
+  | size gizmos `notElem` [1, 2] = Nothing
+  | otherwise =
+    let me' = bool pred succ up me
+        floors' =
+          floors
+            & ix me %~ (`Set.difference` gizmos)
+            & ix me' <>~ gizmos
+     in case length . mapMaybe (irradiate . relist) $ elems floors' of
+          4 -> Just (Area me' floors', gizmos)
+          _ -> Nothing
 
-move :: forall s. STRef s [Area] -> Natural -> Area -> [(Floor, [[Gizmo]])] -> ST s (Maybe (Min Natural))
-move _ _ _ [] = pure empty
-move as n a ((_, []) : ms) = move as n a ms
-move as n a0@(Area{..}) ((e, gs : gizmos) : ms) = do
-  seen <- readSTRef as
-  let a' = do
-        f <- unFloors floors !? me
-        newoldfloor <- irradiate $ f \\ gs
-        let moved = alter (newoldfloor <$) me $ unFloors floors
-        f' <- moved !? e
-        newnewfloor <- irradiate $ f' <> gs
-        pure . traceShowId . Area e . Floors $ alter (newnewfloor <$) e moved
-  case a' of
-    Nothing -> pure Nothing
-    Just a@Area{}
-      | any (equivalent a) seen -> pure Nothing
-      | end a -> pure . Just $ Min n
-      | otherwise ->
-        liftM2 (<|>) (move as n a0 ((e, gizmos) : ms)) $ do
-          modifySTRef' as (a :)
-          move as (succ n) a (moves a)
+moves :: Area -> Maybe [(Area, Set Gizmo)]
+moves area | end area = Nothing
+moves area@Area{..} =
+  let available =
+        relist @_ @[]
+          . Set.filter ((<= 2) . length)
+          . powerSet
+          $ relist (floors ! me)
+   in Just . mapMaybe ($ area) $ move <$> universe <*> available
 
-part1 :: Natural
-part1 =
-  let a = Area One (Floors in11)
-   in runST $ do
-        seen <- newSTRef []
-        maybe 0 getMin <$> move seen 0 a (moves a)
+unfold :: (a -> b -> Maybe [(a, b)]) -> a -> NonEmpty b -> [b]
+unfold f a (b :| bs) = case f a b of
+  Nothing -> bs
+  Just x0 -> _
 
 part2 :: Natural
 part2 = 0

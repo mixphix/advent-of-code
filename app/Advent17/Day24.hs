@@ -29,13 +29,21 @@ bridgify cs bs@(_ Seq.:|> Component _ p) =
   let nexts = mapMaybe (pin p) cs
    in case nexts of
         [] -> [bs]
-        ns -> ns >-< \n -> bridgify (map canonical cs \\ [canonical n]) (bs Seq.:|> n)
+        ns ->
+          ns >-< \n ->
+            bridgify (map canonical cs \\ [canonical n]) (bs Seq.:|> n)
 
 in24 :: [Component]
-in24 = parse (Component <$> (number <* string "/") <*> number) <$> lines (input 2017 24)
+in24 =
+  parse (Component <$> (number <* string "/") <*> number)
+    <$> lines (input 2017 24)
 
 part1 :: Natural
 part1 = withNonEmpty 0 (maximumOf1 (sumOn strength)) $ bridgify in24 Empty
 
 part2 :: Natural
-part2 = withNonEmpty 0 (maximumOf1 (sumOn strength) . head . groupAllWith1 (Down . length)) $ bridgify in24 Empty
+part2 =
+  withNonEmpty
+    0
+    (maximumOf1 (sumOn strength) . head . groupAllWith1 (Down . length))
+    $ bridgify in24 Empty

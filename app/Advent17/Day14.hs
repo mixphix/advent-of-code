@@ -17,7 +17,10 @@ used =
 part1 :: Int
 part1 = length used
 
-contiguous :: Set (Point 2 Integer) -> Set (Point 2 Integer) -> Set (Point 2 Integer)
+contiguous ::
+  Set (Point 2 Integer) ->
+  Set (Point 2 Integer) ->
+  Set (Point 2 Integer)
 contiguous vs set =
   case Set.intersection set $ relist (foldMap vonNeumann vs) Set.\\ vs of
     Empty -> vs

@@ -18,7 +18,9 @@ footsacks = takeWhile ((smallestSizeOver wgt ==) . fst) $ do
   equal x = sum x == wgt
 
 smallestSizeOver :: Natural -> Int
-smallestSizeOver n = succ . genericLength . takeWhile ((n >=) . sum) $ inits (reverse in24)
+smallestSizeOver n =
+  succ . genericLength . takeWhile ((n >=) . sum) $
+    inits (reverse in24)
 
 part1 :: Natural
 part1 = withNonEmpty 0 (minimumOf1 snd) footsacks

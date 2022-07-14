@@ -19,4 +19,6 @@ part1 :: Natural
 part1 = count ((> 1) . length) inv
 
 part2 :: Int
-part2 = withNonEmpty 0 head . keys $ Mop.filter (all ((== 1) . length . (?: []) . (inv !?))) in03
+part2 =
+  withNonEmpty 0 head . keys $
+    Mop.filter (all ((== 1) . length . (?: []) . (inv !?))) in03

@@ -43,7 +43,11 @@ points time = go (Map.fromSet (const (-1, 0)) (Map.keysSet in14)) time
    where
     elapsed = time - n
     distances = Map.fromSet (race elapsed) (Map.keysSet in14)
-    m' = Map.adjust (first succ) (withNonEmpty "" (fst . maximumOn1 snd) (Map.assocs distances)) m
+    m' =
+      Map.adjust
+        (first succ)
+        (withNonEmpty "" (fst . maximumOn1 snd) (Map.assocs distances))
+        m
 
 part2 :: Integer
 part2 = points 2503

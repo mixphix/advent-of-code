@@ -6,7 +6,8 @@ registers :: [String]
 registers = (one <$> ['a' .. 'z']) <> join list2 ['a' .. 'z']
 
 vertexOf :: String -> Int
-vertexOf x = x `elemIndex` ((one <$> ['a' .. 'z']) <> join list2 ['a' .. 'z']) ?: -1
+vertexOf x =
+  x `elemIndex` ((one <$> ['a' .. 'z']) <> join list2 ['a' .. 'z']) ?: -1
 
 data Command
   = Constant String

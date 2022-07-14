@@ -32,14 +32,15 @@ command = choice [rect, row, col]
     pure $ RotateCol c k
 
 runCommand :: Command -> Screen -> Screen
-runCommand = \case
-  Rect w h -> \m -> foldr (`insert` True) m (Point2 <$> [0 .. pred w] <*> [0 .. pred h])
-  RotateRow r k -> \m ->
+runCommand cmd m = case cmd of
+  Rect w h ->
+    foldr (`insert` True) m (Point2 <$> [0 .. pred w] <*> [0 .. pred h])
+  RotateRow r k ->
     let row = relist $ (`Point2` r) <$> [0 .. 49]
         curs = Map.restrictKeys m row
         shifted (Point2 x y) = Point2 ((50 + x - k) `mod` 50) y
      in foldr (\v -> alter (const $ curs !? shifted v) v) m row
-  RotateCol c k -> \m ->
+  RotateCol c k ->
     let col = relist $ Point2 c <$> [0 .. 5]
         curs = Map.restrictKeys m col
         shifted (Point2 x y) = Point2 x ((6 + y - k) `mod` 6)
@@ -52,4 +53,7 @@ part1 :: Natural
 part1 = yeas $ foldl' (flip runCommand) blank in08
 
 part2 :: [String]
-part2 = map (\case True -> '#'; _ -> ' ') <$> foldl' (flip runCommand) blank in08 ^. from grid
+part2 =
+  foldl' (flip runCommand) blank in08 ^. from grid <<&>> \case
+    True -> '#'
+    _ -> ' '

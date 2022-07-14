@@ -41,4 +41,6 @@ part1 :: Integer
 part1 = hexManhattan zero $ foldl' (flip hexCardinal) zero in11
 
 part2 :: Integer
-part2 = withNonEmpty 0 (maximumOf1 (hexManhattan zero)) $ scanl' (flip hexCardinal) zero in11
+part2 =
+  withNonEmpty 0 (maximumOf1 (hexManhattan zero)) $
+    scanl' (flip hexCardinal) zero in11
